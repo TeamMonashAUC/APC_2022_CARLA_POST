@@ -23,6 +23,6 @@
   <node name="car_control" pkg="airsim_py" type="car_control" output="screen"/>
   <node name="goals" pkg="airsim_py" type="goals.py" output="screen"/> -->
 
-  <node name="car_control_master" pkg="shell_simulation" type="car_control_master" output="screen"/>
+  <node name="car_control_master" pkg="shell_simulation" type="car_control_master.py" output="screen"/>
   <!--<node name="car_control_master" pkg="airsim_cpp" type="car_control_master" output="screen"/> -->
 </launch>
