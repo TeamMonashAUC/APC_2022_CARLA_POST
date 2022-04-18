@@ -1,0 +1,28 @@
+<launch>
+  <!-- <node name="car_control_master" pkg="shell_simulation" type="car_control_master" output="screen"/> -->
+
+  <!-- scoring nodes -->
+  <!-- <node name="score" pkg="shell_simulation" type="score.py" output="screen"/> -->
+
+  <!-- <node name="efficiency" pkg="airsim_cpp" type="efficiency" output="screen"/>
+  <node name="plot_eff" pkg="airsim_cpp" type="plot_eff.py" output="screen"/> -->
+
+  <!-- <node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/> -->
+
+  <!-- solo -->
+  <!-- <node name="control_master" pkg="airsim_py" type="control_master.py" output="screen"/> -->
+  <!-- <node name="control_master" pkg="airsim_cpp" type="control_master" output="screen"/> -->
+
+  <!-- cpp -->
+  <!-- <node name="car_control" pkg="shell_simulation" type="car_control" output="screen"/> -->
+  <!-- <node name="goals" pkg="shell_simulation" type="goals" output="screen"/> -->
+  <!-- <node name="timer" pkg="shell_simulation" type="timer" output="screen"/> -->
+
+  <!-- py -->
+  <!-- <node name="timer" pkg="airsim_py" type="timer.py" output="screen"/>
+  <node name="car_control" pkg="airsim_py" type="car_control" output="screen"/>
+  <node name="goals" pkg="airsim_py" type="goals.py" output="screen"/> -->
+
+  <node name="car_control_master" pkg="shell_simulation" type="car_control_master" output="screen"/>
+  <!--<node name="car_control_master" pkg="airsim_cpp" type="car_control_master" output="screen"/> -->
+</launch>
