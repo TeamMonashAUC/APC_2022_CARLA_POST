@@ -26,12 +26,12 @@ class Control: # Control class for modular code
 
 		# Main parameters
 		self.poll_period = 0.2 # Period of calling callback() function
-		self.config = 1 # Goal sequence configuration
+		self.config = 3 # Goal sequence configuration
 
 		# Initialize method attributes (variables global to class)
 		self.car_x = self.car_y = self.car_z = self.yaw = self.v_x = self.v_y = self.v_z = self.t_poll = self.t_tot = self.t0 = self.throttle = self.steering = self.prev_gas = self.stop_cal_t = 0
 		self.stop = self.end = self.start = self.move = False
-		self.prev_gear = ""
+		self.prev_gear = "forward"
 		self.prev_goal_type = self.goal_type = -1
 
 		# Initialize publishers and messages
@@ -80,6 +80,7 @@ class Control: # Control class for modular code
 		else:
 			self.stop_cal_t = 0
 			self.prev_goal_type = self.goal_type
+
 		# Steering control
 		if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
 
@@ -90,7 +91,6 @@ class Control: # Control class for modular code
 				# Apply Ackermann's steering
 				r = car_speed / -omega
 				self.steering = math.atan(self.b_wheel_base / r)
-			rospy.loginfo('a = %.2f, steer = %.2f', a, self.steering)
 
 		if self.goal_type in [6,8,9,10,11]: # Reverse goal types
 			gear = "reverse"
@@ -123,10 +123,11 @@ class Control: # Control class for modular code
 			self.pub_gear.publish(self.gear_data)
 			self.throttle_data.data = self.throttle
 			self.pub_throttle.publish(self.throttle_data)
+
 		else: # Publish gear and throttle only during changes
-			if gear != self.prev_gear:
-				self.throttle = 1 # 'Brake' the car by counter-throttling
-				self.steering = 0 # Reset steering
+			if gear != self.prev_gear: # Switching between forward and reverse
+				# self.throttle = 1 # 'Brake' the car by counter-throttling
+				# self.steering = 0 # Reset steering
 				self.gear_data.data = gear
 				self.pub_gear.publish(self.gear_data)
 				self.prev_gear = gear # update previous gear
@@ -140,7 +141,7 @@ class Control: # Control class for modular code
 			self.steering_data.data = -self.steering # Flip sign to satisfy competition environment conditions
 			self.pub_steering.publish(self.steering_data)
 
-		#rospy.loginfo("Publishing: [D_state: %d, Z_state: %s, Throttle:  %f, Brake: %f, target_speed: %d, Speed_cur: %f, angular_z: %f, a: %f, steer: %f, goal_type: %d, diff_radius: %f]" %(case, z_state, self.throttle, self.brake,target_speed,car_speed,omega,a,self.steering,goal_type,diff_radius))
+		# rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius))
 
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
@@ -232,9 +233,10 @@ class Control: # Control class for modular code
 			self.pose_seq = [[-80, 0], [-135, 0.5], [-205, 0], [-212, -15], [-212, -30], [-212, -74], [-212,-120],[-197,-128],[-179,-128],[-135.5,-128],[-94,-128],[-84,-143],[-84,-153],[-84,-198],[-84,-246],[-99,-256], [-114, -256], [-135.5, -256], [-202, -256], [-212, -241], [-212, -226],[-212,-198],[-212, -57],[-197, -48], [-183,-48], [-135,-48], [-94,-48], [-84,-63], [-84,-78], [-84,-120], [-69,-128], [-54,-128], [0,-128],[34, -128],[44, -110], [44,-95], [44, -90], [43,-79],[39,-71],[38, -67],[44, -66], [45, -69], [45,-77],[44, -198],[44, -246],[29, -256],[14,-256],[0, -256]]
 			self.pose_types = [0,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,1,2,3,4,1,2,3,4,1,5,5,5,5,3,4,1,2,3,7] # 1-11
 		elif self.config == 3:
-			# Config 3 - Fastest (> Distance, <<< Time), (~1555 m, ~144s)
-			self.pose_seq = [[-80, 0], [-135, 0], [-205, 0], [-212, -15], [-212, -30], [-212, -74], [-212,-120],[-197,-128],[-179,-128],[-135.5,-128], [-70, -128], [0,-128],[34, -128],[44, -110], [44,-95], [44, -79], [43,-75], [39, -67],[44, -66], [45, -69], [45,-77],[44, -198],[44, -246],[29, -256],[14,-256],[0, -256],[-70,-256], [-135.5, -256], [-202, -256], [-212, -241], [-212, -226],[-212,-198],[-212, -57],[-197, -48], [-183,-48], [-135,-48], [-94,-48], [-84,-63], [-84,-78], [-84,-198]]
-			self.pose_types = [0,4,1,2,3,4,1,2,3,4,0,4,1,2,3,4,1,5,5,5,3,4,1,2,3,4,0,4,1,2,3,4,1,2,3,4,1,2,3,7] # 1-11)
+			# ze xin trial
+			# Config 3 - Checking
+			self.pose_seq = [[-77.9, -17.59],[-78, 40],[-78, 115],[-76.9, 172.4],[-61.9, 191.8],[-56.5, 194.7],[-15.45,194.16], [-6.9, 192.8], [-3.6, 182.9], [-3.6, 179], [-4.32, 110.51], [-6.5, 38.3]]
+			self.pose_types = [0,1, 2,2,2,3, 2, 2, 3, 0, 2, 7] 
 		elif self.config == 4:
 			# Config 4 - Shortest (<<< Distance, >> Time), (~1440 m, ~180s)
 			self.pose_seq = [[-80, 0], [-135, 0.5], [-203, 0], [-212, -15], [-212, -30],[-212, -38],[-197, -48], [-183,-48], [-163,-48], [-141,-49],[-133,-51],[-130, -48],[-144, -48], [-153, -48],[-202, -48],[-212, -63],[-212, -78],[-212, -74], [-212,-120],[-197,-128],[-179,-128], [-163,-128], [-141,-129],[-133,-131],[-130, -128],[-143, -128],[-153, -128],[-202,-128], [-212,-143], [-212, -158], [-212,-198],[-212, -246],[-197, -256],[-182, -256],[-135.5, -256],[-94,-256],[-84,-241],[-84,-226],[-84.5,-198],[-84,-140],[-72,-128], [-55,-128], [0,-128],[34, -128],[44, -110], [44,-95], [44, -90], [43,-78],[39,-69],[38, -67],[44, -65], [45, -67], [44,-85],[44, -198],[44, -246],[29, -256],[14,-256],[0, -256]]
@@ -293,6 +295,7 @@ def listener():
 	rospy.loginfo("Checking for odom...")
 	data = rospy.wait_for_message("/carla/ego_vehicle/odometry", Odometry, 20) # Blocks until message is received, 20s timeout
 	if data != None:
+		rospy.loginfo("Starting control!")
 		rospy.spin() # Block the node from exiting
 	else:
 		rospy.loginfo("No odom data!")
