@@ -128,7 +128,7 @@ def odom(msg):
 			e_array.append(e)
 	else:
 		t0 = rospy.get_time()
-		if velocity > -0.01:
+		if velocity > 0.01:
 			start = True
 
 # records the duration to reach each goal in an array
@@ -156,8 +156,8 @@ def listener():
 
 if __name__ == '__main__':
 	# Initialize variables
-	goals = [[44.50, -65.75], [0, -256], [-84.5,-198.22], [-135, 1.50]] # Our common final goals
-	last_goal = goals[3] # If using a different final goal, change here
+	goals = [[-4.32, 110.51], [0, -256], [-84.5,-198.22], [-135, 1.50]] # Our common final goals
+	last_goal = goals[0] # If using a different final goal, change here
 	v0 = 0
 	v_x0 = 0
 	v_y0 = 0
@@ -191,7 +191,7 @@ if __name__ == '__main__':
 	area = 2.22 # Car front chassis area [m^2]
 
 	# Graph
-	showgraph = True
+	showgraph = False
 	if (showgraph == True):
 		v_array = []  # velocity array
 		a_array = []  # acceleration array
@@ -202,3 +202,4 @@ if __name__ == '__main__':
 		goaltime = []
 		passed = 0
 	listener()
+
