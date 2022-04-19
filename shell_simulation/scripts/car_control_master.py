@@ -86,7 +86,12 @@ class Control: # Control class for modular code
 
 			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
 			omega = 1 * a # Scalar constant to define angular velocity omega
-
+			if self.goal_type == 12:  #sharp corner turn
+				omega = 2.5 * a
+			elif self.goal_type == 13:  #sharp sharp corner turn
+				omega = 5 * a
+			elif self.goal_type == 14:  #sharp sharp sharp corner turn
+				omega = 8 * a
 			if omega != 0:
 				# Apply Ackermann's steering
 				r = car_speed / -omega
@@ -221,7 +226,12 @@ class Control: # Control class for modular code
         #   8 - goal before corner
         #   9 - corner goal
         #   10 - goal after corner
-		
+		#   11 - reverse variant of 3-point D
+
+		#   Special add-ons for 2022 APC
+		#   12 - sharp corner turn
+		#   13 - sharp sharp corner turn
+		#   14 - sharp sharp sharp corner turn
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
 			# Config 1 - CARLA simple throttle, turn and stop
@@ -238,10 +248,10 @@ class Control: # Control class for modular code
 				[-74.8,-13.8],[-71.5,-3.2],[-64.2,-0.8],
 				
 				[-52.68,-0.91],  	#1
-
-				[-41.4,-1.2],[-29.2,-3.7],[-21.7,-11.5],
+	
+				[-41.4,-0.7],[-29.2,-2.5], [-23.3, -7.6],[-21.7,-11.5], # modified 5
 				[-1.77,-23.78], 	#2
-				[10.8,-20.30],[18.2,-14.40],[26.9,-7.79],
+				[5.5, -22.3],[10.8,-20.30],[18.2,-14.40],[22.2, -9.1],[26.9,-7.79], #modified 6
 
 				[79.56,-7.79],  	#3
 
@@ -257,15 +267,16 @@ class Control: # Control class for modular code
 
 				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
 				
-				# [161.58,-111.42],	#6
+				[161.58,-111.42],	#6
 				
-				[163.3,-108.1],[156.9,-117.4],[129.5,-130.7],[111.3,-130.7],[68.6,-130.7],[19.2,-130.7],
+				[159.8,-114.2], [156.9,-117.4], [149.2, -124] ,[143.6, -126.8],[136.6, -128.8],
+				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
 				[17.1,-130.7],  	#7
 
 				[7.9,-130.4],[-1.9,-134.3],[-9,-150.4], 
 
 				[-9.35,-168.07], 	#8
-				[-9.3,-189.5],[-11.4,-193.9],[-26.2,-196.6],   
+				[-11.9,-194.4],[-18.8,-194.5],[-17.7,-193.4], #modified  1
 				   
 				[-44.25,-193.47],	#9
 				
@@ -277,22 +288,23 @@ class Control: # Control class for modular code
 				[-145.75,-75.7],	#10
 
 				[-145.3,-65.5],[-145.3,-39.5],
-				[-145.6,-10.5],	#11
+				#[-145.6,-10.5],	
 
-				[-145.3,-7.8],[-141.6,-1.6],[-134.8,-0.9],
+				[-145.5,-7.8], #11
+				[-141.6,-3.2],[-137.2,-1.0], [-133.1, -0.1], #modified 8
 				[-104.58,-0.5], 	#12
 
 				[-101.1,-0.6],[-84.9,1.7],[-77.8,11.5], 
 				[-77.86,16.80], 	#13
-					
+						
 
 				[-75,40],[-75,115],
 				[-73.5,170.8],[-67.9,187.3],[-47.8,194.9],
 				
-				[-15.4,194.3],		#14
-				[-6.6,191.1],[-3.3,177.6],
+				[-15.45,194.16],		#14
+				[-8.4,191.4],[-4.3,187.3],[-3.2, 182.4], [-3.5, 172.6],[-4.4, 124.7],#modified 9
 				
-				[-4.32,110.51] 		#15
+				[-4.32,110.51] 		#15s
 				
 				
 				]
@@ -305,15 +317,15 @@ class Control: # Control class for modular code
 
 				4, 		#1
 
-				1,2,2,
-				2, 		#2
-				2,2,3,
+				1,2,12,2,  #modified 5
+				12, 		#2
+				13,12,2,12,3,
 
-				4, 		#3
+				1, 		#3
 
 				0,
 				
-				1,2,3,
+				12,2,3,   #modified 3
 
 				4, 		#4
 
@@ -321,17 +333,18 @@ class Control: # Control class for modular code
 
 				4, 		#5
 
-				1,2,3,1,2,2,
+				1,2,3,1,2,2,#11 
 
-				# 4, 	#6
+				1, 	#6
 
-				2,2,2,3,0,0,
+				12,12,12, 12, 12, 
+				2,3,0,0,#modified 7
 				4, 		#7
 
 				1,2,3,
 
-				4, 		#8
-				1,2,3,
+				2, 		#8
+				14,14,3,  #modified 1
 
 				4, 		#9
 
@@ -343,9 +356,9 @@ class Control: # Control class for modular code
 				4,		#10
 
 				0,0,
-				4,		#11
 
-				1,2,3,  
+				13,		#11
+				13,13, 3,  #modified 4 && 8
 				4, 		#12
 
 				1,2,3,
@@ -354,8 +367,8 @@ class Control: # Control class for modular code
 				0,0,
 				1,2,3,
 				
-				1,		#14
-				2,3, 	
+				13,		#14 #modified 2
+				13,13,3,0,1 ,	#modified 9
 				
 				7		#15
 			] # 1-11
