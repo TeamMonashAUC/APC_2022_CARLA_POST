@@ -1,0 +1,10 @@
+devel/
+logs/
+build/
+bin/
+.vscode/
+
+
+
+# Catkin custom files
+CATKIN_IGNORE
