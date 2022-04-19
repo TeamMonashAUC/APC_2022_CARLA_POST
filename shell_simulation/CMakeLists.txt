@@ -12,7 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   rospy
   std_msgs
-
+  tf2_ros
+  tf
 )
 
 catkin_package(
@@ -20,7 +21,8 @@ catkin_package(
   CATKIN_DEPENDS nav_msgs
   CATKIN_DEPENDS geometry_msgs
   CATKIN_DEPENDS rospy
-
+  CATKIN_DEPENDS tf2_ros
+  CATKIN_DEPENDS tf
 )
 
 
@@ -51,6 +53,8 @@ include_directories(
 catkin_install_python(
   PROGRAMS
     scripts/car_control_master.py
+    scripts/efficiency.py
+    scripts/score.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY
