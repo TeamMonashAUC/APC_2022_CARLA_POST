@@ -26,7 +26,7 @@ class Control: # Control class for modular code
 
 		# Main parameters
 		self.poll_period = 0.2 # Period of calling callback() function
-		self.config = 3 # Goal sequence configuration
+		self.config = 2 # Goal sequence configuration
 
 		# Initialize method attributes (variables global to class)
 		self.car_x = self.car_y = self.car_z = self.yaw = self.v_x = self.v_y = self.v_z = self.t_poll = self.t_tot = self.t0 = self.throttle = self.steering = self.prev_gas = self.stop_cal_t = 0
@@ -221,17 +221,58 @@ class Control: # Control class for modular code
         #   8 - goal before corner
         #   9 - corner goal
         #   10 - goal after corner
-
+		
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
 			# Config 1 - CARLA simple throttle, turn and stop
-			self.pose_seq = [[-77.9, -17.59],[-78, 40],[-78, 115],[-71, 131],[-53.5, 134.5],[-20,134.5]] # Go straight, turn right, then stop
+			self.pose_seq = [[-77.9,-17.59],[-52.68,-0.91]]
 			# The points I set- [Origin, Straight goal, straight goal before corner, corner goal, exit corner goal, stop goal]
-			self.pose_types = [0,0,1,2,3, 7] 
+			self.pose_types = [0,7] 
 		elif self.config == 2:
 			# Config 2 - Efficiency (< Distance, < Time), (~1520 m, ~162s)
-			self.pose_seq = [[-80, 0], [-135, 0.5], [-205, 0], [-212, -15], [-212, -30], [-212, -74], [-212,-120],[-197,-128],[-179,-128],[-135.5,-128],[-94,-128],[-84,-143],[-84,-153],[-84,-198],[-84,-246],[-99,-256], [-114, -256], [-135.5, -256], [-202, -256], [-212, -241], [-212, -226],[-212,-198],[-212, -57],[-197, -48], [-183,-48], [-135,-48], [-94,-48], [-84,-63], [-84,-78], [-84,-120], [-69,-128], [-54,-128], [0,-128],[34, -128],[44, -110], [44,-95], [44, -90], [43,-79],[39,-71],[38, -67],[44, -66], [45, -69], [45,-77],[44, -198],[44, -246],[29, -256],[14,-256],[0, -256]]
-			self.pose_types = [0,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,1,2,3,4,1,2,3,4,1,5,5,5,5,3,4,1,2,3,7] # 1-11
+
+
+			self.pose_seq = [
+				[-77.9,-17.59],[-71.9,-17.59],[-71.5,-3.2],[-64.2,-0.8],
+				[-52.68,-0.91],
+				[-41.4,-1.2],[-29.2,-3.7],[-21.4,-11.5],[-1.77,-23.78],[10.8,-20.30],[18.2,-14.40],[26.9,-7.60],
+				[79.56,-7.79],
+				[91.7,-6.9],[212,-10],[226.4,-12.4],[231,-32.8],
+				[230.9,-40.58],
+				[231,-40.58], [227.3,-52.3],[209.2,-57.2],
+				[189.83,-58.67],
+				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
+				[161.58,-111.42],
+				[163.3,-108.1],[156.9,-117.4],[129.5,-128.8],[111.3,129.1],[68.6,129.6],[19.2,130.4],
+				[17.1,-130.7]
+
+
+				
+				
+				]
+			
+			
+			self.pose_types = [
+				0,1,2,3,
+				4,
+				1,2,2,2,2,2,3,
+				4,
+				0,1,2,3,
+				4,
+				1,2,3,
+				4,
+				1,2,3,1,2,2,
+				2,
+				2,2,2,3,0,0,
+				# 4
+
+
+				7
+			] # 1-11
+
+
+
+
 		elif self.config == 3:
 			# ze xin trial
 			# Config 3 - Checking
