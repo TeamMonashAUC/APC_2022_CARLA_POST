@@ -35,6 +35,7 @@ class Control: # Control class for modular code
 		self.prev_gear = "forward"
 		self.prev_goal_type = self.goal_type = -1
 		self.crash = False
+		self.recover = False
 		self.cnt = 0
 
 		# Initialize publishers and messages
@@ -125,32 +126,65 @@ class Control: # Control class for modular code
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
 		rospy.loginfo("Collsion is %s", self.crash)
-		if self.crash == True: ########## PROTOCOLS FOR CRASHING ###########
+		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
 			self.gear = "reverse"
-			self.throttle = 0.1
+			self.throttle = 0.5
+			self.steering = 0
 			self.cnt += 1
-			if self.cnt > 25:
-				rospy.sleep(2)
+			if self.cnt > 15:
+				# if self.cnt == 6:
+				# 	rospy.sleep(2)
 				self.crash = False
+				self.recover = True
+				if self.cnt <= 28:
+					self.gear = "forward"
+					self.throttle = 0.7
+					self.steering = 0.5
+				elif self.cnt > 28 and self.cnt <=34:
+					self.gear = "forward"
+					self.throttle = 0.5
+					self.steering = -0.4
+				elif self.cnt > 34 and self.cnt <=37:
+					self.gear = "forward"
+					self.throttle = 0.5
+					self.steering = 0
+				elif self.cnt > 37 and self.cnt <=41:
+					self.gear = "forward"
+					self.throttle = 0.5
+					self.steering = -0.4
+				elif self.cnt > 41 and self.cnt <=45:
+					self.gear = "forward"
+					self.throttle = 0.5
+					self.steering = 0.5
+				elif self.cnt > 45 and self.cnt <=47:
+					self.gear = "forward"
+					self.throttle = 0.5
+					self.steering = 0
+					self.cnt = 0
+					self.recover = False	
+			self.pub_gear.publish(self.gear)
+			self.pub_throttle.publish(self.throttle)
+			self.pub_steering.publish(self.steering)
 		### Publish controls ###
-		if not self.move: # Always publish gear & throttle at the start to prevent synching issues
-			self.gear_data.data = gear
-			self.pub_gear.publish(self.gear_data)
-			self.throttle_data.data = self.throttle
-			self.pub_throttle.publish(self.throttle_data)
-
-		else: # Publish gear and throttle only during changes
-			if gear != self.prev_gear: # Switching between forward and reverse
-				# self.throttle = 1 # 'Brake' the car by counter-throttling
-				# self.steering = 0 # Reset steering
+		else:
+			if not self.move: # Always publish gear & throttle at the start to prevent synching issues
 				self.gear_data.data = gear
 				self.pub_gear.publish(self.gear_data)
-				self.prev_gear = gear # update previous gear
-
-			if self.prev_gas != self.throttle:
 				self.throttle_data.data = self.throttle
 				self.pub_throttle.publish(self.throttle_data)
-				self.prev_gas = self.throttle # update previous throttle
+
+			else: # Publish gear and throttle only during changes
+				if gear != self.prev_gear: # Switching between forward and reverse
+					# self.throttle = 1 # 'Brake' the car by counter-throttling
+					# self.steering = 0 # Reset steering
+					self.gear_data.data = gear
+					self.pub_gear.publish(self.gear_data)
+					self.prev_gear = gear # update previous gear
+
+				if self.prev_gas != self.throttle:
+					self.throttle_data.data = self.throttle
+					self.pub_throttle.publish(self.throttle_data)
+					self.prev_gas = self.throttle # update previous throttle
 
 		if self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0: # Stop publishing steering when reached steady state
 			self.steering_data.data = -self.steering # Flip sign to satisfy competition environment conditions
