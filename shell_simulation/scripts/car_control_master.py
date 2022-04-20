@@ -34,6 +34,8 @@ class Control: # Control class for modular code
 		self.stop = self.end = self.start = self.move = False
 		self.prev_gear = "forward"
 		self.prev_goal_type = self.goal_type = -1
+		self.crash = False
+		self.cnt = 0
 
 		# Initialize publishers and messages
 		self.pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
@@ -122,7 +124,14 @@ class Control: # Control class for modular code
 
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
-
+		rospy.loginfo("Collsion is %s", self.crash)
+		if self.crash == True: ########## PROTOCOLS FOR CRASHING ###########
+			self.gear = "reverse"
+			self.throttle = 0.1
+			self.cnt += 1
+			if self.cnt > 25:
+				rospy.sleep(2)
+				self.crash = False
 		### Publish controls ###
 		if not self.move: # Always publish gear & throttle at the start to prevent synching issues
 			self.gear_data.data = gear
@@ -149,6 +158,9 @@ class Control: # Control class for modular code
 
 		rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
+	def collision_handler(self, msg):
+		self.crash = True
+		rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
@@ -424,8 +436,9 @@ def listener():
 
 	# Initialize nodelets and get goals
 	control = Control()
-	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, control.odom)
 	rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, control.collision_handler)
+	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, control.odom)
+
 	rospy.loginfo("Initialized control node")
 	control.getGoals()
 
