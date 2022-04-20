@@ -6,6 +6,7 @@ from geometry_msgs.msg import PoseStamped, Point
 import math
 import tf2_ros
 import tf2_geometry_msgs.tf2_geometry_msgs
+from carla_msgs.msg import CarlaCollisionEvent
 
 # control_master_simple.py
 # Author(s): Jayson Teh, Navaneeth Nair, Zi Yu, Khai Hoe
@@ -94,7 +95,7 @@ class Control: # Control class for modular code
 				omega = 8 * a
 			if omega != 0:
 				# Apply Ackermann's steering
-				r = car_speed / -omega
+				r = car_speed / omega
 				self.steering = math.atan(self.b_wheel_base / r)
 
 		if self.goal_type in [6,8,9,10,11]: # Reverse goal types
@@ -146,7 +147,7 @@ class Control: # Control class for modular code
 			self.steering_data.data = -self.steering # Flip sign to satisfy competition environment conditions
 			self.pub_steering.publish(self.steering_data)
 
-		# rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius))
+		rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
@@ -424,6 +425,7 @@ def listener():
 	# Initialize nodelets and get goals
 	control = Control()
 	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, control.odom)
+	rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, control.collision_handler)
 	rospy.loginfo("Initialized control node")
 	control.getGoals()
 
