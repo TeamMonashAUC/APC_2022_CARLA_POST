@@ -98,7 +98,7 @@ class Control: # Control class for modular code
 				omega = 8 * a
 			if omega != 0:
 				# Apply Ackermann's steering
-				r = car_speed / omega
+				r = car_speed / -omega
 				self.steering = math.atan(self.b_wheel_base / r)
 
 		if self.goal_type in [6,8,9,10,11]: # Reverse goal types
@@ -131,37 +131,45 @@ class Control: # Control class for modular code
 			self.throttle = 0.5
 			self.steering = 0
 			self.cnt += 1
-			if self.cnt > 15:
+			if self.cnt > 20:
 				# if self.cnt == 6:
 				# 	rospy.sleep(2)
-				self.crash = False
+				
+				self.crash = True
 				self.recover = True
-				if self.cnt <= 28:
+				
+				if self.cnt <= 25:
 					self.gear = "forward"
-					self.throttle = 0.7
-					self.steering = 0.5
-				elif self.cnt > 28 and self.cnt <=34:
-					self.gear = "forward"
-					self.throttle = 0.5
-					self.steering = -0.4
-				elif self.cnt > 34 and self.cnt <=37:
-					self.gear = "forward"
-					self.throttle = 0.5
+					self.throttle = 1
 					self.steering = 0
-				elif self.cnt > 37 and self.cnt <=41:
-					self.gear = "forward"
-					self.throttle = 0.5
-					self.steering = -0.4
-				elif self.cnt > 41 and self.cnt <=45:
-					self.gear = "forward"
-					self.throttle = 0.5
-					self.steering = 0.5
-				elif self.cnt > 45 and self.cnt <=47:
-					self.gear = "forward"
-					self.throttle = 0.5
-					self.steering = 0
+				if self.cnt > 25:
+					self.recover = False
+					self.crash = False
 					self.cnt = 0
-					self.recover = False	
+				# 	self.throttle = 0.7
+				# 	self.steering = -0.5
+				# elif self.cnt > 28 and self.cnt <=34:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0.4
+				# elif self.cnt > 34 and self.cnt <=37:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0
+				# elif self.cnt > 37 and self.cnt <=41:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0.4
+				# elif self.cnt > 41 and self.cnt <=45:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = -0.5
+				# elif self.cnt > 45 and self.cnt <=47:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0
+				# 	self.cnt = 0
+				# 	self.recover = False	
 			self.pub_gear.publish(self.gear)
 			self.pub_throttle.publish(self.throttle)
 			self.pub_steering.publish(self.steering)
@@ -296,15 +304,15 @@ class Control: # Control class for modular code
 				
 				[-52.68,-0.91],  	#1
 	
-				[-41.4,-0.7],[-29.2,-2.5], [-23.3, -7.6],[-21.7,-11.5], # modified 5
+				[-41.4,-0.7],[-29.2,-2.5], [-23.3, -7.6],[-21.7,-11.5], [-16.4, -17.6],[-12.3,-21],[-8.3,-23.1],[-4.1, -23.7],# modified 5
 				[-1.77,-23.78], 	#2
-				[5.5, -22.3],[10.8,-20.30],[18.2,-14.40],[22.2, -9.1],[26.9,-7.79], #modified 6
+				[5.5, -23.3],[8.7, -22.4],[10.8,-20.30],[12.5,-20],[15.7,- 17.1],[18.2,-14.40],[20.5,-11],[22.2, -9.1],[24.1,-8.7],[26.9,-7.79],[30.6,-7.2],[36.9,-7.3], [45.2,-7.4],#modified 6
 
 				[79.56,-7.79],  	#3
 
 				[91.7,-7.79],
 				
-				[212,-10],[226.4,-12.4],[231,-32.8],
+				[212,-10],[219, -10],[223.1,-10.7],[225.7,-11.9],[227.5,-13.0],[228.2,-13.3],[229.8,-16.0],[230.2,-18.8],[230.5,-25.3],
 
 				[230.9,-40.58],  	#4
 
@@ -323,7 +331,7 @@ class Control: # Control class for modular code
 				[7.9,-130.4],[-1.9,-134.3],[-9,-150.4], 
 
 				[-9.35,-168.07], 	#8
-				[-11.9,-194.4],[-18.8,-194.5],[-17.7,-193.4], #modified  1
+				[-9.6,-188.8],[-12,-194.7],[-16.5,-197.3],[-24.2, -196.3] ,[-28.2, -195.1],[-34.6,-193.8],#modified  1
 				   
 				[-44.25,-193.47],	#9
 				
@@ -364,15 +372,15 @@ class Control: # Control class for modular code
 
 				4, 		#1
 
-				1,2,12,2,  #modified 5
+				1,2,12,12,12,12,12,12, #modified 5
 				12, 		#2
-				13,12,2,12,3,
+				12,12,12,12,12,12,12,12,12,12,12,3,0,
 
-				1, 		#3
+				0, 		#3
 
-				0,
+				1,
 				
-				12,2,3,   #modified 3
+				1,1,12,13,13,13,13,13,3,   #modified 3
 
 				4, 		#4
 
@@ -390,8 +398,8 @@ class Control: # Control class for modular code
 
 				1,2,3,
 
-				2, 		#8
-				14,14,3,  #modified 1
+				1, 		#8
+				13,14,13,3,2,3,  #modified 1
 
 				4, 		#9
 
@@ -418,7 +426,7 @@ class Control: # Control class for modular code
 				13,13,3,0,1 ,	#modified 9
 				
 				7		#15
-			] # 1-11
+				] # 1-11
 
 
 

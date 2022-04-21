@@ -13,7 +13,7 @@ def getOdom(msg):
         controls.reverse = True
 
     controls.throttle = throttle
-    controls.steer = steering
+    controls.steer = -steering
 
     pub.publish(controls)
 
