@@ -106,6 +106,7 @@ class Control: # Control class for modular code
 
 		if self.goal_type == 7 and diff_radius < 3: # End condition
 			self.stop = True
+			self.steering = 0
 
 		# Throttle control
 		if car_speed < 0.5 :  # Low speed condition
@@ -131,18 +132,18 @@ class Control: # Control class for modular code
 			self.throttle = 0.5
 			self.steering = 0
 			self.cnt += 1
-			if self.cnt > 20:
+			if self.cnt > 10:
 				# if self.cnt == 6:
 				# 	rospy.sleep(2)
 				
 				self.crash = True
 				self.recover = True
 				
-				if self.cnt <= 25:
+				if self.cnt <= 20:
 					self.gear = "forward"
 					self.throttle = 1
 					self.steering = 0
-				if self.cnt > 25:
+				if self.cnt > 20:
 					self.recover = False
 					self.crash = False
 					self.cnt = 0
@@ -195,7 +196,7 @@ class Control: # Control class for modular code
 					self.prev_gas = self.throttle # update previous throttle
 
 		if self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0: # Stop publishing steering when reached steady state
-			self.steering_data.data = -self.steering # Flip sign to satisfy competition environment conditions
+			self.steering_data.data = self.steering 
 			self.pub_steering.publish(self.steering_data)
 
 		rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
@@ -328,10 +329,10 @@ class Control: # Control class for modular code
 				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
 				[17.1,-130.7],  	#7
 
-				[7.9,-130.4],[-1.9,-134.3],[-9,-150.4], 
+				[7.9,-130.4],[-1.9,-134.3],[-9,-146.4], 
 
 				[-9.35,-168.07], 	#8
-				[-9.6,-188.8],[-12,-194.7],[-16.5,-197.3],[-24.2, -196.3] ,[-28.2, -195.1],[-34.6,-193.8],#modified  1
+				[-8.0,-172.4],[-5.1,-185.0],[-6.2,-191.2],[-13, -194.8] ,[-18.4, -195.3],[-34.6,-193.8],#modified  1
 				   
 				[-44.25,-193.47],	#9
 				
@@ -345,8 +346,8 @@ class Control: # Control class for modular code
 				[-145.3,-65.5],[-145.3,-39.5],
 				#[-145.6,-10.5],	
 
-				[-145.5,-7.8], #11
-				[-141.6,-3.2],[-137.2,-1.0], [-133.1, -0.1], #modified 8
+				[-145.47,-7.79], #11
+				[-145.5, -5.7],[-144.2,-2.8], [-139.0, -0.4], [-134.0, 0.1], #modified 8
 				[-104.58,-0.5], 	#12
 
 				[-101.1,-0.6],[-84.9,1.7],[-77.8,11.5], 
@@ -356,9 +357,14 @@ class Control: # Control class for modular code
 				[-75,40],[-75,115],
 				[-73.5,170.8],[-67.9,187.3],[-47.8,194.9],
 				
-				[-15.45,194.16],		#14
-				[-8.4,191.4],[-4.3,187.3],[-3.2, 182.4], [-3.5, 172.6],[-4.4, 124.7],#modified 9
-				
+				# [-15.45,194.16],		#14
+				# [-8.4,191.4],[-4.3,187.3],[-3.2, 182.4], [-3.5, 172.6],[-4.4, 124.7],#modified 9
+				[-45, 195.2], #14
+				[-12,194.1], [-3.7, 184.3],
+				[-3.8, 174.8], [-4.5, 126.1], 
+				#[-5.3, 93.8],
+
+
 				[-4.32,110.51] 		#15s
 				
 				
@@ -374,13 +380,13 @@ class Control: # Control class for modular code
 
 				1,2,12,12,12,12,12,12, #modified 5
 				12, 		#2
-				12,12,12,12,12,12,12,12,12,12,12,3,0,
+				12,12,12,12,12,12,12,12,12,2,12,3,0,
 
 				0, 		#3
 
 				1,
 				
-				1,1,12,13,13,13,13,13,3,   #modified 3
+				1,1,12,13,13,13,14,13,3,   #modified 3
 
 				4, 		#4
 
@@ -396,10 +402,10 @@ class Control: # Control class for modular code
 				2,3,0,0,#modified 7
 				4, 		#7
 
-				1,2,3,
+				1,13,3,
 
-				1, 		#8
-				13,14,13,3,2,3,  #modified 1
+				12, 		#8
+				12,14,13,13,12,3,  #modified 1
 
 				4, 		#9
 
@@ -413,7 +419,7 @@ class Control: # Control class for modular code
 				0,0,
 
 				13,		#11
-				13,13, 3,  #modified 4 && 8
+				14, 14, 13, 14,  #modified 4 && 8
 				4, 		#12
 
 				1,2,3,
@@ -422,8 +428,11 @@ class Control: # Control class for modular code
 				0,0,
 				1,2,3,
 				
-				13,		#14 #modified 2
-				13,13,3,0,1 ,	#modified 9
+				# 13,		#14 #modified 2
+				# 13,13,3,0,1 ,	#modified 9
+				0,
+				1,12,
+				3,1,
 				
 				7		#15
 				] # 1-11
