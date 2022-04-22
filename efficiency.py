@@ -98,11 +98,11 @@ def odom(msg):
 
 		# Calculate dt and save
 		t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
-		dt = t - t0
-		# dt = 0.05
+		#dt = t - t0
+		dt = 0.05
 		t0 = t
-		if dt == 0:
-			dt = 0.001
+		#if dt == 0:
+		#	dt = 0.001
 		duration += dt
 
 		# Calculate acceleration

@@ -37,6 +37,8 @@ class Control: # Control class for modular code
 		self.crash = False
 		self.recover = False
 		self.cnt = 0
+		self.goal15check = False
+		self.prevthrottle = 0.5
 
 		# Initialize publishers and messages
 		self.pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
@@ -54,7 +56,7 @@ class Control: # Control class for modular code
 	def callback(self, time):
 		gear = "forward" # Initialize gear to forward
 		if self.stop and not self.end: # Exit control when reached final goal
-			rospy.loginfo("Controller Time: %.4f" %(time)) # Display total controller time
+			#rospy.loginfo("Controller Time: %.4f" %(time)) # Display total controller time
 			self.end = True
 			return
 		elif self.end: # End condition
@@ -109,16 +111,25 @@ class Control: # Control class for modular code
 			self.steering = 0
 
 		# Throttle control
+		if self.goal15check == True:
+			self.throttle = self.prevthrottle
+			self.goal15check = False
 		if car_speed < 0.5 :  # Low speed condition
 			self.throttle = 0.5
 		elif not self.stop:  # not at final goal
 			self.move = True # Flag when car starts moving
 			if self.goal_type not in [5, 11]: # Not at stop & go goal
-				if car_speed < 2:
+				if self.goal_type == 15:
+					self.goal15check = True
+					if self.throttle != 0 and self.prevthrottle != 0:
+						self.prevthrottle = self.throttle
+					self.throttle = 0 # make throttle 0
+				elif car_speed < 2:
 					self.throttle = self.fct[0] # Base throttle
 				elif self.throttle < 0.49: # Limit max throttle
 					self.throttle += self.fct[1] # increment throttle
 			else:
+
 				if diff_radius < 20 and self.throttle > 0.1:
 					self.throttle -= self.fct[2] # decrement throttle when close to stop & go, min 0.1
 		else: # End condition
@@ -126,7 +137,7 @@ class Control: # Control class for modular code
 
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
-		rospy.loginfo("Collsion is %s", self.crash)
+		#rospy.loginfo("Collsion is %s", self.crash)
 		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
 			self.gear = "reverse"
 			self.throttle = 0.5
@@ -199,11 +210,11 @@ class Control: # Control class for modular code
 			self.steering_data.data = self.steering 
 			self.pub_steering.publish(self.steering_data)
 
-		rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
+		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
 	def collision_handler(self, msg):
 		self.crash = True
-		rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
+		#rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
@@ -228,7 +239,7 @@ class Control: # Control class for modular code
 			t = rospy.get_time() # Get current time in seconds
 			if not self.start: # Start condition
 				self.start = True
-				rospy.loginfo("Starting control loop(py) with polling period: %.2fs" %(self.poll_period)) # Report set period
+				#rospy.loginfo("Starting control loop(py) with polling period: %.2fs" %(self.poll_period)) # Report set period
 				dt = 0
 				self.callback(self.t_tot) # Callback at t = 0
 			else:
@@ -288,6 +299,8 @@ class Control: # Control class for modular code
 		#   12 - sharp corner turn
 		#   13 - sharp sharp corner turn
 		#   14 - sharp sharp sharp corner turn
+		#   15 - straight zero throttle
+
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
 			# Config 1 - CARLA simple throttle, turn and stop
@@ -321,11 +334,11 @@ class Control: # Control class for modular code
 
 				[189.83,-58.67],  	#5
 
-				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
+				[180.1,-58.67],[172.4,-63.7],[168.5,-79.8],[166.5,-80.8],[167.3,-88.8],[166.8,-94.3],[165.7, -101.9],[163.2, -107.7],
 				
 				[161.58,-111.42],	#6
 				
-				[159.8,-114.2], [156.9,-117.4], [149.2, -124] ,[143.6, -126.8],[136.6, -128.8],
+				[160.2,-113.2], [156.9,-116.2], [149.2, -123.0] ,[143.6, -125.6],[136.6, -127.6],
 				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
 				[17.1,-130.7],  	#7
 
@@ -386,7 +399,7 @@ class Control: # Control class for modular code
 
 				1,
 				
-				1,1,12,13,13,13,14,13,3,   #modified 3
+				1,1,12,13,13,13,12,13,3,   #modified 3
 
 				4, 		#4
 
@@ -394,11 +407,11 @@ class Control: # Control class for modular code
 
 				4, 		#5
 
-				1,2,3,1,2,2,#11 
+				1,2,3,15,13,12,12,12,
 
-				1, 	#6
+				12, 	#6
 
-				12,12,12, 12, 12, 
+				12,2,2, 2, 2, 
 				2,3,0,0,#modified 7
 				4, 		#7
 
