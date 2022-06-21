@@ -55,7 +55,7 @@ catkin_install_python(
     scripts/car_control_master.py
     scripts/efficiency.py
     scripts/score.py
-    scripts/test.py
+
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY
