@@ -137,6 +137,11 @@ class Control: # Control class for modular code
 
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
+
+
+		if self.goal_type in [1,2,3,8,9,10]:
+			gear = self.corner(output, car_speed)
+
 		#rospy.loginfo("Collsion is %s", self.crash)
 		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
 			self.gear = "reverse"
@@ -212,9 +217,43 @@ class Control: # Control class for modular code
 
 		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
+	def corner(self, output, car_speed):
+		gear = "forward"
+		if self.goal_type in [8,9,10]: # Reverse into corner
+			gear = "reverse"
+
+		# Steering control
+		if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
+			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
+			omega = 1 * a # Scalar constant to define angular velocity omega
+			if omega != 0:
+				# Apply Ackermann's steering
+				r = car_speed / -omega
+				self.steering = math.atan(self.b_wheel_base / r)
+
+		if abs(self.steering) > 0.6: # Limit max steering
+			self.steering = 0.6*abs(self.steering) / self.steering
+
+		# Throttle control
+		if car_speed < 0.5 :  # Low speed condition
+			self.throttle = 0.5
+
+		elif not self.stop:  # not at final goal
+			self.move = True # Flag when car starts moving
+			if car_speed < 2:
+				self.throttle = self.fct[0] # Base throttle
+			elif self.throttle < 0.49: # Limit max throttle
+				self.throttle += self.fct[1] # increment throttle
+
+		else: # End condition
+			self.throttle = 0
+		
+		return gear
+
 	def collision_handler(self, msg):
 		self.crash = True
 		#rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
+
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
