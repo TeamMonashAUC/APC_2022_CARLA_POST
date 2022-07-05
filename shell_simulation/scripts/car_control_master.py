@@ -140,7 +140,9 @@ class Control: # Control class for modular code
 
 
 		if self.goal_type in [1,2,3,8,9,10]:
+			rospy.loginfo("Approaching goal: [%.2f, %.2f], Goal type: %d", self.goal_x, self.goal_y, self.goal_type)
 			gear = self.corner(output, car_speed)
+			rospy.loginfo("Finished running corner method")
 
 		#rospy.loginfo("Collsion is %s", self.crash)
 		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
@@ -218,6 +220,7 @@ class Control: # Control class for modular code
 		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
 	def corner(self, output, car_speed):
+		rospy.loginfo("Running corner method...")
 		gear = "forward"
 		if self.goal_type in [8,9,10]: # Reverse into corner
 			gear = "reverse"
@@ -248,6 +251,8 @@ class Control: # Control class for modular code
 		else: # End condition
 			self.throttle = 0
 		
+		rospy.loginfo("Gear = %s, Steering = %f, Throttle = %f", gear, self.steering, self.throttle)
+		rospy.loginfo("Exiting corner method...")
 		return gear
 
 	def collision_handler(self, msg):
@@ -297,7 +302,7 @@ class Control: # Control class for modular code
 				diff = math.sqrt((self.car_x - self.goal_x)**2 + (self.car_y - self.goal_y)**2 + self.car_z**2) # Radial distance to goal
 				if diff < rad: # Car reaches within radius defined above
 					# Delete goal and its type
-					rospy.loginfo('Passed point: [%.2f,%.2f]',self.pose_seq[0][0],self.pose_seq[0][1])
+					rospy.loginfo('Passed point: [%.2f, %.2f], Goal type: %d', self.pose_seq[0][0], self.pose_seq[0][1], self.pose_types[0])
 					self.pose_seq.pop(0)
 					self.pose_types.pop(0)
 					self.arrSize -= 1
