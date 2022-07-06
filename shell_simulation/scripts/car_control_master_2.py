@@ -310,7 +310,7 @@ class Control: # Control class for modular code
 		elif self.config == 2:
 			# Config 2 - Efficiency (< Distance, < Time), (~1520 m, ~162s)
 			
-			
+			"""
 			self.pose_seq = [
 				[-77.9,-17.59],
 				
@@ -395,83 +395,7 @@ class Control: # Control class for modular code
 				
 				
 				]
-			
-			"""
-			self.pose_seq = [
-				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
-				
-				[161.58,-111.42],	#6
-				
-				[159.8,-114.2], [156.9,-117.4], [149.2, -124] ,[143.6, -126.8],[136.6, -128.8],
-				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
-				[17.1,-130.7],  	#7
-
-				[7.9,-130.4],[-1.9,-134.3],[-9,-146.4], 
-
-				# TO CHANGE : 1,13,3,4
-				#[-9.35,-168.07], 	#8
-				#[-8.0,-172.4],[-5.1,-185.0],[-6.2,-191.2],[-13, -194.8] ,[-18.4, -195.3],[-34.6,-193.8],#modified  1
-				   
-				#[-44.25,-193.47],	#9
-				# UP TO THIS PART ^
-				
-				# AMMENDED VERSION (It's Good)
-				[-9.0,-191.3], #8
-				[-16.2,-193.8], [-29.3,-193.6],
-
-				[-36.9,-193.6], #9
-				# UP TO THIS PART ^
-
-				# TO CHANGE : 
-				#[-44.25,-193.47],[-54.1,-194.7],[-66,-185.4],[-73.3,-176],[-78,-149.5],
-				
-				#[-78,-149.5],[-83,-137],[-99,-133],    [-117.7,-133.2],[-137.4,-126.8],[-145.3,-105.6],
-				
-				#[-145.7,-87.2],
-				#[-145.75,-75.7],	#10
-
-				# AMMENDED VERSION (It's Good)
-				[-44.2,-193.2], [-51.1,-192], [-56.1,-189.8], [-62.1,-185.9], [-67.2,-179.9], [-71.5,-171.7], [-74.3,-157.8], [-74.4,-147.5],
-
-				[-74.4,-145.1], [-96.6,-129.3], [-104.3,-129.4],	[-115.0,-129.6],[-128.8,-128.2],[-135.7,-123.6],[-141.7,-109.1],[-141.8,-99.1],
-
-				[-142.0,-92.4], [-142.1,-70.4],
-				[-141.7,-65.0],
-
-			]
-
-			self.pose_types = [
-				1,2,3,1,2,2,#11 
-
-				1, 	#6
-
-				12,12,12, 12, 12, 
-				2,3,0,0,#modified 7
-				4, 		#7
-
-				1,13,3,
-
-				# TO CHANGE : 1,12,3,4
-				#12, 		#8
-				#12,14,13,13,12,3,  #modified 1
-
-				#4, 		#9
-				# UP TO THIS PART ^
-
-				# AMMENDED VERSION (It's Good)
-				1,	#8
-				14,3,
-				4,	#9
-				# UP TO THIS PART ^
-
-				# TO CHANGE : 
-				1,2,2,2,2,2,2,3,
-
-				1,2,3,  1,2,2,2,3,
-				
-				0,0,
-				4,		#10
-			]
+				"""
 			"""
 			self.pose_types = [
 				0,
@@ -551,7 +475,7 @@ class Control: # Control class for modular code
 				7		#15
 				] # 1-11
 
-
+"""
 		elif self.config == 3:
 			# ze xin trial
 			# Config 3 - Checking
@@ -592,6 +516,9 @@ class Control: # Control class for modular code
 		self.goal_y = self.pose_seq[0][1]
 		self.goal_type = self.pose_types[0]
 
+	def split(self, coord, types):
+		self.pose_seq.append[coord]
+		self.pose_types.append[types]
 # Main function
 def listener():
 	# Initialize control node
@@ -603,6 +530,10 @@ def listener():
 	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, control.odom)
 
 	rospy.loginfo("Initialized control node")
+	control.split( [-77.9,-17.59], 0)
+	control.split( [-74.8,-13.8], 1)
+	control.split( [-71.5,-3.2], 2)
+	control.split( [-64.2,-0.8], 3)
 	control.getGoals()
 
 	while not rospy.is_shutdown():
