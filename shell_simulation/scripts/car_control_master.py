@@ -304,7 +304,8 @@ class Control: # Control class for modular code
 		#   13 - sharp sharp corner turn
 		#   14 - sharp sharp sharp corner turn
 		#   15 - straight zero throttle
-
+		self.pose_seq =[]
+		self.pose_types =[]
 		self.split( [-77.9,-17.59], 0)
 		self.split( [-74.8,-13.8], 1)
 		self.split( [-71.5,-3.2], 2)
