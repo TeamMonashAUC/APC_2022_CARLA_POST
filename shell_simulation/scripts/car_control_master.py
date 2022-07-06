@@ -278,8 +278,8 @@ class Control: # Control class for modular code
 
 
 	def split(self, coord, types):
-		self.pose_seq.append[coord]
-		self.pose_types.append[types]
+		self.pose_seq.append(coord)
+		self.pose_types.append(types)
 	# Class method that allocates array of coordinates and goal types
 	def getGoals(self):
 		rospy.loginfo("Loading goals for configuration: %d" %(self.config))
