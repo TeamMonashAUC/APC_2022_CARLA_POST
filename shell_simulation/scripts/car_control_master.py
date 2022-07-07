@@ -277,7 +277,7 @@ class Control: # Control class for modular code
 			return
 
 
-	def split(self, coord, types):
+	def store(self, coord, types):
 		self.pose_seq.append(coord)
 		self.pose_types.append(types)
 	# Class method that allocates array of coordinates and goal types
@@ -306,10 +306,10 @@ class Control: # Control class for modular code
 		#   15 - straight zero throttle
 		self.pose_seq =[]
 		self.pose_types =[]
-		self.split( [-77.9,-17.59], 0)
-		self.split( [-74.8,-13.8], 1)
-		self.split( [-71.5,-3.2], 2)
-		self.split( [-64.2,-0.8], 3)
+		self.store( [-77.9,-17.59], 0)
+		self.store( [-74.8,-13.8], 1)
+		self.store( [-71.5,-3.2], 2)
+		self.store( [-64.2,-0.8], 3)
 		# Initialize goal coordinates, array size and goal type
 		self.arrSize = len(self.pose_types)
 		self.goal_x = self.pose_seq[0][0]
