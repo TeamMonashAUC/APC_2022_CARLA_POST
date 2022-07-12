@@ -405,6 +405,10 @@ class Control: # Control class for modular code
 		else:
 			return
 
+
+	def store(self, coord, types):
+		self.pose_seq.append(coord)
+		self.pose_types.append(types)
 	# Class method that allocates array of coordinates and goal types
 	def getGoals(self):
 		rospy.loginfo("Loading goals for configuration: %d" %(self.config))
@@ -426,6 +430,7 @@ class Control: # Control class for modular code
 		#   13 - sharp sharp corner turn
 		#   14 - sharp sharp sharp corner turn
 		#   15 - straight zero throttle
+<<<<<<< HEAD
 
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
@@ -724,12 +729,20 @@ class Control: # Control class for modular code
 			self.pose_seq = [[0,0], [34.5, 0],[44,-30], [44,-115],[29,-124],[-0.5,-128],[37,-130],[42,-143],[44,-198],[43, -244],[29, -252.5],[0, -256],[-76,-255],[-81.5,-241],[-84.5,-197],[-84,-246],[-99,-255],[-114,-255],[-135.5,-255.5],[-178,-253],[-196.5,-242.5],[-207,-219],[-211.5,-198],[-210.5,-140],[-197,-133],[-135,-128],[-205,-127],[-210,-115],[-212,-98],[-212,-74],[-211,-60],[-199,-49],[-135,-48],[-92,-47.5],[-86,-30.5],[-86,-19],[-86,-11],[-98,-4],[-135,1]]
 			self.pose_types = [0,8,9,8,9,11,1,2,4,1,2,4,1,2,5,8,9,10,6,8,9,10,6,8,9,11,1,2,3,4,1,2,4,1,2,3,1,2,7]
 
+=======
+		self.pose_seq =[]
+		self.pose_types =[]
+		self.store( [-77.9,-17.59], 0)
+		self.store( [-74.8,-13.8], 1)
+		self.store( [-71.5,-3.2], 2)
+		self.store( [-64.2,-0.8], 3)
+>>>>>>> origin/Split
 		# Initialize goal coordinates, array size and goal type
 		self.arrSize = len(self.pose_types)
 		self.goal_x = self.pose_seq[0][0]
 		self.goal_y = self.pose_seq[0][1]
 		self.goal_type = self.pose_types[0]
-
+		
 # Main function
 def listener():
 	# Initialize control node
