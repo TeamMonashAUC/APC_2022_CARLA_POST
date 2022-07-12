@@ -27,7 +27,7 @@ class Control: # Control class for modular code
 
 		# Main parameters
 		self.poll_period = 0.2 # Period of calling callback() function
-		self.config = 2 # Goal sequence configuration
+		self.config = 1 # Goal sequence configuration
 
 		# Initialize method attributes (variables global to class)
 		self.car_x = self.car_y = self.car_z = self.yaw = self.v_x = self.v_y = self.v_z = self.t_poll = self.t_tot = self.t0 = self.throttle = self.steering = self.prev_gas = self.stop_cal_t = 0
@@ -38,7 +38,7 @@ class Control: # Control class for modular code
 		self.recover = False
 		self.cnt = 0
 		self.goal15check = False
-		self.prevthrottle = 0.5
+		self.prevthrottle = 0.5 
 
 		# Initialize publishers and messages
 		self.pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
@@ -72,7 +72,6 @@ class Control: # Control class for modular code
 			except:
 				rospy.sleep(0.001)
 				continue
-		
 
 		# Calculate velocity as a magnitude of cartesian vectors
 		car_speed = math.sqrt(math.pow(self.v_x, 2) + math.pow(self.v_y, 2) + math.pow(self.v_z, 2))
@@ -87,62 +86,77 @@ class Control: # Control class for modular code
 			self.stop_cal_t = 0
 			self.prev_goal_type = self.goal_type
 
+		rospy.loginfo("Test 1")
+		rospy.loginfo("Current Round Goal type: %d", self.goal_type)
 		# Steering control
-		if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
+		# if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
 
-			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
-			omega = 1 * a # Scalar constant to define angular velocity omega
-			if self.goal_type == 12:  #sharp corner turn
-				omega = 2.5 * a
-			elif self.goal_type == 13:  #sharp sharp corner turn
-				omega = 5 * a
-			elif self.goal_type == 14:  #sharp sharp sharp corner turn
-				omega = 8 * a
-			if omega != 0:
-				# Apply Ackermann's steering
-				r = car_speed / -omega
-				self.steering = math.atan(self.b_wheel_base / r)
+		# 	a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
+		# 	omega = 1 * a # Scalar constant to define angular velocity omega
+		# 	if self.goal_type == 12:  #sharp corner turn
+		# 		omega = 2.5 * a
+		# 	elif self.goal_type == 13:  #sharp sharp corner turn
+		# 		omega = 5 * a
+		# 	elif self.goal_type == 14:  #sharp sharp sharp corner turn
+		# 		omega = 8 * a
+		# 	if omega != 0:
+		# 		Apply Ackermann's steering
+		# 		r = car_speed / -omega
+		# 		self.steering = math.atan(self.b_wheel_base / r)
 
-		if self.goal_type in [6,8,9,10,11]: # Reverse goal types
-			gear = "reverse"
+		# if self.goal_type in [6,8,9,10,11]: # Reverse goal types
+		# 	gear = "reverse"
 
-		if self.goal_type == 7 and diff_radius < 3: # End condition
-			self.stop = True
-			self.steering = 0
+		# if self.goal_type == 7 and diff_radius < 3: # End condition
+		# 	self.stop = True
+		# 	self.steering = 0
 
 		# Throttle control
-		if self.goal15check == True:
-			self.throttle = self.prevthrottle
-			self.goal15check = False
-		if car_speed < 0.5 :  # Low speed condition
-			self.throttle = 0.5
-		elif not self.stop:  # not at final goal
-			self.move = True # Flag when car starts moving
-			if self.goal_type not in [5, 11]: # Not at stop & go goal
-				if self.goal_type == 15:
-					self.goal15check = True
-					if self.throttle != 0 and self.prevthrottle != 0:
-						self.prevthrottle = self.throttle
-					self.throttle = 0 # make throttle 0
-				elif car_speed < 2:
-					self.throttle = self.fct[0] # Base throttle
-				elif self.throttle < 0.49: # Limit max throttle
-					self.throttle += self.fct[1] # increment throttle
-			else:
+		# if self.goal15check == True:
+		# 	self.throttle = self.prevthrottle
+		# 	self.goal15check = False
+		# if car_speed < 0.5 :  # Low speed condition
+		# 	self.throttle = 0.5
+		# elif not self.stop:  # not at final goal
+		# 	self.move = True # Flag when car starts moving
+		# 	if self.goal_type not in [5, 11]: # Not at stop & go goal
+		# 		if self.goal_type == 15:
+		# 			self.goal15check = True
+		# 			if self.throttle != 0 and self.prevthrottle != 0:
+		# 				self.prevthrottle = self.throttle
+		# 			self.throttle = 0 # make throttle 0
+		# 		elif car_speed < 2:
+		# 			self.throttle = self.fct[0] # Base throttle
+		# 		elif self.throttle < 0.49: # Limit max throttle
+		# 			self.throttle += self.fct[1] # increment throttle
+		# 	else:
 
-				if diff_radius < 20 and self.throttle > 0.1:
-					self.throttle -= self.fct[2] # decrement throttle when close to stop & go, min 0.1
-		else: # End condition
-			self.throttle = 0
+		# 		if diff_radius < 20 and self.throttle > 0.1:
+		# 			self.throttle -= self.fct[2] # decrement throttle when close to stop & go, min 0.1
+		# else: # End condition
+		# 	self.throttle = 0
 
-		if abs(self.steering) > 0.6: # Limit max steering
-			self.steering = 0.6*abs(self.steering) / self.steering
+		# if abs(self.steering) > 0.6: # Limit max steering
+		# 	self.steering = 0.6*abs(self.steering) / self.steering
 
 
 		if self.goal_type in [1,2,3,8,9,10]:
 			rospy.loginfo("Approaching goal: [%.2f, %.2f], Goal type: %d", self.goal_x, self.goal_y, self.goal_type)
 			gear = self.corner(output, car_speed)
 			rospy.loginfo("Finished running corner method")
+
+		if self.goal_type  == 7: #final goal
+			rospy.loginfo("Approaching goal: [%.2f, %.2f], Goal type: %d", self.goal_x, self.goal_y, self.goal_type)
+			gear = self.finalgoal(output, car_speed, diff_radius)
+			rospy.loginfo("Finished running Final Goal")
+
+		if self.goal_type in [0, 6]: #straight
+			rospy.loginfo("Test 2")
+			rospy.loginfo("Approaching goal: [%.2f, %.2f], Goal type: %d", self.goal_x, self.goal_y, self.goal_type)
+			gear = self.straight(output, car_speed)
+			rospy.loginfo("Finished running Straight")
+
+
 
 		#rospy.loginfo("Collsion is %s", self.crash)
 		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
@@ -207,6 +221,9 @@ class Control: # Control class for modular code
 					self.gear_data.data = gear
 					self.pub_gear.publish(self.gear_data)
 					self.prev_gear = gear # update previous gear
+					# self.throttle_data.data = self.throttle
+					# self.pub_throttle.publish(self.throttle_data)
+					
 
 				if self.prev_gas != self.throttle:
 					self.throttle_data.data = self.throttle
@@ -251,6 +268,10 @@ class Control: # Control class for modular code
 		else: # End condition
 			self.throttle = 0
 		
+		if abs(self.steering) > 0.6: # Limit max steering
+			self.steering = 0.6*abs(self.steering) / self.steering
+
+		
 		rospy.loginfo("Gear = %s, Steering = %f, Throttle = %f", gear, self.steering, self.throttle)
 		rospy.loginfo("Exiting corner method...")
 		return gear
@@ -259,6 +280,69 @@ class Control: # Control class for modular code
 		self.crash = True
 		#rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
 
+	def straight(self, output, car_speed):
+		rospy.loginfo("Test 3")
+		if self.goal_type == 0:
+			rospy.loginfo("move forward in straight")
+			gear = "forward"
+		elif self.goal_type == 6:
+			rospy.loginfo("Test 4")
+			rospy.loginfo("move reverse in straight")
+			gear = "reverse"
+
+		# Steering control
+		if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
+			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
+			omega = 1 * a # Scalar constant to define angular velocity omega
+			if omega != 0:
+				# Apply Ackermann's steering
+				r = car_speed / -omega
+				self.steering = math.atan(self.b_wheel_base / r)
+		# Throttle control
+		if car_speed < 0.5 :  # Low speed condition
+			self.throttle = 0.5
+
+		elif not self.stop:  # not at final goal
+			self.move = True # Flag when car starts moving
+			if car_speed < 2:
+				self.throttle = self.fct[0] # Base throttle
+			elif self.throttle < 0.49: # Limit max throttle
+				self.throttle += self.fct[1] # increment throttle
+
+		else: # End condition
+			self.throttle = 0
+		if abs(self.steering) > 0.6: # Limit max steering
+			self.steering = 0.6*abs(self.steering) / self.steering
+
+		
+		rospy.loginfo("Gear = %s, Throttle = %f", gear, self.throttle)
+		rospy.loginfo("Exiting straight method...")
+		return gear
+
+	def finalgoal(self, output, car_speed, diff_radius):
+		gear = self.prev_gear
+		rospy.loginfo("Running final method...")		
+		# Steering Control
+		if car_speed > 1 and (self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0): # Settling time = 10 x poll_period
+			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
+			omega = 1 * a # Scalar constant to define angular velocity omega
+			if omega != 0:
+				# Apply Ackermann's steering
+				r = car_speed / -omega
+				self.steering = math.atan(self.b_wheel_base / r)
+		if self.goal_type == 7 and diff_radius < 3: # End condition
+			self.stop = True
+			self.steering = 0
+
+		# Throttle control
+		if car_speed < 0.5 :  # Low speed condition
+			self.throttle = 0.5
+		else: # End condition
+			self.throttle = 0
+		if abs(self.steering) > 0.6: # Limit max steering
+			self.steering = 0.6*abs(self.steering) / self.steering
+
+		return gear
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
@@ -316,6 +400,7 @@ class Control: # Control class for modular code
 			t_err = abs(self.t_poll - self.poll_period)/self.poll_period; # Calculate error
 			if (t_err < 0.05 or self.t_poll > self.poll_period): # callback when within 5% precision or when poll elapsed time exceeds defined period
 				self.t_poll = 0 # Reset callback elapsed time
+				rospy.loginfo("Test line 395")
 				self.callback(self.t_tot)
 		else:
 			return
@@ -336,10 +421,7 @@ class Control: # Control class for modular code
         #   6 - straight goal
         #   8 - goal before corner
         #   9 - corner goal
-        #   10 - goal after corner
-		#   11 - reverse variant of 3-point D
-
-		#   Special add-ons for 2022 APC
+        #   10 - goal after cornerrospy.loginfo("Test 2")
 		#   12 - sharp corner turn
 		#   13 - sharp sharp corner turn
 		#   14 - sharp sharp sharp corner turn
@@ -347,10 +429,28 @@ class Control: # Control class for modular code
 
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
-			# Config 1 - CARLA simple throttle, turn and stop
-			self.pose_seq = [[-77.9,-17.59],[-52.68,-0.91]]
+			# Test cases
+			# 1 Forward and Backward straight
+			# self.pose_seq = [[-77.9,-17.59],[-77.9,13.0],[-77.9,-10], [-77.9,-17.59]]
+			# # The points I set- [Origin, Straight goal, straight goal before corner, corner goal, exit corner goal, stop goal]
+			# self.pose_types = [0,0,6,7]
+			
+			# 2 Forward and Reverse corner
+			self.pose_seq = [[-77.9,-17.59],
+				
+							[-74.8,-13.8],[-71.5,-3.2],[-64.2,-0.8],
+							
+							[-64.2,-0.8],[-71.5,-3.2],[-74.8,-13.8],
+
+							[-77.9,-17.59]]
+
+
+
 			# The points I set- [Origin, Straight goal, straight goal before corner, corner goal, exit corner goal, stop goal]
-			self.pose_types = [0,7] 
+			self.pose_types = [0,
+							   1,2,3,
+							   8,9,10,
+							   7] 
 		elif self.config == 2:
 			# Config 2 - Efficiency (< Distance, < Time), (~1520 m, ~162s)
 			
