@@ -8,14 +8,14 @@ import tf2_ros
 import tf2_geometry_msgs.tf2_geometry_msgs
 from carla_msgs.msg import CarlaCollisionEvent
 
-# control_master_simple.py
-# Author(s): Jayson Teh, Navaneeth Nair, Zi Yu, Khai Hoe
-# Documented by: Navaneeth Nair R Dhileepan
+# car_control_master.py
+# Author(s): Team Monash SEM Intelligent Department
+# Documented by: Team Monash SEM Intelligent Department
 # School: Monash University Malaysia
-# Description: - Python script that controls the PhysXCar in AirSim from start to finish
+# Description: - Python script that controls the car in Simulator from start to finish
 #                by subscribing to the car's odometry data, calculating the required throttle,
 #                gear & steering values based on pre-defined goal sequences and goal types,
-#                and publish these values to AirSim to move the car at a defined period.
+#                and publish these values to the simulator to move the car at a defined period.
 #              - This _simple variant simplifies the throttle to basic increments and decrements for low speeds (<= 5m/s)
 
 class Control: # Control class for modular code
@@ -53,6 +53,20 @@ class Control: # Control class for modular code
 		self.listener = tf2_ros.TransformListener(self.tf2_buffer)
 
 	# Class method that performs the calculation for controlling the car, total time elapsed from controller start is passed
+	# Method Name: callback
+
+	# Input :
+	# 1) time: The total time elapsed from start
+
+	# Output :
+	# 1) None
+
+	# Function Explanation :
+	# Based on the current data, make decision and publish data to topics of the actuators
+	# Decide when to stop finding for next goal
+	# Transform goals from map frame to car frame
+	# Calculate velocity and radial distance from car to goal
+	# Call necessary functions/methods to calculate steering, throttle and brake value required based on current goal type
 	def callback(self, time):
 		gear = "forward" # Initialize gear to forward
 		if self.stop and not self.end: # Exit control when reached final goal
@@ -236,6 +250,23 @@ class Control: # Control class for modular code
 
 		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
+
+
+	# Method Name: corner
+
+	# Input :
+	# 1) output: The target coordinate to reach towards with reference to the car frame
+	# 2) car_speed: The current speed of the car
+
+	# Output :
+	# 1) gear: what type of gear is used in given condition
+
+	# Function Explanation :
+	# The codes that will be run when a corner turning is wanted to be performed
+	# These includes:
+	# Steering control
+	# Throttle control
+	# Gear control
 	def corner(self, output, car_speed):
 		rospy.loginfo("Running corner method...")
 		gear = "forward"
@@ -268,8 +299,6 @@ class Control: # Control class for modular code
 		else: # End condition
 			self.throttle = 0
 		
-		if abs(self.steering) > 0.6: # Limit max steering
-			self.steering = 0.6*abs(self.steering) / self.steering
 
 		
 		rospy.loginfo("Gear = %s, Steering = %f, Throttle = %f", gear, self.steering, self.throttle)
@@ -280,6 +309,22 @@ class Control: # Control class for modular code
 		self.crash = True
 		#rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
 
+
+	# Method Name: straight
+
+	# Input :
+	# 1) output: The target coordinate to reach towards with reference to the car frame
+	# 2) car_speed: The current speed of the car
+
+	# Output :
+	# 1) gear: what type of gear is used in given condition
+
+	# Function Explanation :
+	# The codes that will be run when a straight car movement is desired
+	# These includes:
+	# Steering control
+	# Throttle control
+	# Gear control
 	def straight(self, output, car_speed):
 		rospy.loginfo("Test 3")
 		if self.goal_type == 0:
@@ -319,6 +364,22 @@ class Control: # Control class for modular code
 		rospy.loginfo("Exiting straight method...")
 		return gear
 
+	# Method Name: finalgoal
+
+	# Input :
+	# 1) output: The target coordinate to reach towards with reference to the car frame
+	# 2) car_speed: The current speed of the car
+	# 3) diff_radius: The radial distance between the center of the car and the target coordinate
+
+	# Output :
+	# 1) gear: what type of gear is used in given condition
+
+	# Function Explanation :
+	# The codes that will be run when the car reach final goal and want to stop and shutdown
+	# These includes:
+	# Steering control
+	# Throttle control
+	# Gear control
 	def finalgoal(self, output, car_speed, diff_radius):
 		gear = self.prev_gear
 		rospy.loginfo("Running final method...")		
@@ -343,7 +404,21 @@ class Control: # Control class for modular code
 			self.steering = 0.6*abs(self.steering) / self.steering
 
 		return gear
-	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
+	
+	# Method Name: odom
+
+	# Input:
+	# 1) msg : the odometry data (coordinates in reference to map frame) of current car position  
+
+	# Output :
+	# None
+
+	# Function Explanation :
+	# Class method that gets called when odometry message is published to /odom by ROS and simulator bridge, and passed to msg variable
+	# a) extracts current position and velocity of the car
+	# b) extracts the goal coordinates from the input 
+	# c) use timer to calculate condition for running callback() method
+	# d) update the next goal in the array sequence of input goals only when certain condition is satisfied
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
 			# Get cartesian positions
@@ -400,16 +475,41 @@ class Control: # Control class for modular code
 			t_err = abs(self.t_poll - self.poll_period)/self.poll_period; # Calculate error
 			if (t_err < 0.05 or self.t_poll > self.poll_period): # callback when within 5% precision or when poll elapsed time exceeds defined period
 				self.t_poll = 0 # Reset callback elapsed time
-				rospy.loginfo("Test line 395")
 				self.callback(self.t_tot)
 		else:
 			return
 
 
+	# Method Name: store
+
+	# Input :
+	# 1) coord: The target coordinate to reach towards with reference to the map frame
+	# 2) types: The type of car movement 
+
+	# Output :
+	# None
+
+	# Function Explanation :
+	# Use the input type of car movement(types) to move to wanted destination coordinate(coord)
+	# Adding new data to 2 arrays, pose_seq and pose_types
+	# pose_seq is array for coordinates
+	# pose_types is array of goal types 
 	def store(self, coord, types):
 		self.pose_seq.append(coord)
 		self.pose_types.append(types)
-	# Class method that allocates array of coordinates and goal types
+
+
+
+	# Method Name: getGoals
+
+	# Input :
+	# None
+
+	# Output :
+	# None
+
+	# Function Explanation :
+	# For user to input goal coordinates and respective goal types by calling the function store 
 	def getGoals(self):
 		rospy.loginfo("Loading goals for configuration: %d" %(self.config))
         # The goal types are described using numbers and are represented as follow
@@ -452,6 +552,20 @@ class Control: # Control class for modular code
 		self.goal_type = self.pose_types[0]
 		
 # Main function
+	# Method Name: listener
+
+	# Input :
+	# None
+
+	# Output :
+	# None
+
+	# Function Explanation :
+	# Initialize a ROS node for subscribing and publishing topics
+	# Subscribe to wanted ROS topics to collect required data:
+	# a) Odometry
+	# Keeps the neccessary connection for the the functions above until user cancel it
+	# Or there is no neccssary topics or data published by the topics
 def listener():
 	# Initialize control node
 	rospy.init_node('cmd_car_control')
@@ -478,8 +592,13 @@ def listener():
 	if data != None:
 		rospy.loginfo("Starting control!")
 		rospy.spin() # Block the node from exiting
+		rospy.loginfo("Ending!!!!!!!!!")
 	else:
 		rospy.loginfo("No odom data!")
+
+
+
+
 
 if __name__ == '__main__':
 	listener() # Call listener function when script is executed
