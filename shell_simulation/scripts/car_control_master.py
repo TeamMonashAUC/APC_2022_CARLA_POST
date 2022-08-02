@@ -27,10 +27,10 @@ class Control: # Control class for modular code
 
 		# Main parameters
 		self.poll_period = 0.2 # Period of calling callback() function
-		self.config = 2 # Goal sequence configuration
+		self.config = 1 # Goal sequence configuration
 
 		# Initialize method attributes (variables global to class)
-		self.car_x = self.car_y = self.car_z = self.yaw = self.v_x = self.v_y = self.v_z = self.t_poll = self.t_tot = self.t0 = self.throttle = self.steering = self.prev_gas = self.stop_cal_t = 0
+		self.car_x = self.car_y = self.car_z = self.yaw = self.v_x = self.v_y = self.v_z = self.t_poll = self.t_tot = self.t0 = self.throttle = self.steering = self.brake = self.prev_gas = self.stop_cal_t = 0
 		self.stop = self.end = self.start = self.move = False
 		self.prev_gear = "forward"
 		self.prev_goal_type = self.goal_type = -1
@@ -39,12 +39,14 @@ class Control: # Control class for modular code
 		self.cnt = 0
 		self.goal15check = False
 		self.prevthrottle = 0.5 
+		self.prevbrake = 0 
 
 		# Initialize publishers and messages
 		self.pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
 		self.pub_throttle = rospy.Publisher("/throttle_command", Float64, queue_size = 1)
 		self.pub_steering = rospy.Publisher("/steering_command", Float64, queue_size = 1)
-		self.throttle_data = self.steering_data = Float64()
+		self.pub_brake = rospy.Publisher("/brake_command", Float64, queue_size = 1)
+		self.throttle_data = self.steering_data = self.brake_data =  Float64()
 		self.gear_data = String()
 
 		# Goal point transformer
@@ -222,11 +224,11 @@ class Control: # Control class for modular code
 			self.pub_steering.publish(self.steering)
 		### Publish controls ###
 		else:
-			if not self.move: # Always publish gear & throttle at the start to prevent synching issues
+			if not self.move: # Always publish gear at the start to prevent synching issues
 				self.gear_data.data = gear
 				self.pub_gear.publish(self.gear_data)
-				self.throttle_data.data = self.throttle
-				self.pub_throttle.publish(self.throttle_data)
+				# self.throttle_data.data = self.throttle
+				# self.pub_throttle.publish(self.throttle_data)
 
 			else: # Publish gear and throttle only during changes
 				if gear != self.prev_gear: # Switching between forward and reverse
@@ -239,10 +241,10 @@ class Control: # Control class for modular code
 					# self.pub_throttle.publish(self.throttle_data)
 					
 
-				if self.prev_gas != self.throttle:
-					self.throttle_data.data = self.throttle
-					self.pub_throttle.publish(self.throttle_data)
-					self.prev_gas = self.throttle # update previous throttle
+				# if self.prev_gas != self.throttle:
+				# 	self.throttle_data.data = self.throttle
+				# 	self.pub_throttle.publish(self.throttle_data)
+				# 	self.prev_gas = self.throttle # update previous throttle
 
 		if self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0: # Stop publishing steering when reached steady state
 			self.steering_data.data = self.steering 
@@ -250,7 +252,39 @@ class Control: # Control class for modular code
 
 		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
+	# Method Name: publishThrotBrake
 
+	# Input :
+	# 1) throttle: A throttle value from min 0 to max 1 (from no throttle to maximum throttle)
+	# 2) brake: A brake value from min 0 to max 1 (from no throttle to maximum throttle)
+
+	# Output :
+	# None
+
+	# Function Explanation :
+	# To Publish Throttle and Brake to the car
+	def publishThrotBrake(self, throttle = 0, brake = 0):
+		if not self.move: # Always publish brake & throttle at the start to prevent synching issues
+				self.brake_data.data = self.brake = brake
+				self.pub_brake.publish(self.brake_data)
+				self.throttle_data.data = self.throttle
+				self.pub_throttle.publish(self.throttle_data)
+
+		else: # Publish brake and throttle only during changes
+			if self.prevbrake != self.brake: # Switching between forward and reverse
+				# self.throttle = 1 # 'Brake' the car by counter-throttling
+				# self.steering = 0 # Reset steering
+				self.brake_data.data = self.prevbrake = self.brake = brake
+				self.pub_brake.publish(self.brake_data)
+						
+						# update previous gear
+						# self.throttle_data.data = self.throttle
+						# self.pub_throttle.publish(self.throttle_data)
+					
+			if self.prev_gas != self.throttle:
+				self.throttle_data.data = self.throttle = throttle
+				self.pub_throttle.publish(self.throttle_data)
+				self.prev_gas = self.throttle # update previous throttle
 
 	# Method Name: corner
 
@@ -300,7 +334,7 @@ class Control: # Control class for modular code
 			self.throttle = 0
 		
 
-		
+		self.publishThrotBrake(self.throttle)
 		rospy.loginfo("Gear = %s, Steering = %f, Throttle = %f", gear, self.steering, self.throttle)
 		rospy.loginfo("Exiting corner method...")
 		return gear
@@ -359,7 +393,7 @@ class Control: # Control class for modular code
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
 
-		
+		self.publishThrotBrake(self.throttle)
 		rospy.loginfo("Gear = %s, Throttle = %f", gear, self.throttle)
 		rospy.loginfo("Exiting straight method...")
 		return gear
@@ -402,7 +436,7 @@ class Control: # Control class for modular code
 			self.throttle = 0
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
-
+		self.publishThrotBrake(self.throttle)
 		return gear
 	
 	# Method Name: odom
