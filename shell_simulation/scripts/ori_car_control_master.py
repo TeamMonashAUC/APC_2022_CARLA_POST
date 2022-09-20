@@ -6,6 +6,7 @@ from geometry_msgs.msg import PoseStamped, Point
 import math
 import tf2_ros
 import tf2_geometry_msgs.tf2_geometry_msgs
+from carla_msgs.msg import CarlaCollisionEvent
 
 # control_master_simple.py
 # Author(s): Jayson Teh, Navaneeth Nair, Zi Yu, Khai Hoe
@@ -33,6 +34,11 @@ class Control: # Control class for modular code
 		self.stop = self.end = self.start = self.move = False
 		self.prev_gear = "forward"
 		self.prev_goal_type = self.goal_type = -1
+		self.crash = False
+		self.recover = False
+		self.cnt = 0
+		self.goal15check = False
+		self.prevthrottle = 0.5
 
 		# Initialize publishers and messages
 		self.pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
@@ -50,7 +56,7 @@ class Control: # Control class for modular code
 	def callback(self, time):
 		gear = "forward" # Initialize gear to forward
 		if self.stop and not self.end: # Exit control when reached final goal
-			rospy.loginfo("Controller Time: %.4f" %(time)) # Display total controller time
+			#rospy.loginfo("Controller Time: %.4f" %(time)) # Display total controller time
 			self.end = True
 			return
 		elif self.end: # End condition
@@ -86,7 +92,12 @@ class Control: # Control class for modular code
 
 			a = math.atan2(output.pose.position.y,output.pose.position.x)  # alpha
 			omega = 1 * a # Scalar constant to define angular velocity omega
-
+			if self.goal_type == 12:  #sharp corner turn
+				omega = 2.5 * a
+			elif self.goal_type == 13:  #sharp sharp corner turn
+				omega = 5 * a
+			elif self.goal_type == 14:  #sharp sharp sharp corner turn
+				omega = 8 * a
 			if omega != 0:
 				# Apply Ackermann's steering
 				r = car_speed / -omega
@@ -97,18 +108,28 @@ class Control: # Control class for modular code
 
 		if self.goal_type == 7 and diff_radius < 3: # End condition
 			self.stop = True
+			self.steering = 0
 
 		# Throttle control
+		if self.goal15check == True:
+			self.throttle = self.prevthrottle
+			self.goal15check = False
 		if car_speed < 0.5 :  # Low speed condition
 			self.throttle = 0.5
 		elif not self.stop:  # not at final goal
 			self.move = True # Flag when car starts moving
 			if self.goal_type not in [5, 11]: # Not at stop & go goal
-				if car_speed < 2:
+				if self.goal_type == 15:
+					self.goal15check = True
+					if self.throttle != 0 and self.prevthrottle != 0:
+						self.prevthrottle = self.throttle
+					self.throttle = 0 # make throttle 0
+				elif car_speed < 2:
 					self.throttle = self.fct[0] # Base throttle
 				elif self.throttle < 0.49: # Limit max throttle
 					self.throttle += self.fct[1] # increment throttle
 			else:
+
 				if diff_radius < 20 and self.throttle > 0.1:
 					self.throttle -= self.fct[2] # decrement throttle when close to stop & go, min 0.1
 		else: # End condition
@@ -116,33 +137,84 @@ class Control: # Control class for modular code
 
 		if abs(self.steering) > 0.6: # Limit max steering
 			self.steering = 0.6*abs(self.steering) / self.steering
-
+		#rospy.loginfo("Collsion is %s", self.crash)
+		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
+			self.gear = "reverse"
+			self.throttle = 0.5
+			self.steering = 0
+			self.cnt += 1
+			if self.cnt > 10:
+				# if self.cnt == 6:
+				# 	rospy.sleep(2)
+				
+				self.crash = True
+				self.recover = True
+				
+				if self.cnt <= 20:
+					self.gear = "forward"
+					self.throttle = 1
+					self.steering = 0
+				if self.cnt > 20:
+					self.recover = False
+					self.crash = False
+					self.cnt = 0
+				# 	self.throttle = 0.7
+				# 	self.steering = -0.5
+				# elif self.cnt > 28 and self.cnt <=34:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0.4
+				# elif self.cnt > 34 and self.cnt <=37:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0
+				# elif self.cnt > 37 and self.cnt <=41:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0.4
+				# elif self.cnt > 41 and self.cnt <=45:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = -0.5
+				# elif self.cnt > 45 and self.cnt <=47:
+				# 	self.gear = "forward"
+				# 	self.throttle = 0.5
+				# 	self.steering = 0
+				# 	self.cnt = 0
+				# 	self.recover = False	
+			self.pub_gear.publish(self.gear)
+			self.pub_throttle.publish(self.throttle)
+			self.pub_steering.publish(self.steering)
 		### Publish controls ###
-		if not self.move: # Always publish gear & throttle at the start to prevent synching issues
-			self.gear_data.data = gear
-			self.pub_gear.publish(self.gear_data)
-			self.throttle_data.data = self.throttle
-			self.pub_throttle.publish(self.throttle_data)
-
-		else: # Publish gear and throttle only during changes
-			if gear != self.prev_gear: # Switching between forward and reverse
-				# self.throttle = 1 # 'Brake' the car by counter-throttling
-				# self.steering = 0 # Reset steering
+		else:
+			if not self.move: # Always publish gear & throttle at the start to prevent synching issues
 				self.gear_data.data = gear
 				self.pub_gear.publish(self.gear_data)
-				self.prev_gear = gear # update previous gear
-
-			if self.prev_gas != self.throttle:
 				self.throttle_data.data = self.throttle
 				self.pub_throttle.publish(self.throttle_data)
-				self.prev_gas = self.throttle # update previous throttle
+
+			else: # Publish gear and throttle only during changes
+				if gear != self.prev_gear: # Switching between forward and reverse
+					# self.throttle = 1 # 'Brake' the car by counter-throttling
+					# self.steering = 0 # Reset steering
+					self.gear_data.data = gear
+					self.pub_gear.publish(self.gear_data)
+					self.prev_gear = gear # update previous gear
+
+				if self.prev_gas != self.throttle:
+					self.throttle_data.data = self.throttle
+					self.pub_throttle.publish(self.throttle_data)
+					self.prev_gas = self.throttle # update previous throttle
 
 		if self.stop_cal_t <= 10 or (self.stop_cal_t - 10) % 10 == 0: # Stop publishing steering when reached steady state
-			self.steering_data.data = -self.steering # Flip sign to satisfy competition environment conditions
+			self.steering_data.data = self.steering 
 			self.pub_steering.publish(self.steering_data)
 
-		# rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius))
+		#rospy.loginfo("Publishing: [Throttle:  %f, Brake: %f, Gear: %s, Speed_cur: %f, steer: %f, goal_type: %d, diff_radius: %f, pos_x: %f, pos_y: %f, pos_z: %f, rz: %f]" %(self.throttle, 0,gear,car_speed,self.steering,self.goal_type,diff_radius,self.car_x,self.car_y,self.car_z,self.yaw))
 
+	def collision_handler(self, msg):
+		self.crash = True
+		#rospy.loginfo("Collsion detected, COLLISION PROTOCOL starting")
 	# Class method that gets called when odometry message is published to /odom by the AirSim-ROS wrapper, and passed to msg variable
 	def odom(self, msg):
 		if not self.end: # Perform operations while end condition is not true
@@ -167,7 +239,7 @@ class Control: # Control class for modular code
 			t = rospy.get_time() # Get current time in seconds
 			if not self.start: # Start condition
 				self.start = True
-				rospy.loginfo("Starting control loop(py) with polling period: %.2fs" %(self.poll_period)) # Report set period
+				#rospy.loginfo("Starting control loop(py) with polling period: %.2fs" %(self.poll_period)) # Report set period
 				dt = 0
 				self.callback(self.t_tot) # Callback at t = 0
 			else:
@@ -221,7 +293,14 @@ class Control: # Control class for modular code
         #   8 - goal before corner
         #   9 - corner goal
         #   10 - goal after corner
-		
+		#   11 - reverse variant of 3-point D
+
+		#   Special add-ons for 2022 APC
+		#   12 - sharp corner turn
+		#   13 - sharp sharp corner turn
+		#   14 - sharp sharp sharp corner turn
+		#   15 - straight zero throttle
+
 		# Allocate goals array based on defined config at class declaration
 		if self.config == 1:
 			# Config 1 - CARLA simple throttle, turn and stop
@@ -230,6 +309,8 @@ class Control: # Control class for modular code
 			self.pose_types = [0,7] 
 		elif self.config == 2:
 			# Config 2 - Efficiency (< Distance, < Time), (~1520 m, ~162s)
+			
+
 
 
 			self.pose_seq = [
@@ -237,102 +318,232 @@ class Control: # Control class for modular code
 				
 				[-74.8,-13.8],[-71.5,-3.2],[-64.2,-0.8],
 				
-				[-52.68,-0.91],  #1
-				[-41.4,-1.2],[-29.2,-3.7],[-21.4,-11.5],[-1.77,-23.78],[10.8,-20.30],[18.2,-14.40],[26.9,-7.60],
-				[79.56,-7.79],  #2
-				[91.7,-6.9],[212,-10],[226.4,-12.4],[231,-32.8],
-				[230.9,-40.58],  #3
+				[-52.68,-0.91],  	#1
+	
+				[-41.4,-0.7],[-29.2,-2.5], [-23.3, -7.6],[-21.7,-11.5], [-16.4, -17.6],[-12.3,-21],[-8.3,-23.1],[-4.1, -23.7],# modified 5
+				[-1.77,-23.78], 	#2
+				[5.5, -23.3],[8.7, -22.4],[10.8,-20.30],[12.5,-20],[15.7,- 17.1],[18.2,-14.40],[20.5,-11],[22.2, -9.1],[24.1,-8.7],[26.9,-7.79],[30.6,-7.2],[36.9,-7.3], [45.2,-7.4],#modified 6
+
+				[79.56,-7.79],  	#3
+
+				[91.7,-7.79],
+				
+				[212,-10],[219, -10],[223.1,-10.7],[225.7,-11.9],[227.5,-13.0],[228.2,-13.3],[229.8,-16.0],[230.2,-18.8],[230.5,-25.3],
+
+				[230.9,-40.58],  	#4
+
 				[231,-40.58], [227.3,-52.3],[209.2,-57.2],
-				[189.83,-58.67],  #4
-				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
-				# [161.58,-111.42],  #5
-				[163.3,-108.1],[156.9,-117.4],[129.5,-128.8],[111.3,-129.1],[68.6,-129.6],[19.2,-130.4],
-				[17.1,-130.7],  #6
-				[17.1,-130.7],[1.7,-133.2],[-9,-147.4], 
 
-				[-9.35,-168.07], #7
-				[-9.1,-186.7],[-12.4,-193],[-26.2,-196.6],   
+				[189.83,-58.67],  	#5
+
+				[180.1,-58.67],[172.4,-63.7],[168.5,-79.8],[166.5,-80.8],[167.3,-88.8],[166.8,-94.3],[165.7, -101.9],[163.2, -107.7],
+				
+				[161.58,-111.42],	#6
+				
+				[160.2,-113.2], [156.9,-116.2], [149.2, -123.0] ,[143.6, -125.6],[136.6, -127.6],
+				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
+				[17.1,-130.7],  	#7
+
+				# [7.9,-130.4],[-1.9,-134.3],[-9,-146.4], 
+				#### Please check this line 
+				[8.1,-132.3], [1.0,-135.0], [-6.9,-141.2], [-8.7, -145.4],[-8.8, -151.2],[-9.2, -155.3],
+
+				################################################# ORIGINAL CODE
+				# [-9.35,-168.07], 	#8
+				# [-8.0,-172.4],[-5.1,-185.0],[-6.2,-191.2],[-13, -194.8] ,[-18.4, -195.3],[-34.6,-193.8],#modified  1
 				   
-				[-44.25,-193.47],#8
+				# [-44.25,-193.47],	#9
 				
-				[-44.25,-193.47],[-54.1,-194.7],[-66,-185.4],[-73.3,-176],[-78,-149.5],
+				# [-44.25,-193.47],[-54.1,-194.7],[-66,-185.4],[-73.3,-176],[-78,-149.5],
 				
-				[-78,-149.5],[-83,-137],[-99,-133],    [-117.7,-133.2],[-137.4,-126.8],[-145.3,-105.6],
+				# [-78,-149.5],[-83,-137],[-99,-133],    [-117.7,-133.2],[-137.4,-126.8],[-145.3,-105.6],
+				############################################### ORIGINAL CODE (END)
 				
-				[-145.7,-87.2],
-				[-145.75,-75.7],#9
+				############# AMMENDED VERSION (It's Good)
+				[-9.0,-191.3], #8
+				[-16.2,-193.8], [-29.3,-193.6],
 
-				[-145.3,-65.5],[-145.3,-39.5],
-				[-145.75,-7.79],
+				[-36.9,-193.6], #9
 
-				[-145.75,-7.79],[-140.9,-3.4],[-131.6,-1.0],
-				[-104.58,-0.5], #10
+				[-44.2,-193.2], [-51.1,-192], [-56.1,-189.8], [-63.2,-185.0], [-67.2,-179.8], [-70.0,-175.4], [-72.3,-171.1], [-73.8, -165.2],[-74.4, -160.7],[-74.4,-147.5],
+
+				[-74.4,-145.1], [-78.5,-138.7], [-85.4, -135.4],[-90.2,-133.8],[-93.0,-133.2],[-96.6, -132.8],[-104.4,-132.8],   	[-110.5,-133.0],[-119.4,-133.3],[-122.8,-133.4],[-124.9,-133.3],[-126.7,-133.0],[-130.3,-131.9],[-133.7, -130.2],[-136.0,-128.5],[-138.0,-126.6],[-140.2,-123.5],[-142.8,-119.6],[-143.6, -117.6],[-144.7, -111.1],[-145.4, -108.3], [-145.5, -103.7], [-145.5, -100.4],[-145.5, -92,5],[-145.75, -78.7],
+
+				################################ CHANGED BY DON UNTIL HERE ^ 
+
+				[-145.75,-75.7],	#10
+				[-145.4,-51.5],[-145.4,-39.5],[-145.4,-23.2],
+
+				[-145.47,-7.79], #11
+				[-145.47, -5.7],[-144.4,-3.5], [-142.7, -2.3], [-141.5, -1.7], [-140.1,-1.1],[-138.0,-0.5],[-135.8,-0.4],[-133.0, -0.3],[-131.2,-0.4],[-127.8,-0.5],#modified 8
+				[-104.58,-0.5], 	#12
 
 				[-101.1,-0.6],[-84.9,1.7],[-77.8,11.5], 
-				[-77.86,16.80], #11 
-					
+				[-77.86,16.80], 	#13
 
-				[-78,40],[-78,115],
-				[-73.5,170.8],[-67.9,187.3],[-47.8,194.9],
-				#8
-				[-15.4,194.3],[-6.6,191.1],[-3.3,177.6],
-				#9
-				[-4.32,110.51]
+				# READ HERE! ITS JON'S CODE \/ for PART A		
+				# Jon: Changed from the line below this {LINE 379} until final goal (goal 15) {LINE 385}
+				[-75,40],[-75,115],
+				[-73.5,170.8], [-72.8, 178.9],[-67.9,187.3],[-47.8,194.9],
+					
+				[-15.45,194.16],		#14
+				[-9.7, 194.2],[-4.4, 190.9],[-3.2, 187.7], [-3.2, 182.4], [-3.5, 172.6],[-4.4, 124.7],#modified 9
+
+				[-4.32,110.51] 		#15s
 				
+			]
+			
+			"""
+			self.pose_seq = [
+				[190.1,-58.67],[172.4,-63.7],[167,-80.8],[167,-80.8],[167.1,-89.8],[166.6,-97.6],
 				
-				]
-			
-			
+				[161.58,-111.42],	#6
+				
+				[159.8,-114.2], [156.9,-117.4], [149.2, -124] ,[143.6, -126.8],[136.6, -128.8],
+				[129.5,-129.2],[111.3,-129.6],[68.6,-130.0],[19.2,-130.7], #modified 7
+				[17.1,-130.7],  	#7
+
+				[7.9,-130.4],[-1.9,-134.3],[-9,-146.4], 
+
+				# TO CHANGE : 1,13,3,4
+				#[-9.35,-168.07], 	#8
+				#[-8.0,-172.4],[-5.1,-185.0],[-6.2,-191.2],[-13, -194.8] ,[-18.4, -195.3],[-34.6,-193.8],#modified  1
+				   
+				#[-44.25,-193.47],	#9
+				# UP TO THIS PART ^
+				
+				# AMMENDED VERSION (It's Good)
+				[-9.0,-191.3], #8
+				[-16.2,-193.8], [-29.3,-193.6],
+
+				[-36.9,-193.6], #9
+				# UP TO THIS PART ^
+
+				# TO CHANGE : 
+				#[-44.25,-193.47],[-54.1,-194.7],[-66,-185.4],[-73.3,-176],[-78,-149.5],
+				
+				#[-78,-149.5],[-83,-137],[-99,-133],    [-117.7,-133.2],[-137.4,-126.8],[-145.3,-105.6],
+				
+				#[-145.7,-87.2],
+				#[-145.75,-75.7],	#10
+
+				# AMMENDED VERSION (It's Good)
+				[-44.2,-193.2], [-51.1,-192], [-56.1,-189.8], [-62.1,-185.9], [-67.2,-179.9], [-71.5,-171.7], [-74.3,-157.8], [-74.4,-147.5],
+
+				[-74.4,-145.1], [-96.6,-129.3], [-104.3,-129.4],	[-115.0,-129.6],[-128.8,-128.2],[-135.7,-123.6],[-141.7,-109.1],[-141.8,-99.1],
+
+				[-142.0,-92.4], [-142.1,-70.4],
+				[-141.7,-65.0],
+
+			]
+
+			self.pose_types = [
+				1,2,3,1,2,2,#11 
+
+				1, 	#6
+
+				12,12,12, 12, 12, 
+				2,3,0,0,#modified 7
+				4, 		#7
+
+				1,13,3,
+
+				# TO CHANGE : 1,12,3,4
+				#12, 		#8
+				#12,14,13,13,12,3,  #modified 1
+
+				#4, 		#9
+				# UP TO THIS PART ^
+
+				# AMMENDED VERSION (It's Good)
+				1,	#8
+				14,3,
+				4,	#9
+				# UP TO THIS PART ^
+
+				# TO CHANGE : 
+				1,2,2,2,2,2,2,3,
+
+				1,2,3,  1,2,2,2,3,
+				
+				0,0,
+				4,		#10
+			]
+			"""
 			self.pose_types = [
 				0,
 				
 				1,2,3,
-				4, #1
-				1,2,2,2,2,2,3,
-				4, #2
-				0,1,2,3,
-				4, #3
-				1,2,3,
-				4, #4
-				1,2,3,1,2,2,
-				# 4, #5
-				2,2,2,3,0,0,
-				4, #6
-				1,2,3,
 
-				4, #7
-				1,2,3,
+				4, 		#1
 
-				4, #8
+				1,2,12,12,12,12,12,12, #modified 5
+				12, 		#2
+				12,12,12,12,12,12,12,12,12,2,12,3,0,
 
-				1,2,2,2,3,
+				0, 		#3
 
-				1,2,3,  1,2,3,
+				1,
 				
-				0,
-				4,#9
+				1,1,12,13,13,13,12,13,3,   #modified 3
 
-				0,0,
-				4,
-
-				1,2,3,  
-				4, #10
+				4, 		#4
 
 				1,2,3,
-				4, #11
+
+				4, 		#5
+
+				1,2,3,15,13,12,12,2,
+
+				12, 	#6
+
+				2,2,2, 2, 2, 
+				2,3,0,0,#modified 7
+				2, 		#7
+
+				# 1,13,3,
+				##### Please check this line and line 334
+				12,13,15,13,12,3,
+
+				############################ ORIGINAL CODE 
+				#12, 		#8
+				#12,14,13,13,12,3,  #modified 1
+
+				#4, 		#9
+
+				# 1,2,2,2,3,
+				# 1,2,3,  1,2,3,
+				########################### ORIGINAL CODE (END)
+
+				########################### AMMENDED VERSION 
+				1,			#8 
+				14,3,
+
+				4,			#9
+				
+				1,2,12,12,12,15,12,12,2,3,
+				13,13,15,13,15,3,3,  2,15,15,15,2,2,2,2,1,15,2,2,1,15,2,1,15,2,
+				########################### UP TO THIS PART ^ 
+				
+				2,		#10
+				2,3,15,
+
+				12,		#11
+				14, 15, 14, 15, 14, 15, 14, 15,2, 3,  #modified 4 && 8
+
+				4, 			#12
+
+				1,2,3,
+				4, 		#13  
 				
 				0,0,
-				1,2,3,
-				#8
-				1,2,3,
-				#9
-
-
-
+				1,2,4,3,
+				
+				4,		#14 #modified 2
+				13, 13, 13, 4, 3, 0,	#modified 9
+				
 				7
 			] # 1-11
-
-
 
 
 		elif self.config == 3:
@@ -382,7 +593,9 @@ def listener():
 
 	# Initialize nodelets and get goals
 	control = Control()
+	rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, control.collision_handler)
 	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, control.odom)
+
 	rospy.loginfo("Initialized control node")
 	control.getGoals()
 
