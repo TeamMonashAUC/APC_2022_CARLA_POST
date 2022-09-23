@@ -26,5 +26,6 @@
   <node name="car_control_master" pkg="shell_simulation" type="car_control_master.py" output="screen"/>
 <node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/>
 <node name="score" pkg="shell_simulation" type="score.py" output="screen"/>
+<node name="test" pkg="shell_simulation" type="test.py" output="screen"/>
   <!--<node name="car_control_master" pkg="airsim_cpp" type="car_control_master" output="screen"/> -->
 </launch>
