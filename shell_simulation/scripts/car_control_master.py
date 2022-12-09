@@ -620,6 +620,8 @@ def listener():
 		except(tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
 			rospy.sleep(0.001)
 			continue
+
+		
 	# Wait for odom to be available
 	rospy.loginfo("Checking for odom...")
 	data = rospy.wait_for_message("/carla/ego_vehicle/odometry", Odometry, 20) # Blocks until message is received, 20s timeout

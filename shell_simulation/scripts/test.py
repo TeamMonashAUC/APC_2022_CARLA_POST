@@ -33,7 +33,20 @@ def getSteering(steering_data):
     global steering
     steering = steering_data.data
 
+    '''
+    Method Name: 
+        listener
 
+    Input:
+        None
+
+    Output:
+        None
+
+    Function Explanation:
+        Convert APC_Monash topis to carla-ros-bridge 
+
+    '''
 def listener():
     global controls, pub
     rospy.init_node('tester', anonymous=True)
@@ -49,8 +62,10 @@ def listener():
 
 
 if __name__ == '__main__':
+    # initial vehicle condition 
     steering = 0
     throttle = 0
     brake = 0
     gear = "forward"
+
     listener()
