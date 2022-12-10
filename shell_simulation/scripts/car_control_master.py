@@ -71,6 +71,9 @@ class Control: # Control class for modular code
 	# Call necessary functions/methods to calculate steering, throttle and brake value required based on current goal type
 	def callback(self, time):
 		gear = "forward" # Initialize gear to forward
+		
+		
+		'''Decide when to stop finding for next goal''' 
 		if self.stop and not self.end: # Exit control when reached final goal
 			#rospy.loginfo("Controller Time: %.4f" %(time)) # Display total controller time
 			self.end = True
@@ -78,6 +81,7 @@ class Control: # Control class for modular code
 		elif self.end: # End condition
 			return
 
+		'''Convert goals in map coordinate to coordinate in respect to car'''
 		# Transform goal points in map frame 'map' to car frame 'ego_vehicle
 		while not rospy.is_shutdown():
 			try:
@@ -89,11 +93,15 @@ class Control: # Control class for modular code
 				rospy.sleep(0.001)
 				continue
 
+
+
 		# Calculate velocity as a magnitude of cartesian vectors
 		car_speed = math.sqrt(math.pow(self.v_x, 2) + math.pow(self.v_y, 2) + math.pow(self.v_z, 2))
 
 		# Calculate radial distance from car to goal
 		diff_radius = math.sqrt(math.pow(output.pose.position.x, 2) + math.pow(output.pose.position.y, 2))
+
+
 
 		# Stop calculating steering when it reaches steady state
 		if abs(self.steering) <= 0.2 and self.goal_type == self.prev_goal_type:
@@ -174,54 +182,54 @@ class Control: # Control class for modular code
 
 
 
-		#rospy.loginfo("Collsion is %s", self.crash)
-		if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
-			self.gear = "reverse"
-			self.throttle = 0.5
-			self.steering = 0
-			self.cnt += 1
-			if self.cnt > 10:
-				# if self.cnt == 6:
-				# 	rospy.sleep(2)
+		# #rospy.loginfo("Collsion is %s", self.crash)
+		# if self.crash == True or self.recover == True: ########## PROTOCOLS FOR CRASHING ###########
+		# 	self.gear = "reverse"
+		# 	self.throttle = 0.5
+		# 	self.steering = 0
+		# 	self.cnt += 1
+		# 	if self.cnt > 10:
+		# 		# if self.cnt == 6:
+		# 		# 	rospy.sleep(2)
 				
-				self.crash = True
-				self.recover = True
+		# 		self.crash = True
+		# 		self.recover = True
 				
-				if self.cnt <= 20:
-					self.gear = "forward"
-					self.throttle = 1
-					self.steering = 0
-				if self.cnt > 20:
-					self.recover = False
-					self.crash = False
-					self.cnt = 0
-				# 	self.throttle = 0.7
-				# 	self.steering = -0.5
-				# elif self.cnt > 28 and self.cnt <=34:
-				# 	self.gear = "forward"
-				# 	self.throttle = 0.5
-				# 	self.steering = 0.4
-				# elif self.cnt > 34 and self.cnt <=37:
-				# 	self.gear = "forward"
-				# 	self.throttle = 0.5
-				# 	self.steering = 0
-				# elif self.cnt > 37 and self.cnt <=41:
-				# 	self.gear = "forward"
-				# 	self.throttle = 0.5
-				# 	self.steering = 0.4
-				# elif self.cnt > 41 and self.cnt <=45:
-				# 	self.gear = "forward"
-				# 	self.throttle = 0.5
-				# 	self.steering = -0.5
-				# elif self.cnt > 45 and self.cnt <=47:
-				# 	self.gear = "forward"
-				# 	self.throttle = 0.5
-				# 	self.steering = 0
-				# 	self.cnt = 0
-				# 	self.recover = False	
-			self.pub_gear.publish(self.gear)
-			self.pub_throttle.publish(self.throttle)
-			self.pub_steering.publish(self.steering)
+		# 		if self.cnt <= 20:
+		# 			self.gear = "forward"
+		# 			self.throttle = 1
+		# 			self.steering = 0
+		# 		if self.cnt > 20:
+		# 			self.recover = False
+		# 			self.crash = False
+		# 			self.cnt = 0
+		# 		# 	self.throttle = 0.7
+		# 		# 	self.steering = -0.5
+		# 		# elif self.cnt > 28 and self.cnt <=34:
+		# 		# 	self.gear = "forward"
+		# 		# 	self.throttle = 0.5
+		# 		# 	self.steering = 0.4
+		# 		# elif self.cnt > 34 and self.cnt <=37:
+		# 		# 	self.gear = "forward"
+		# 		# 	self.throttle = 0.5
+		# 		# 	self.steering = 0
+		# 		# elif self.cnt > 37 and self.cnt <=41:
+		# 		# 	self.gear = "forward"
+		# 		# 	self.throttle = 0.5
+		# 		# 	self.steering = 0.4
+		# 		# elif self.cnt > 41 and self.cnt <=45:
+		# 		# 	self.gear = "forward"
+		# 		# 	self.throttle = 0.5
+		# 		# 	self.steering = -0.5
+		# 		# elif self.cnt > 45 and self.cnt <=47:
+		# 		# 	self.gear = "forward"
+		# 		# 	self.throttle = 0.5
+		# 		# 	self.steering = 0
+		# 		# 	self.cnt = 0
+		# 		# 	self.recover = False	
+		# 	self.pub_gear.publish(self.gear)
+		# 	self.pub_throttle.publish(self.throttle)
+		# 	self.pub_steering.publish(self.steering)
 		### Publish controls ###
 		else:
 			if not self.move: # Always publish gear at the start to prevent synching issues
@@ -284,7 +292,7 @@ class Control: # Control class for modular code
 			if self.prev_gas != self.throttle:
 				self.throttle_data.data = self.throttle = throttle
 				self.pub_throttle.publish(self.throttle_data)
-				self.prev_gas = self.throttle # update previous throttle
+				self.prev_gas = self.throttle # update previous throttle"
 
 	# Method Name: corner
 
@@ -377,6 +385,8 @@ class Control: # Control class for modular code
 				# Apply Ackermann's steering
 				r = car_speed / -omega
 				self.steering = math.atan(self.b_wheel_base / r)
+
+				
 		# Throttle control
 		if car_speed < 0.5 :  # Low speed condition
 			self.throttle = 0.5
