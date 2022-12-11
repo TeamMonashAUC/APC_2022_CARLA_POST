@@ -30,7 +30,7 @@ def PID_SetSpeed(targetSpeed):
     # PID parameters setting
     pid = PID(Kp = 0.4, Ki = 0.3, Kd = 0.2, setpoint= targetSpeed)
 
-    return pid(settings.currentSpeed) # apply global variable (currentSpeed of the car, updated from carla rostopic)
+    return pid(settings.currentCarSpeed) # apply global variable (currentCarSpeed of the car, updated from carla rostopic)
 
 
 
@@ -106,5 +106,5 @@ def carControl(targetSpeed = 0, steerAngle = 0):
 
 
     ##########################################
-    # rospy.loginfo("target:%d  current:%d car_brake:%f" , targetSpeed, currentSpeed,car_brake)
+    # rospy.loginfo("target:%d  current:%d car_brake:%f" , targetSpeed, currentCarSpeed,car_brake)
     ROS_Communication.transmit_to_carla(car_throttle, car_steer, car_brake, car_reverse, car_handBrake)

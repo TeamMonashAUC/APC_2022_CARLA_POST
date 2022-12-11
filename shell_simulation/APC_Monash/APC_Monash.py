@@ -35,26 +35,7 @@ import rospy
 
 #################################################################################################################################################
 def main():
-    Movement_Control.carControl(targetSpeed = 10,steerAngle= 0)
-
-    # ROS_Communication.currentSpeed = Movement_Control.currentSpeed = currentSpeed
-    # ROS_Communication.curr_time = Movement_Control.curr_time = curr_time
-
-    # CarlaEgoVehicleInfo.wheels
-    # CarlaEgoVehicleInfoWheel.max_steer_angle
-    # link = rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)
-    # tf2_buffer = tf2_ros.Buffer()
-    # goal_map = PoseStamped()
-
-    # goal_map.pose.position.x = 0
-    # goal_map.pose.position.y = 0
-    # trans = tf2_buffer.lookup_transform("ego_vehicle","map",rospy.Time())
-    # output = tf2_buffer.transform(goal_map,"ego_vehicle")
-    # rospy.loginfo(output)
-# def base(data):
-    
-    # rospy.loginfo(data.wheels)
-    # rospy.loginfo(data.max_steer_angle)
+    Movement_Control.carControl(targetSpeed = 20,steerAngle= 0)
 
 
 
