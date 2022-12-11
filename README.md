@@ -15,6 +15,17 @@ The new research code developed is under APC_Monash folder
     "Movement_Control.carControl(targetSpeed = 10,steerAngle= 0)"  
 - Cleaner code for developing & understanding 
 
+## To-do list
+- [x] PID control
+- [x] Linear steering
+- [ ] Coordinate system for car travel
+    - [ ] Straight line
+    - [ ] Corners
+- [ ] Lane centering using camera (opencv2)   
+    - [ ] Straight line
+    - [ ] Corners
+
+
 
 ### pro tips: (https://blog.unosquare.com/10-tips-for-writing-cleaner-code-in-any-programming-language)
 1) documentation is important (link sources used in learning these techniques)
