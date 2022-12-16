@@ -5,6 +5,10 @@ File purpose:
     - Steering control - Uses linear steering to steer at a certain distance given the angle
     - easier use for higher level programming
     - uses SI unit of km/h
+
+This function main purpose is to enables 
+        Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= angle+settings.car_direction_from_world[2])
+to work properly (not including manipulating the speed or steering angle)
 '''
 
 
@@ -106,5 +110,5 @@ def carControl(targetSpeed = 0, steerAngle = 0):
 
 
     ##########################################
-    # rospy.loginfo("target:%d  current:%d car_brake:%f" , targetSpeed, currentCarSpeed,car_brake)
+    # rospy.loginfo("target:%d  current:%d car_brake:%f" , targetSpeed, settings.currentCarSpeed,car_brake)
     ROS_Communication.transmit_to_carla(car_throttle, car_steer, car_brake, car_reverse, car_handBrake)

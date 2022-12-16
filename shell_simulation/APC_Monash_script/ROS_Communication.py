@@ -53,6 +53,9 @@ from carla_msgs.msg import CarlaCollisionEvent, CarlaEgoVehicleControl, CarlaEgo
 from sensor_msgs.msg import NavSatFix, Imu
 
 
+# from geometry_msgs.msg import PoseStamped, Point
+# import tf2_ros
+# import tf2_geometry_msgs.tf2_geometry_msgs
 
 
 
@@ -73,14 +76,13 @@ def ROS_Start():
     # rospy.Subscriber('/carla/ego_vehicle/gnss',NavSatFix,receive_Gnss)   
     # rospy.Subscriber('/carla/ego_vehicle/imu',Imu,receive_IMU)   
     rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)   
-
     
 
     ####################################################
     # publish data to carla using rostopic
     global publish_carla_data # store as global variable in this file to publish data to this node
     publish_carla_data = rospy.Publisher('/carla/ego_vehicle/vehicle_control_cmd',CarlaEgoVehicleControl, queue_size=10)
-    
+
 
 
 
@@ -149,10 +151,10 @@ def receive_Speedometer(speeed_ms): # speed given by Speedometer is in m/s
 
 ###########################################################
 def receive_Gnss(gnss):
-    settings.latitude = gnss.latitude
-    settings.longitude = gnss.longitude
-    settings.altitude = gnss.altitude
-    
+    # settings.latitude = gnss.latitude
+    # settings.longitude = gnss.longitude
+    # settings.altitude = gnss.altitude
+    pass
 
 ###########################################################
 def receive_IMU(imu):
@@ -162,6 +164,111 @@ def receive_IMU(imu):
 ###########################################################
 def receive_Odometry(data):
     settings.curr_time = data.header.stamp # obtained from "rosmsg show nav_msgs/Odometry"
-    settings.car_coordinate     = [data.pose.pose.position.x, data.pose.pose.position.y, data.pose.pose.position.z]
-    settings.car_direction     = [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w]
+    settings.car_coordinate_from_world     = [data.pose.pose.position.x, data.pose.pose.position.y, data.pose.pose.position.z]
+
+    settings.curr_time = data.header.stamp.secs + (data.header.stamp.nsecs)*1e-9
+
+    # settings.car_direction_from_world      = euler_from_quaternion(data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w)
+    euler_angle = euler_from_quaternion(data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w)
+    settings.car_direction_from_world      = [euler_angle[0],euler_angle[1],absoluteYaw(euler_angle[2])]
     # rospy.loginfo(car_coordinate)
+    
+    # rospy.loginfo(data.header)
+
+    # # Goal point transformer
+    # goal_map = PoseStamped ()
+    # tf2_buffer = tf2_ros.Buffer()
+    # listener = tf2_ros.TransformListener(tf2_buffer)
+
+    # # goal_map = PoseStamped()
+    # goal_map.header = data.header
+    # # rospy.loginfo(data)
+    # goal_map.pose.position.x = -77.8
+    # goal_map.pose.position.y = 50
+    
+    # #Transform goal points in map frame 'map' to car frame 'ego_vehicle
+    # # rospy.loginfo(output)
+    # while not rospy.is_shutdown():
+    # try:
+    #     trans = tf2_buffer.lookup_transform("ego_vehicle","map",rospy.Time())
+    #     # rospy.loginfo(trans)
+    
+    # except(tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+    #     rospy.sleep(0.001)
+        
+    # while not rospy.is_shutdown():
+    # output=0
+    # try:
+    #     trans = tf2_buffer.lookup_transform("ego_vehicle","map",rospy.Time())
+    #     output = tf2_buffer.transform(goal_map,"ego_vehicle")
+    #     rospy.loginfo(output)
+    
+    # except:
+    #     rospy.sleep(0.001)
+        
+    # rospy.loginfo(output)
+    
+    # rospy.loginfo(output.pose.position.x)
+    # tf2_buffer.lookup_transform("ego_vehicle","map",rospy.Time())
+
+    
+###########################################################
+'''
+Functions to convert -180 to 180 angle to infinite angle to make calculations easier
+'''
+# turns = 0    
+# current_quadrant = 1
+# prev_quadrant = 1
+def absoluteYaw(angle):
+    
+    settings.prev_quadrant = settings.current_quadrant
+    if (angle >=0 and angle <90):
+        settings.current_quadrant = 1 
+    elif (angle >=90 and angle <=180):
+        settings.current_quadrant = 2
+    elif (angle <-90 and angle >=-180):
+        settings.current_quadrant = 3
+    elif (angle <0 and angle >=-90):
+        settings.current_quadrant = 4
+   
+    
+    if(settings.prev_quadrant==3 and settings.current_quadrant==2):
+        settings.turns = settings.turns - 1
+
+    elif(settings.prev_quadrant==2 and settings.current_quadrant==3):
+        settings.turns = settings.turns + 1
+
+    absolute_angle = settings.turns*360 + angle  
+    # rospy.loginfo(settings.turns)
+    # rospy.loginfo(absolute_angle)
+
+    return absolute_angle
+###########################################################
+'''
+Functions to convert quaternion angle to euler angle
+'''
+def euler_from_quaternion(x, y, z, w):
+        """
+        Convert a quaternion into euler angles (roll, pitch, yaw)
+        roll is rotation around x in radians (counterclockwise)
+        pitch is rotation around y in radians (counterclockwise)
+        yaw is rotation around z in radians (counterclockwise)
+        """
+        t0 = +2.0 * (w * x + y * z)
+        t1 = +1.0 - 2.0 * (x * x + y * y)
+        roll_x = math.atan2(t0, t1)
+     
+        t2 = +2.0 * (w * y - z * x)
+        t2 = +1.0 if t2 > +1.0 else t2
+        t2 = -1.0 if t2 < -1.0 else t2
+        pitch_y = math.asin(t2)
+     
+        t3 = +2.0 * (w * z + x * y)
+        t4 = +1.0 - 2.0 * (y * y + z * z)
+        yaw_z = math.atan2(t3, t4)
+
+        degree_roll_x = roll_x*180/math.pi        
+        degree_pitch_y= pitch_y*180/math.pi
+        degree_yaw_z = yaw_z*180/math.pi
+        
+        return degree_roll_x, degree_pitch_y, degree_yaw_z # in degree

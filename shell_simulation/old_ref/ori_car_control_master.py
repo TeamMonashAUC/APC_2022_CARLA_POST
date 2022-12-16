@@ -23,7 +23,7 @@ class Control: # Control class for modular code
 		# Constants
 		self.fct = [0.35, 0.005, 0.02] # Throttle factors
 		self.rad90 = math.radians(90) # 90 degrees in radians
-		self.b_wheel_base = 2.9 # Wheelbase length [m]
+		self.b_wheel_base = 2.9 # Wheelbmatched by PSpice equivalent thermal circuit simulation and theoretical analytical calculation.ase length [m]
 
 		# Main parameters
 		self.poll_period = 0.2 # Period of calling callback() function
@@ -79,7 +79,7 @@ class Control: # Control class for modular code
 
 		# Calculate radial distance from car to goal
 		diff_radius = math.sqrt(math.pow(output.pose.position.x, 2) + math.pow(output.pose.position.y, 2))
-
+		rospy.loginfo(output.pose.position.x)
 		# Stop calculating steering when it reaches steady state
 		if abs(self.steering) <= 0.2 and self.goal_type == self.prev_goal_type:
 			self.stop_cal_t += 1

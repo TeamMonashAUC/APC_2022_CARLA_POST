@@ -31,14 +31,43 @@ curr_time = 0
 
 #car_variables
 max_steer_angle = math.degrees(1.221730351448059) # about 70 degree'
+wheelBase = 3  # 3m obtain from rostopic vehicle_info, by getting the difference in position of the front wheel and back wheels
 
-latitude = 0
-longitude = 0
-altitude = 0
+curr_time = 0 # in seconds, with decimal points until nanosecond
+car_coordinate_from_world = [0,0,0] # car coordinate in [x,y,z] 
+car_direction_from_world = [0,0,0]  # euler angle [roll, pitch, yaw] 
 
-curr_time =0
-car_coordinate = [0,0,0]
-car_direction = [0,0,0,0]
+turns = 0
+current_quadrant = 1
+prev_quadrant = 1
+#################################################################################################################################################
+'''
+The goal types are described using numbers and are represented as follow
+Moving forward
+	0 - straight goal
+	1 - goal before corner
+	2 - corner goal
+	3 - goal after corner
+	4 - actual goal in the competition, its control is same as goal type 0
+	5 - 3-point D
+	7 - last goal, need to fully stop
+Moving backward
+	6 - straight goal
+	8 - goal before corner
+	9 - corner goal
+	10 - goal after corner
+	11 - reverse variant of 3-point D
+
+	Special add-ons for 2022 APC
+	12 - sharp corner turn
+	13 - sharp sharp corner turn
+	14 - sharp sharp sharp corner turn
+	15 - straight zero throttle
+'''
+pose_seq 		= []   # [x, y, target direction] coordinate
+pose_type		= []   # [turn type, speed limit]
+
+# odom = Odometry ()
 #rosdata
 # ros_front_camera    = Image()
 # ros_top_camera      = Image()
