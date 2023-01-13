@@ -16,6 +16,7 @@ The new research code developed is under APC_Monash folder
 - Cleaner code for developing & understanding 
 
 ## To-do list
+### Mandatory features
 - [x] PID control
 - [x] Linear steering
 - [ ] Coordinate system for car travel
@@ -29,8 +30,7 @@ The new research code developed is under APC_Monash folder
     - [ ] Straight line
     - [ ] Corners
 
-
-### Add on
+### Add on features
 - [ ] Map system analysis using (OpenDRIVE standard 1.4) 
     - [ ] car can automatically decide which lane to use
 - [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)

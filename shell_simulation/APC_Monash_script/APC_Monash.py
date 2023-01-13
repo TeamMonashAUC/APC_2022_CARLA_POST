@@ -37,7 +37,7 @@ import math
 
 def main():
     
-    # '''
+    '''
     # test straight line function 1
     travel_to(80,[-71.6,150])
     travel_to(20,[-71.6,194])
@@ -52,9 +52,17 @@ def main():
     rospy.loginfo ("3")
 
     travel_to(80,[40,8])
-    travel_to(20,[24,8])
+    travel_to(20,[28,8])
     rospy.loginfo ("4")
-    # '''
+
+    travel_to(20,[14.7,-11.2])
+    travel_to(20,[-6.9,-49.2])
+    rospy.loginfo ("5")
+
+    travel_to(20,[-8.9,-192.4])
+    travel_to(20,[-66.8,-194.6])
+    rospy.loginfo ("6")
+    '''
 
     '''
     # test straight line function 2
@@ -77,8 +85,37 @@ def main():
     rospy.loginfo ("4")
     '''
 
-
+    val=0
     while not rospy.is_shutdown():
+        # '''
+        # test straight line function 1
+        travel_to(80,[-75.6,150])
+        travel_to(20,[-75.6,194])
+        rospy.loginfo ("1")
+
+        travel_to(80,[120,194])
+        travel_to(20,[150.1,194])
+        rospy.loginfo ("2")
+
+        travel_to(80,[150,30.4])
+        travel_to(20,[150,8.4])
+        rospy.loginfo ("3")
+
+        travel_to(80,[40,8])
+        travel_to(20,[28,8])
+        rospy.loginfo ("4")
+
+        travel_to(20,[14.7,-11.2])
+        travel_to(60,[-6.9,-49.2])
+        rospy.loginfo ("5")
+
+        travel_to(80,[-8.9,-192.4])
+        travel_to(40,[-66.8,-194.6])
+        rospy.loginfo ("6")
+        
+        val = val +1
+        rospy.loginfo("total run = " + str(val))
+        # '''
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
         rospy.ROSInterruptException  # allow control+C to exit the program
 
