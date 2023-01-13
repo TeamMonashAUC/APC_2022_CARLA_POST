@@ -21,9 +21,22 @@ The new research code developed is under APC_Monash folder
 - [ ] Coordinate system for car travel
     - [x] Straight line
     - [ ] Corners
+- [ ] Stop when detect moving obstacle (using camera or rader) 
+    - [ ] Traffic light
+    - [ ] pedestrian
+    - [ ] car
 - [ ] Lane centering using camera (opencv2)   
     - [ ] Straight line
     - [ ] Corners
+
+
+### Add on
+- [ ] Map system analysis using (OpenDRIVE standard 1.4) 
+    - [ ] car can automatically decide which lane to use
+- [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)
+- [ ] Lidar SLAM research 
+
+
 
 
 
@@ -45,4 +58,4 @@ The new research code developed is under APC_Monash folder
 
 
 
-###### written by : Andrew Joseph
+###### written by : Andrew Josephwhat

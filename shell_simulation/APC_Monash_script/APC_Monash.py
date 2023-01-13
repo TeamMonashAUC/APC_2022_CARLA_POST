@@ -37,75 +37,45 @@ import math
 
 def main():
     
-    travel_to(15, [-77.9,-13])
-    corner(15,[-110.4,3.4], 10,180)
+    # '''
+    # test straight line function 1
+    travel_to(80,[-71.6,150])
+    travel_to(20,[-71.6,194])
+    rospy.loginfo ("1")
 
+    travel_to(80,[120,194])
+    travel_to(20,[150.1,194])
+    rospy.loginfo ("2")
 
-    travel_to(15, [-134,3.6])
-    rospy.loginfo("1")
-    # corner(15,[-145.4,25.2], 10,90)
+    travel_to(80,[150,30.4])
+    travel_to(20,[150,8.4])
+    rospy.loginfo ("3")
 
-    # travel_to(15, [-134,3.6])
-    # corner(15,[-149.4,-15.5], 15,270)
+    travel_to(80,[40,8])
+    travel_to(20,[24,8])
+    rospy.loginfo ("4")
+    # '''
 
+    '''
+    # test straight line function 2
+    travel_to(20,[-86.6,-97.2])
+    travel_to(20,[-69.3,-184.1])
+    rospy.loginfo ("1")
 
+    travel_to(80,[177.7,-195.5])
+    travel_to(20,[240.1,-135.7])
+    travel_to(20,[240.1,-68.8])
+    rospy.loginfo ("2")
 
-    # corner(15,[-44.2,-0.8], 10,0)
-    
-    # goal_map = PoseStamped()
-    # goal_map.header = settings.odom
-    # rospy.loginfo(settings.odom)
-    # goal_map.pose.position.x = -77.8
-    # goal_map.pose.position.y = 50
-
-    # output = tf2_buffer.transform(goal_map,"ego_vehicle")
-    
-   
-    # travel_to([-74.8,-13.8])
-    # travel_to([-71.5,-3.2])
-    # travel_to([-64.2,-0.8])
-    # travel_to([-41.4,-1.2])
-    # travel_to([-29.2,-3.7])
-    # travel_to([-21.4,-11.5])
-    # travel_to(20,[0,0])
-
-    # travel_to(80,[-71.6,150])
-    # travel_to(20,[-71.6,194])
-    # rospy.loginfo ("1")
-
-    # travel_to(80,[120,194])
-    # travel_to(20,[150.1,194])
-    # rospy.loginfo ("2")
-
-    # travel_to(80,[150,30.4])
+    travel_to(20,[185,-58.6])
     # travel_to(20,[150,8.4])
-    # rospy.loginfo ("3")
+    travel_to(20,[157.6,-121.2])
+    rospy.loginfo ("3")
 
-    # travel_to(80,[40,8])
+    travel_to(80,[-2,-130.2])
     # travel_to(20,[24,8])
-    # rospy.loginfo ("4")
-
-    # travel_to(40,[-77.8,11])
-    # rospy.loginfo ("1")
-    # travel_to(20,[-77.8,50])
-    # rospy.loginfo ("2")
-    # travel_to(40,[-77.8,120])
-    # rospy.loginfo ("3")
-    # travel_to(20,[-77.8,175])
-    # rospy.loginfo ("4")
-
-    # travel_to(15, [-77.9,-13])
-    # corner(15,[-44.2,-0.8], 10,0)
-    # corner(15,[-110.4,3.4], 10,180)
-
-
-
-    # travel_to(20,[-110.4,3.4])
-    # to do
-    # 1) adapt calculations for left turn as well (apply from car coordinate instead of world)
-    # 2) adapt corner to turn into any angled road (45 degree road)
-    # 3) possible improvement to coordinate system in travel_to function
-
+    rospy.loginfo ("4")
+    '''
 
 
     while not rospy.is_shutdown():
@@ -155,47 +125,30 @@ def corner(speed,endPos,turnRadius,target_angle):
 
 def travel_to(setSpeed,goal_coord):
     
-    # diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
-    # rospy.loginfo (diff_goal)
+    # set up local variable to ensure 50Hz signal
     prev_time = settings.curr_time
 
-    while not rospy.is_shutdown():
-        # rospy.loginfo(settings.car_direction_from_world[2])
+    while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
+        rospy.ROSInterruptException  # allow ctrl+C to exit the program    
 
-        if((settings.curr_time - prev_time) > 0.02):  # run at 50Hz to reduce computational power
-            goal_coord_from_car = goal_distance_from_car(target_coord = goal_coord, from_coord = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]])
-
-            # rospy.loginfo(goal_coord_from_car)
-
-            diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
-            # diff_goal = 1
-            
-            # if(goal_coord_from_car[0]>=0):
-            # ori_angle = -(math.atan2(goal_coord_from_car[1],goal_coord_from_car[0])*180)/math.pi
-            # angle = ori_angle
-            # if(settings.current_quadrant ==3):
-            #     if(angle<0):
-            #         angle = 360-ori_angle
-            # elif(settings.current_quadrant==2):
-            #     if(angle>0):
-            #         angle = ori_angle-360 
-            # rospy.loginfo(f"{angle} {ori_angle}")
-            # else:
-            #     angle = -(math.atan2(goal_coord_from_car[1],-goal_coord_from_car[0])*180)/math.pi
-
-            # if(settings.car_direction_from_world[2])
-            # if(angle >)
-            
-
-            # rospy.loginfo(f"{angle}")
-
-
-
+        # run at 50Hz to reduce computational power 
+        # using non (search for arduino debounce if you're intrested in this method)
+        if((settings.curr_time - prev_time) > 0.02):  
             prev_time = settings.curr_time
-            # rospy.loginfo(goal_coord_from_car[2])
+
+            # 1) run function to obtain goal coordinates & angle from current car position
+            goal_coord_from_car = goal_position_from_car(goal_coord)
+            
+
+            # 2) obtain goal distance from car (using pythagoras theorem)
+            diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
+
+
+            # 3) send commands to carla to control the car
             Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
 
-            rospy.ROSInterruptException  # allow control+C to exit the program
+
+            # stop the loop when the goal is within 2m of the car
             if diff_goal<=2:
                 break
     
@@ -207,26 +160,54 @@ def travel_to(setSpeed,goal_coord):
 
 # obtain coordinate target_coordinate with respects to from_coordinate
 # example, goal coordinate with respect to car (from car's perspective)
-def goal_distance_from_car(target_coord, from_coord):
-    result_coord = [0,0,0]
-    result_coord[0] = target_coord[0]-from_coord[0] # x coordinate
-    result_coord[1] = target_coord[1]-from_coord[1] # y coordinate
-
-    world_angle = (math.atan2(result_coord[1],result_coord[0])*180)/math.pi  # value from -180 to 180
-    goal_from_car_angle = settings.car_direction_from_world[2]-world_angle 
+def goal_position_from_car(goal_coord):
+    '''
+    function format
+    since we mainly need x, y coordinate and orientation, we would use the following format for this function
+        [x ,y , angle]
     
-    while(goal_from_car_angle<-180):
-        goal_from_car_angle = goal_from_car_angle+360
-
-    while(goal_from_car_angle>180):
-        goal_from_car_angle = goal_from_car_angle-360
-
-    result_coord[2] = goal_from_car_angle
+    it would be used in the followings 
+    - car position with respect to the world
+    - goal position with respect to the car
+    '''
+    car_from_world = [0,0,0]
+    goal_from_car = [0,0,0]
     
+
+    # 1) obtain current car coordinates from global variables
+    # note that settings.car_direction_from_world is an absolute angle, (meaning that when you keep turining right, it is not limited to the -180 to 180 degree set by carla and thus go to 720, 1080 and so on)
+    car_from_world = [  settings.car_coordinate_from_world[0], # x coordinate
+                        settings.car_coordinate_from_world[1], # y coordinate
+                        settings.car_direction_from_world[2]  # angle
+                        ]
     
-    # rospy.loginfo(f"{result_coord} {world_angle}")
+    # 2) find x and y coordinate of the goal from the car
+    goal_from_car[0] = goal_coord[0] - car_from_world [0] # x coordinate
+    goal_from_car[1] = goal_coord[1] - car_from_world [1] # y coordinate
+
+
+    # 3) find angle in the world coordinate of the goal from the car (without taking car angle in account)
+    car_and_goal_angle_diff_in_world = (math.atan2(goal_from_car[1],goal_from_car[0])*180)/math.pi  # value from -180 to 180
+
+
+    # 4) offset angle by car current angle 
+    goal_from_car[2] =  car_from_world[2]  - car_and_goal_angle_diff_in_world 
+
+    
+    # 5) filter system to ensure from car's prespective, that (-1 to -180 is turning left) & (1 to 180 is turning right) 
+    while(goal_from_car[2]<-180):
+        goal_from_car[2]= goal_from_car[2]+360
+
+    while(goal_from_car[2]>180):
+        goal_from_car[2] = goal_from_car[2]-360
+
+    # goal_from_car[2] = goal_from_car[2]
+    
      
-    return result_coord
+    # 6) return goal's position and angle from car's prespective
+    return goal_from_car  
+
+
 
 #################################################################################################################################################
 try:
@@ -234,7 +215,7 @@ try:
 
     # start rosnode
     rospy.init_node('APC_Monash')
-    rate = rospy.Rate(50) # publish data at 100Hz
+    rate = rospy.Rate(50) # publish data at 50Hz
     rospy.loginfo("APC_Monash started")
 
     # start ros communications with rostopics
