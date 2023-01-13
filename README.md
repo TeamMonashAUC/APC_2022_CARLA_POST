@@ -19,7 +19,7 @@ The new research code developed is under APC_Monash folder
 - [x] PID control
 - [x] Linear steering
 - [ ] Coordinate system for car travel
-    - [ ] Straight line
+    - [x] Straight line
     - [ ] Corners
 - [ ] Lane centering using camera (opencv2)   
     - [ ] Straight line

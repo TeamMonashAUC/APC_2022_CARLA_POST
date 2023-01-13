@@ -43,7 +43,7 @@ def main():
 
     travel_to(15, [-134,3.6])
     rospy.loginfo("1")
-    corner(15,[-145.4,25.2], 10,90)
+    # corner(15,[-145.4,25.2], 10,90)
 
     # travel_to(15, [-134,3.6])
     # corner(15,[-149.4,-15.5], 15,270)
@@ -94,9 +94,9 @@ def main():
     # travel_to(20,[-77.8,175])
     # rospy.loginfo ("4")
 
-    travel_to(15, [-77.9,-13])
+    # travel_to(15, [-77.9,-13])
     # corner(15,[-44.2,-0.8], 10,0)
-    corner(15,[-110.4,3.4], 10,180)
+    # corner(15,[-110.4,3.4], 10,180)
 
 
 
@@ -196,7 +196,7 @@ def travel_to(setSpeed,goal_coord):
             Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
 
             rospy.ROSInterruptException  # allow control+C to exit the program
-            if diff_goal<=0.5:
+            if diff_goal<=2:
                 break
     
     
