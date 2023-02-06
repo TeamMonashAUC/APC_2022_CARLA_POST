@@ -67,7 +67,7 @@ def arduino_map_function(x, in_min, in_max, out_min, out_max):
 #################################################################################################################################################
 '''
 Function Explanation :
-    allows easy input, Speed (in m/s, can be any negative or positive number), Steer (angle of travel wanted))
+    allows easy input, Speed (in m/s, can be any negative or positive number), Steer (angle of travel wanted in radians))
 '''
 def carControl(targetSpeed = 0, steerAngle = 0):
     # variables to be sent to carla

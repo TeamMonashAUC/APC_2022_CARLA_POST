@@ -14,6 +14,18 @@ This function main purpose is to enables the car to goal to a designated corodin
 '''
 
 #################################################################################################################################################
+# import other prgramming files
+import settings
+import ROS_Communication
+import Movement_Control
+
+#################################################################################################################################################
+# import used libraries
+import rospy
+import math
+
+
+#################################################################################################################################################
 
 '''
 Function Explanation :
