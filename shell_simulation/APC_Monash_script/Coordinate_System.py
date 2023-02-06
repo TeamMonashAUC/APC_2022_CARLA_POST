@@ -1,0 +1,129 @@
+'''
+Coordinate_System (Level 3 code)
+- uses Movement_Control.py
+
+File purpose:
+    - Translate coordinate goal and system to throttle and steering commands for the car
+    - 
+
+This function main purpose is to enables the car to goal to a designated corodinate using the following
+- travel_to(setSpeed,goal_coord)       -- allowing the car to travel straight to a coordinate, and would end when within 2m from the goal
+- corner
+
+
+'''
+
+#################################################################################################################################################
+
+'''
+Function Explanation :
+    knowing the world coordinate of the car and the goal, 
+    this function would use them to find the goal coordinate when the axis is placed on the car
+
+    x axis would be the goal distance from the front of the car
+    y axis would be the goal distance from the side of the car
+    angle would be the angle of the goal from the front of the car
+    
+'''
+def goal_position_from_car(goal_coord):
+    '''
+    function format
+    since we mainly need x, y coordinate and orientation, we would use the following format for this function
+        [x ,y , angle]
+    
+    it would be used in the followings 
+    - car position with respect to the world
+    - goal position with respect to the car before rotation
+    - goal position with respect to the car
+    '''
+    car_from_world = [0,0,0]
+    goal_from_car_before_rotation = [0,0,0]
+    goal_from_car = [0,0,0]
+    
+
+    # 1) obtain current car coordinates from global variables
+    # note that settings.car_direction_from_world is an absolute angle, (meaning that when you keep turining right, it is not limited to the -180 to 180 degree set by carla and thus go to 720, 1080 and so on)
+    car_from_world = [  settings.car_coordinate_from_world[0], # x coordinate
+                        settings.car_coordinate_from_world[1], # y coordinate
+                        settings.car_direction_from_world[2]  # angle
+                        ]
+    
+    # 2) calculate coordinate position from car
+    goal_from_car_before_rotation[0]  =  goal_coord[0] - car_from_world [0] # x coordinate
+    goal_from_car_before_rotation[1]  =  goal_coord[1] - car_from_world [1] # y coordinate
+
+
+    # 3) find angle in the world coordinate of the goal from the car (before rotating axis)
+    goal_from_car_before_rotation[2] = math.atan2(goal_from_car_before_rotation[1],goal_from_car_before_rotation[0] )  # value from -180 to 180
+
+
+
+    '''
+    coordinate transformation
+    https://en.wikipedia.org/wiki/Rotation_of_axes#:~:text=If%20the%20curve%20(hyperbola%2C%20parabola,called%20a%20transformation%20of%20coordinates.
+    x' = x cos(theta) + y sin(theta)
+    y' = -x sin(theta) + y cos(theta)
+    '''
+    # 4) rotate axis and goal points around the car origin 
+    goal_from_car[0] = goal_from_car_before_rotation[0] * math.cos((car_from_world[2]*math.pi/ 180 )) + goal_from_car_before_rotation[1] *math.sin((car_from_world[2]*math.pi / 180 ))
+    goal_from_car[1] = -goal_from_car_before_rotation[0] * math.sin((car_from_world[2]*math.pi / 180 )) + goal_from_car_before_rotation[1]  *math.cos((car_from_world[2]*math.pi / 180 ))
+    goal_from_car[2] =  (car_from_world[2]*math.pi) / 180  - goal_from_car_before_rotation[2] 
+    
+
+    # 5) filter system to ensure from car's prespective, that (-1 to -180 is turning left) & (1 to 180 is turning right) 
+    goal_from_car[2] = (goal_from_car[2]*180)/math.pi
+    while(goal_from_car[2]<-180):
+        goal_from_car[2]= goal_from_car[2]+360
+
+    while(goal_from_car[2]>180):
+        goal_from_car[2] = goal_from_car[2]-360
+
+     
+    # 6) return goal's position and angle from car's prespective
+    return goal_from_car  
+
+
+
+
+#################################################################################################################################################
+
+'''
+Function Explanation :
+    travel_to()
+    -uses goal_position_from_car(goal_coord) function 
+
+    it allows the car to move straight to a coordinate point 
+    (does as aggressive steering as needed, and would drive straight to that point wihtout care for obstacles)
+    
+'''
+
+def travel_to(setSpeed,goal_coord):
+    
+    # set up local variable to ensure output signal updates at 50Hz
+    prev_time = settings.curr_time
+
+    while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
+        rospy.ROSInterruptException  # allow ctrl+C to exit the program    
+
+        # run at 50Hz to reduce computational power 
+        # using non (search for arduino debounce if you're intrested in this method)
+        if((settings.curr_time - prev_time) > 0.02):  
+            prev_time = settings.curr_time
+
+            # 1) run function to obtain goal coordinates & angle from current car position
+            goal_coord_from_car = goal_position_from_car(goal_coord)
+            
+
+            # 2) obtain goal distance from car (using pythagoras theorem)
+            diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
+
+
+            # 3) send commands to carla to control the car
+            Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
+
+
+            # stop the loop when the goal is within 2m of the car
+            if diff_goal<=2:
+                break
+    
+    

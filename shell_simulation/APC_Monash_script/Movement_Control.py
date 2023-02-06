@@ -1,5 +1,7 @@
 '''
 Movement_Control (Level 2 code)
+- uses ROS_Communication.py
+
 File purpose:
 	- Speed control - uses PID control to manipulate throttle pedal & brake for consistent speed
     - Steering control - Uses linear steering to steer at a certain distance given the angle

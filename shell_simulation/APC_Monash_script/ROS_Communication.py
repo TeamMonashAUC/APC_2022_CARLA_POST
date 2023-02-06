@@ -170,7 +170,8 @@ def receive_Odometry(data):
 
     # settings.car_direction_from_world      = euler_from_quaternion(data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w)
     euler_angle = euler_from_quaternion(data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w)
-    settings.car_direction_from_world      = [euler_angle[0],euler_angle[1],absoluteYaw(euler_angle[2])]
+    # settings.car_direction_from_world      = [euler_angle[0],euler_angle[1],absoluteYaw(euler_angle[2])]
+    settings.car_direction_from_world      = [euler_angle[0],euler_angle[1],euler_angle[2]]
     # rospy.loginfo(car_coordinate)
     
     # rospy.loginfo(data.header)

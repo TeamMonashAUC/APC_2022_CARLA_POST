@@ -32,94 +32,122 @@ import Movement_Control   	 # utilise PID for throttle & linear steering using m
 # import libraries
 import rospy
 import math
+import numpy as np
 
 #################################################################################################################################################
 
 def main():
+    # first corner
+    travel_to(15, [-77.9, -15])
+    corner(15,8,[-44.2, -1],0)
+    
     
     '''
-    # test straight line function 1
-    travel_to(80,[-71.6,150])
-    travel_to(20,[-71.6,194])
-    rospy.loginfo ("1")
-
-    travel_to(80,[120,194])
-    travel_to(20,[150.1,194])
-    rospy.loginfo ("2")
-
-    travel_to(80,[150,30.4])
-    travel_to(20,[150,8.4])
-    rospy.loginfo ("3")
-
-    travel_to(80,[40,8])
-    travel_to(20,[28,8])
-    rospy.loginfo ("4")
-
-    travel_to(20,[14.7,-11.2])
-    travel_to(20,[-6.9,-49.2])
-    rospy.loginfo ("5")
-
-    travel_to(20,[-8.9,-192.4])
-    travel_to(20,[-66.8,-194.6])
-    rospy.loginfo ("6")
+    # corner 2, 2 corners in a row
+    travel_to(50, [-74.7, 84.1])
+    travel_to(15, [-74.7, 104.2])
+    corner(15,5,[-53.3,132.4],0)
+    
+    travel_to(15, [-19.7, 131.7])
+    corner(15,8,[-4.5,114.7],-90)
     '''
 
-    '''
-    # test straight line function 2
-    travel_to(20,[-86.6,-97.2])
-    travel_to(20,[-69.3,-184.1])
-    rospy.loginfo ("1")
+    # corner(15,5,[10,10],-90)
+    # corner(15,8,[-53.3,131.6],-90)
+    # travel_to(15, [-44.2, -1])
 
-    travel_to(80,[177.7,-195.5])
-    travel_to(20,[240.1,-135.7])
-    travel_to(20,[240.1,-68.8])
-    rospy.loginfo ("2")
-
-    travel_to(20,[185,-58.6])
-    # travel_to(20,[150,8.4])
-    travel_to(20,[157.6,-121.2])
-    rospy.loginfo ("3")
-
-    travel_to(80,[-2,-130.2])
-    # travel_to(20,[24,8])
-    rospy.loginfo ("4")
-    '''
 
     val=0
     while not rospy.is_shutdown():
-        # '''
-        # test straight line function 1
-        travel_to(80,[-75.6,150])
-        travel_to(20,[-75.6,194])
-        rospy.loginfo ("1")
+        rospy.ROSInterruptException  # allow control+C to exit the program
+        # rospy.loginfo(goal_position_from_car([-56.9,-0.4]))
+        # corner(20,5,[10,10],60)
 
-        travel_to(80,[120,194])
-        travel_to(20,[150.1,194])
-        rospy.loginfo ("2")
 
-        travel_to(80,[150,30.4])
-        travel_to(20,[150,8.4])
-        rospy.loginfo ("3")
-
-        travel_to(80,[40,8])
-        travel_to(20,[28,8])
-        rospy.loginfo ("4")
-
-        travel_to(20,[14.7,-11.2])
-        travel_to(60,[-6.9,-49.2])
-        rospy.loginfo ("5")
-
-        travel_to(80,[-8.9,-192.4])
-        travel_to(40,[-66.8,-194.6])
-        rospy.loginfo ("6")
+        # val = val +1
+        # rospy.loginfo("total run = " + str(val))
         
-        val = val +1
-        rospy.loginfo("total run = " + str(val))
-        # '''
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
+
+def corner(speed,turnRadius,end_Pos,end_Angle):
+    # start_Pos = [0,0]
+    # start_Pos = [-74.754638671875, 102.29220581054688]
+    # start_Angle = 90 -90
+    end_Angle = end_Angle-90
+    
+    # start_Angle = 0
+    # start_Pos = [-74.754638671875, 102.29220581054688]
+    # start_Angle = 88.35488891601564
+    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
+    start_Angle = settings.car_direction_from_world[2]-90
+
+    # rospy.loginfo(goal_position_from_car(end_Pos))
+
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
+    rospy.loginfo("start_Angle: " + str(start_Angle ))
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    # rospy.loginfo("  ")
+
+    start_Angle = start_Angle*math.pi/180
+    end_Angle = end_Angle*math.pi/180
+
+
+    # solve simultaneous equation
+    A = np.array([
+        [math.sin(start_Angle), -math.sin(end_Angle)],
+        [math.cos(start_Angle), -math.cos(end_Angle)]
+        ])
+    B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
+    C = np.linalg.solve(A,B)
+    # rospy.loginfo("A" + str(A))
+    # rospy.loginfo("B" + str(B))
+    # rospy.loginfo("C" + str(C))
+    # rospy.loginfo("  ")
+
+    P3_coord = [end_Pos[0]+C[1]*math.sin(end_Angle),
+                end_Pos[1]+C[1]*math.cos(end_Angle)]
+
+    # P3_coord = [end_Pos[0] + C[1]*math.sin(end_Angle), end_Pos[1] + C[1]*math.cos(end_Angle) ]
+
+    rospy.loginfo("intersectionPoint" + str(P3_coord))
+    # rospy.loginfo("  ")
+
+    angle_diff = end_Angle - start_Angle
+    d = turnRadius*math.tan(angle_diff/2 )+settings.wheelBase-0.5
+
+    # turnCoord = [   P3_coord[0]-d*math.sin((-start_Angle*math.pi)/360)+start_Pos[0],
+    #                 -P3_coord[1]-d*math.cos((start_Angle*math.pi)/360)+start_Pos[1]]
+    turnCoord = [   P3_coord[0]-d*math.sin((-start_Angle*math.pi)/360),
+                    P3_coord[1]+d*math.cos((start_Angle*math.pi)/360)]
+    # rospy.loginfo("math" + str(P3_coord)+" "+str(d*math.cos((start_Angle*math.pi)/360))+" "+str(start_Pos[1]))
+    rospy.loginfo("TurnCoord" + str(turnCoord))
+    rospy.loginfo("  ")
+    rospy.loginfo("  ")
+
+
+
+    # rospy.loginfo(goal_position_from_car(end_Pos))
+    travel_to(speed, turnCoord)
+    '''
+    RightDir = 0 # 0 ?
+    # turnfor turn left, 1 for turning right 
+    # if end_Angle < settings.car_direction_from_world[2]:
+    #     turnRightDir = 0
+    # else :
+    #     turnRightDir = 1
+    '''
+    while not rospy.is_shutdown():
+        angle = math.asin(settings.wheelBase/turnRadius)
         rospy.ROSInterruptException  # allow control+C to exit the program
 
-def corner(speed,endPos,turnRadius,target_angle):
+        # rospy.loginfo(angle *180/math.pi)
+        Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
+        if goal_position_from_car(end_Pos)[2] <= end_Angle+15:
+            break
+
+    travel_to(speed, end_Pos)
+    '''
     #1 get startPos,endPos and radius 
     startPos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
     # startAngle = settings.car_direction_from_world[2]
@@ -127,19 +155,19 @@ def corner(speed,endPos,turnRadius,target_angle):
     # rospy.loginfo(startPos)
     # 2 calculate intersection point
     
-    intersectPos = [startPos[0],endPos[1]]
+    intersectPos = [startPos[1],endPos[0]]
     # rospy.loginfo(intersectPos)
     
     #3 find start curning coordinate
 
-    rospy.loginfo([intersectPos[0], intersectPos[1]-turnRadius])
-    travel_to(speed, [intersectPos[0], intersectPos[1]-turnRadius]  )
-
-    # turnRightDir = 0 # 0 for turn left, 1 for turning right 
+    rospy.loginfo([intersectPos[0], intersectPos[1]+turnRadius])  
+    travel_to(speed, [intersectPos[0], intersectPos[1]+turnRadius]  )
+    RightDir = 0 # 0 
+    # turnfor turn left, 1 for turning right 
     if target_angle < settings.car_direction_from_world[2]:
-        turnRightDir = 1
-    else :
         turnRightDir = 0
+    else :
+        turnRightDir = 1
 
     while not rospy.is_shutdown():
         angle = math.asin(settings.wheelBase/turnRadius)
@@ -159,90 +187,11 @@ def corner(speed,endPos,turnRadius,target_angle):
         
 
     travel_to(speed,endPos)
-
-def travel_to(setSpeed,goal_coord):
-    
-    # set up local variable to ensure 50Hz signal
-    prev_time = settings.curr_time
-
-    while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
-        rospy.ROSInterruptException  # allow ctrl+C to exit the program    
-
-        # run at 50Hz to reduce computational power 
-        # using non (search for arduino debounce if you're intrested in this method)
-        if((settings.curr_time - prev_time) > 0.02):  
-            prev_time = settings.curr_time
-
-            # 1) run function to obtain goal coordinates & angle from current car position
-            goal_coord_from_car = goal_position_from_car(goal_coord)
-            
-
-            # 2) obtain goal distance from car (using pythagoras theorem)
-            diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
-
-
-            # 3) send commands to carla to control the car
-            Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
-
-
-            # stop the loop when the goal is within 2m of the car
-            if diff_goal<=2:
-                break
-    
-    
-    
-
-
-
-
-# obtain coordinate target_coordinate with respects to from_coordinate
-# example, goal coordinate with respect to car (from car's perspective)
-def goal_position_from_car(goal_coord):
     '''
-    function format
-    since we mainly need x, y coordinate and orientation, we would use the following format for this function
-        [x ,y , angle]
-    
-    it would be used in the followings 
-    - car position with respect to the world
-    - goal position with respect to the car
-    '''
-    car_from_world = [0,0,0]
-    goal_from_car = [0,0,0]
-    
-
-    # 1) obtain current car coordinates from global variables
-    # note that settings.car_direction_from_world is an absolute angle, (meaning that when you keep turining right, it is not limited to the -180 to 180 degree set by carla and thus go to 720, 1080 and so on)
-    car_from_world = [  settings.car_coordinate_from_world[0], # x coordinate
-                        settings.car_coordinate_from_world[1], # y coordinate
-                        settings.car_direction_from_world[2]  # angle
-                        ]
-    
-    # 2) find x and y coordinate of the goal from the car
-    goal_from_car[0] = goal_coord[0] - car_from_world [0] # x coordinate
-    goal_from_car[1] = goal_coord[1] - car_from_world [1] # y coordinate
-
-
-    # 3) find angle in the world coordinate of the goal from the car (without taking car angle in account)
-    car_and_goal_angle_diff_in_world = (math.atan2(goal_from_car[1],goal_from_car[0])*180)/math.pi  # value from -180 to 180
-
-
-    # 4) offset angle by car current angle 
-    goal_from_car[2] =  car_from_world[2]  - car_and_goal_angle_diff_in_world 
 
     
-    # 5) filter system to ensure from car's prespective, that (-1 to -180 is turning left) & (1 to 180 is turning right) 
-    while(goal_from_car[2]<-180):
-        goal_from_car[2]= goal_from_car[2]+360
 
-    while(goal_from_car[2]>180):
-        goal_from_car[2] = goal_from_car[2]-360
 
-    # goal_from_car[2] = goal_from_car[2]
-    
-     
-    # 6) return goal's position and angle from car's prespective
-    return goal_from_car  
 
 
 
