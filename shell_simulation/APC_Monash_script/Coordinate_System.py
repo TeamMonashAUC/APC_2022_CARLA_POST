@@ -23,6 +23,7 @@ import Movement_Control
 # import used libraries
 import rospy
 import math
+import numpy as np
 
 
 #################################################################################################################################################
@@ -137,5 +138,58 @@ def travel_to(setSpeed,goal_coord):
             # stop the loop when the goal is within 2m of the car
             if diff_goal<=0.2:
                 break
+   
+################################################################################################################################################# 
+def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
+    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
+    
+
+
+    rospy.loginfo("start_Angle: " + str(start_Angle ))
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    rospy.loginfo("  ")
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
     
     
+    start_Angle = start_Angle*math.pi/180
+    end_Angle = end_Angle*math.pi/180
+    
+    # solve simultaneous equation
+    A = np.array([
+        [math.sin(start_Angle), -math.sin(end_Angle)],
+        [math.cos(start_Angle), -math.cos(end_Angle)]
+        ])
+    B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
+    C = np.linalg.solve(A,B)
+
+    intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
+    # intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]+C[1]*math.cos(start_Angle)]
+    rospy.loginfo("intersectionPoint" + str(intersectionPoint))
+
+    rospy.loginfo("C0: " + str(C[0]))
+    rospy.loginfo("C1: " + str(C[1]))
+
+    turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
+                    intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
+
+
+    rospy.loginfo("offset x: " + str(-turnRadius*math.cos(start_Angle)))
+    rospy.loginfo("offset y: " + str(-turnRadius*math.sin(start_Angle)))
+    rospy.loginfo("TurnCoord" + str(turnCoord))
+    rospy.loginfo("  ")
+    rospy.loginfo("  ")
+
+    travel_to(speed, turnCoord)
+    
+    while not rospy.is_shutdown():
+        rospy.ROSInterruptException  # allow control+C to exit the program
+
+        angle = math.asin(settings.wheelBase/turnRadius)
+        Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
+        # rospy.loginfo(angle *180/math.pi)
+
+        if goal_position_from_car(end_Pos)[2] <= end_Angle+10:
+            break
+
+    travel_to(speed, end_Pos)
