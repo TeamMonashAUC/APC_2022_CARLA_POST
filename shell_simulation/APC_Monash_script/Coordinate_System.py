@@ -135,7 +135,7 @@ def travel_to(setSpeed,goal_coord):
 
 
             # stop the loop when the goal is within 2m of the car
-            if diff_goal<=2:
+            if diff_goal<=0.2:
                 break
     
     

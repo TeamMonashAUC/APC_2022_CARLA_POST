@@ -38,11 +38,34 @@ import numpy as np
 #################################################################################################################################################
 
 def main():
-    # '''
+    Coordinate_System.travel_to(15, [132.5, 132])
+    corner(15,5,0,[150.2, 113.8],-90)
+
+    Coordinate_System.travel_to(15, [149.8, 88.7])
+    corner(15,5,-90,[133.8, 76.9],-180)
+
+    Coordinate_System.travel_to(15, [100.8, 76.9])
+    corner(15,5,-180,[84.6, 92.5],90)
+
+
+    Coordinate_System.travel_to(15, [84.6, 113.5])
+    corner(15,5,90,[102.9, 132.4],0)
+
+    '''
+    Coordinate_System.travel_to(15, [-100, -0.4])
+    corner(15,5,[-88.2, -32.9],-90)
+
+    Coordinate_System.travel_to(45, [-84.8, -108.4])
+    corner(15,5,[-59.7, -135.7],0)
+    '''
+
+    # Coordinate_System.travel_to(15, [-100, -0.4])
+    # corner(15,5,[-74.3, 10.6],90)
+    '''
     # first corner (working)
     Coordinate_System.travel_to(15, [-77.9, -15])
-    corner(15,5,[-44.2, -1],-90)
-    # '''
+    corner(15,5,[-44.2, -1],0)
+    '''
     
     '''
     # corner 2, (corner 1 working, corner 2 failed)
@@ -75,15 +98,82 @@ def main():
         
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
 
-def corner(speed,turnRadius,end_Pos,end_Angle):
-    # start_Pos = [0,0]
-    # start_Pos = [-74.754638671875, 102.29220581054688]
-    # start_Angle = 90 -90
-    # end_Angle = end_Angle
+def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
+    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
+    # start_Angle = settings.car_direction_from_world[2]
+    angle_diff = end_Angle - start_Angle
+
+    # rospy.loginfo(goal_position_from_car(end_Pos))
+
+    rospy.loginfo("start_Angle: " + str(start_Angle ))
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    rospy.loginfo("diff_Angle: " + str(angle_diff))
+    rospy.loginfo("  ")
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
+    # rospy.loginfo("  ")
+
+    start_Angle = start_Angle*math.pi/180
+    end_Angle = end_Angle*math.pi/180
+    angle_diff = angle_diff*math.pi/180
+
+
+    # solve simultaneous equation
+    A = np.array([
+        [math.sin(start_Angle), -math.sin(end_Angle)],
+        [math.cos(start_Angle), -math.cos(end_Angle)]
+        ])
+    B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
+    C = np.linalg.solve(A,B)
+
+    intersectionPoint = [end_Pos[0]+C[1]*math.cos(end_Angle)  ,  end_Pos[1]+C[0]*math.sin(end_Angle)]
+    rospy.loginfo("intersectionPoint" + str(intersectionPoint))
+
+    rospy.loginfo("C0: " + str(C[0]))
+    rospy.loginfo("C1: " + str(C[1]))
+
+    # P3_coord = [end_Pos[0] + C[1]*math.sin(end_Angle), end_Pos[1] + C[1]*math.cos(end_Angle) ]
+
+    # rospy.loginfo("  ")
+
+    # d = turnRadius*math.tan(angle_diff/2 )+settings.wheelBase
+
+    # turnCoord = [   P3_coord[0]-d*math.sin((-start_Angle*math.pi)/360)+start_Pos[0],
+    #                 -P3_coord[1]-d*math.cos((start_Angle*math.pi)/360)+start_Pos[1]]
+    # turnCoord = [   intersectionPoint[0]-turnRadius*math.cos((start_Angle*math.pi)/360),
+    #                 intersectionPoint[1]+turnRadius*math.sin((start_Angle*math.pi)/360)]
+    # turnCoord = [   intersectionPoint[0]-turnRadius*math.cos((start_Angle*math.pi)/180),
+                    # intersectionPoint[1]-turnRadius*math.sin((-start_Angle*math.pi)/180)]
+    turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
+                    intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
+
+
+    rospy.loginfo("offset x: " + str(-turnRadius*math.cos(start_Angle)))
+    rospy.loginfo("offset y: " + str(-turnRadius*math.sin(start_Angle)))
+    # rospy.loginfo("math" + str(P3_coord)+" "+str(d*math.cos((start_Angle*math.pi)/360))+" "+str(start_Pos[1]))
+    rospy.loginfo("TurnCoord" + str(turnCoord))
+    rospy.loginfo("  ")
+    rospy.loginfo("  ")
+
+    # rospy.loginfo(goal_position_from_car(end_Pos))
+    Coordinate_System.travel_to(speed, turnCoord)
     
-    # start_Angle = 0
-    # start_Pos = [-74.754638671875, 102.29220581054688]
-    # start_Angle = 88.35488891601564
+    while not rospy.is_shutdown():
+        rospy.ROSInterruptException  # allow control+C to exit the program
+
+        angle = math.asin(settings.wheelBase/turnRadius)
+        # rospy.loginfo(angle *180/math.pi)
+        Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
+
+        if Coordinate_System.goal_position_from_car(end_Pos)[2] <= end_Angle+10:
+            break
+
+    # Coordinate_System.travel_to(0, end_Pos)
+    Coordinate_System.travel_to(speed, end_Pos)
+
+
+    
+    '''
     start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
     start_Angle = settings.car_direction_from_world[2]+end_Angle
 
@@ -154,6 +244,15 @@ def corner(speed,turnRadius,end_Pos,end_Angle):
             break
 
     Coordinate_System.travel_to(speed, end_Pos)
+
+    '''
+
+
+
+
+
+
+
     '''
     #1 get startPos,endPos and radius 
     startPos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
