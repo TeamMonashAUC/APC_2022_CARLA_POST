@@ -39,6 +39,9 @@ import numpy as np
 
 def main():
     # '''
+    # "spawn_point": {"x": 113.6, "y": 132.2, "z": 8.2, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+    
+    # Right turn test
     Coordinate_System.travel_to(15, [132.5, 132])
     Coordinate_System.corner(15,5,0,[150.2, 113.8],-90)
 
@@ -51,10 +54,7 @@ def main():
     Coordinate_System.travel_to(15, [84.6, 113.5])
     Coordinate_System.corner(15,5,90,[97.0, 132.4],0)
 
-
-    # '''
-
-    # '''
+    # Left turn test
     Coordinate_System.travel_to(15, [132.5, 132])
     Coordinate_System.corner(15,5,0,[154.5, 149.7],90)
 
@@ -79,6 +79,7 @@ def main():
 
 
     '''
+	#   "spawn_point": {"x": -77.9, "y": -17.59, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
     Coordinate_System.travel_to(15, [-100, -0.4])
     corner(15,5,[-88.2, -32.9],-90)
 

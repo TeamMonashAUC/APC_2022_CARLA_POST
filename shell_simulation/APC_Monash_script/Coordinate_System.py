@@ -145,11 +145,11 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     
 
 
-    rospy.loginfo("start_Angle: " + str(start_Angle ))
-    rospy.loginfo("end_Angle: " + str(end_Angle))
-    rospy.loginfo("  ")
-    rospy.loginfo("start: " + str(start_Pos))
-    rospy.loginfo("end: " + str(end_Pos))
+    # rospy.loginfo("start_Angle: " + str(start_Angle ))
+    # rospy.loginfo("end_Angle: " + str(end_Angle))
+    # rospy.loginfo("  ")
+    # rospy.loginfo("start: " + str(start_Pos))
+    # rospy.loginfo("end: " + str(end_Pos))
     
     
     start_Angle = start_Angle*math.pi/180
@@ -165,20 +165,20 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
 
     intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
     # intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]+C[1]*math.cos(start_Angle)]
-    rospy.loginfo("intersectionPoint" + str(intersectionPoint))
+    # rospy.loginfo("intersectionPoint" + str(intersectionPoint))
 
-    rospy.loginfo("C0: " + str(C[0]))
-    rospy.loginfo("C1: " + str(C[1]))
+    # rospy.loginfo("C0: " + str(C[0]))
+    # rospy.loginfo("C1: " + str(C[1]))
 
     turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
                     intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
 
 
-    rospy.loginfo("offset x: " + str(-turnRadius*math.cos(start_Angle)))
-    rospy.loginfo("offset y: " + str(-turnRadius*math.sin(start_Angle)))
-    rospy.loginfo("TurnCoord" + str(turnCoord))
-    rospy.loginfo("  ")
-    rospy.loginfo("  ")
+    # rospy.loginfo("offset x: " + str(-turnRadius*math.cos(start_Angle)))
+    # rospy.loginfo("offset y: " + str(-turnRadius*math.sin(start_Angle)))
+    # rospy.loginfo("TurnCoord" + str(turnCoord))
+    # rospy.loginfo("  ")
+    # rospy.loginfo("  ")
 
     travel_to(speed, turnCoord)
     
