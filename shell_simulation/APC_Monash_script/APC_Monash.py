@@ -38,7 +38,7 @@ import numpy as np
 #################################################################################################################################################
 
 def main():
-    # '''
+    '''
     # "spawn_point": {"x": 113.6, "y": 132.2, "z": 8.2, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
     
     # Right turn test
@@ -67,51 +67,45 @@ def main():
 
     Coordinate_System.travel_to(15, [82.5, 150.5])
     Coordinate_System.corner(15,5,-90,[99.6,132.8],0)
+    '''
+    '''
+    rospy.loginfo(str(Coordinate_System.intersect_Point([132.5,132],0,[150.2,113.8],-90)))
+    rospy.loginfo(str(Coordinate_System.intersect_Point([150.2,113.8],-90,[133.8,75.9],-180)))
+    rospy.loginfo(str(Coordinate_System.intersect_Point([133.8,75.9],180,[83.8,94.6],90)))
+    rospy.loginfo(str(Coordinate_System.intersect_Point([83.8,94.6],90,[132.5,132],0)))
+
+    rospy.loginfo("  ")
+
+    rospy.loginfo(str(Coordinate_System.intersect_Point([-63.1,2.8],180,[-105.3,-26.3],-135)))
+    rospy.loginfo(str(Coordinate_System.intersect_Point([-63.1,2.8],180,[-85.4,17.9],135)))
+    '''
     # '''
-
-
-
-
-
-
-
-
-
-
-    '''
 	#   "spawn_point": {"x": -77.9, "y": -17.59, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
-    Coordinate_System.travel_to(15, [-100, -0.4])
-    corner(15,5,[-88.2, -32.9],-90)
 
-    Coordinate_System.travel_to(45, [-84.8, -108.4])
-    corner(15,5,[-59.7, -135.7],0)
-    '''
 
-    # Coordinate_System.travel_to(15, [-100, -0.4])
-    # corner(15,5,[-74.3, 10.6],90)
-    '''
-    # first corner (working)
-    Coordinate_System.travel_to(15, [-77.9, -15])
-    corner(15,5,[-44.2, -1],0)
-    '''
+    Coordinate_System.travel_to(15, [-77.6, -9.3])
+
+    # Coordinate_System.corner(15,5,90,[-101,-21.7],-135)
+
+
+    Coordinate_System.corner(15,10,90,[-107.8,3.2],-180)
+    Coordinate_System.travel_to(15, [-128.4,3.2])
+
+    Coordinate_System.corner(15,6,-180,[-149.2,-12.7],-90)
+    Coordinate_System.travel_to(15, [-149.2,-46.4])
+
+    Coordinate_System.travel_to(15, [-149.1,-80.1])
+    Coordinate_System.corner(15,20,-90,[-115.6,-136.7],0)
     
-    '''
-    # corner 2, (corner 1 working, corner 2 failed)
-    Coordinate_System.travel_to(50, [-74.7, 84.1])
-    Coordinate_System.travel_to(15, [-74.7, 104.2])
-    corner(15,5,[-53.3,132.4],-90)
-    
-    Coordinate_System.travel_to(15, [-39.7, 131.7])
-    corner(15,8,[-4.5,114.7],0)
-    '''
+    Coordinate_System.travel_to(15, [-102,-136.4])
+    Coordinate_System.corner(15,10,0,[-77.5,-108.6],90)
 
-    '''
-    Coordinate_System.travel_to(15, [-77.9, -10])
-    corner(15,5,[-108.7, 3.5],90)
-    '''
-    # corner(15,5,[10,10],-90)
-    # corner(15,8,[-53.3,131.6],-90)
-    # travel_to(15, [-44.2, -1])
+
+    # Coordinate_System.travel_to(15, [-145.5, -77.1])
+    # Coordinate_System.corner(15,5,90,[-136.4,-52.3],45)
+
+
+
 
 
     val=0

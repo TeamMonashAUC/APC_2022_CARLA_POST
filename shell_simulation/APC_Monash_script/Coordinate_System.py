@@ -140,21 +140,13 @@ def travel_to(setSpeed,goal_coord):
                 break
    
 ################################################################################################################################################# 
-def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
-    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
-    
+def intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle):
 
-
-    # rospy.loginfo("start_Angle: " + str(start_Angle ))
-    # rospy.loginfo("end_Angle: " + str(end_Angle))
-    # rospy.loginfo("  ")
-    # rospy.loginfo("start: " + str(start_Pos))
-    # rospy.loginfo("end: " + str(end_Pos))
-    
-    
     start_Angle = start_Angle*math.pi/180
     end_Angle = end_Angle*math.pi/180
-    
+
+    diff_Angle = start_Angle-end_Angle
+    # rospy.loginfo(str(diff_Angle*180/math.pi))
     # solve simultaneous equation
     A = np.array([
         [math.sin(start_Angle), -math.sin(end_Angle)],
@@ -162,14 +154,49 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
         ])
     B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
     C = np.linalg.solve(A,B)
+    Point =[end_Pos[0]-C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
+    # Point =[start_Pos[0]+C[1]*math.cos(start_Angle)  ,  start_Pos[1]+C[1]*math.sin(start_Angle)]
+    # Point =[end_Pos[0]+C[0]*math.cos(end_Angle)  ,  start_Pos[1]-C[1]*math.sin(start_Angle)]
 
-    intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
-    # intersectionPoint = [end_Pos[0]+C[0]*math.sin(-start_Angle)  ,  end_Pos[1]+C[1]*math.cos(start_Angle)]
-    # rospy.loginfo("intersectionPoint" + str(intersectionPoint))
 
+    return Point
+
+
+
+def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
+    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
+    # start_Angle = settings.car_direction_from_world[2]
+
+
+    rospy.loginfo("start_Angle: " + str(start_Angle ))
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    rospy.loginfo("  ")
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
+    
+    
+    
+    # solve simultaneous equation
+    # A = np.array([
+    #     [math.sin(start_Angle), -math.sin(end_Angle)],
+    #     [math.cos(start_Angle), -math.cos(end_Angle)]
+    #     ])
+    # B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
+    # C = np.linalg.solve(A,B)
+
+    # intersectionPoint = [start_Pos[0]-C[0]*math.cos(start_Angle)  ,  start_Pos[1]-C[0]*math.sin(start_Angle)]
+    # intersectionPoint = [end_Pos[0]-C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
+    intersectionPoint = intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle)
+    # rospy.loginfo("C0 sin start angle: " + str(-C[0]*math.sin(start_Angle)))
+    # rospy.loginfo("C0 cos start angle: " + str(-C[0]*math.cos(start_Angle)))
+    rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
+
+    start_Angle = start_Angle*math.pi/180
+    end_Angle = end_Angle*math.pi/180
     # rospy.loginfo("C0: " + str(C[0]))
     # rospy.loginfo("C1: " + str(C[1]))
 
+    # apply offset to turn in using starting angle
     turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
                     intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
 
@@ -185,11 +212,12 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program
 
-        angle = math.asin(settings.wheelBase/turnRadius)
+        angle = -math.asin(settings.wheelBase/turnRadius)
         Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
         # rospy.loginfo(angle *180/math.pi)
 
-        if goal_position_from_car(end_Pos)[2] <= end_Angle+10:
+        if abs(goal_position_from_car(end_Pos)[2]- end_Angle) <= 15:
             break
 
+    rospy.loginfo("finalTurn")
     travel_to(speed, end_Pos)

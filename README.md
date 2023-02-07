@@ -21,7 +21,8 @@ The new research code developed is under APC_Monash folder
 - [x] Linear steering
 - [ ] Coordinate system for car travel
     - [x] Straight line
-    - [ ] Corners
+    - [x] Corners 90
+    - [ ] Corners any angle
 - [ ] Stop when detect moving obstacle (using camera or rader) 
     - [ ] Traffic light
     - [ ] pedestrian
