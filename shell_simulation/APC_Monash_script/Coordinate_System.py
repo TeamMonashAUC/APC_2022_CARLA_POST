@@ -118,9 +118,9 @@ def travel_to(setSpeed,goal_coord):
     while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
         rospy.ROSInterruptException  # allow ctrl+C to exit the program    
 
-        # run at 50Hz to reduce computational power 
+        # run at 100Hz to reduce computational power 
         # using non (search for arduino debounce if you're intrested in this method)
-        if((settings.curr_time - prev_time) > 0.02):  
+        if((settings.curr_time - prev_time) > 0.01):  
             prev_time = settings.curr_time
 
             # 1) run function to obtain goal coordinates & angle from current car position

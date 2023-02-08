@@ -136,7 +136,7 @@ try:
 
     # start rosnode
     rospy.init_node('APC_Monash')
-    rate = rospy.Rate(50) # publish data at 50Hz
+    rate = rospy.Rate(100) # publish data at 100Hz
     rospy.loginfo("APC_Monash started")
 
     # start ros communications with rostopics
