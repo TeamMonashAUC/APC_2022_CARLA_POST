@@ -6,7 +6,6 @@
 2) type in the terminal "pip install simple-pid" to install simple-PID
 
 
-
 ## Program Notes:
 The new research code developed is under APC_Monash folder
 - This new node will stop the need of test.py as a communication bridge between carla & APC_Monash
@@ -30,6 +29,10 @@ The new research code developed is under APC_Monash folder
 - [ ] Lane centering using camera (opencv2)   
     - [ ] Straight line
     - [ ] Corners
+- [ ] Energy Saving   
+    - [ ] Soft accelerate
+    - [ ] Coasting on straights
+    - [ ] Coasting on corners
 
 ### Add on features
 - [ ] Map system analysis using (OpenDRIVE standard 1.4) 
@@ -38,6 +41,7 @@ The new research code developed is under APC_Monash folder
 - [ ] Lidar SLAM research 
 
 
+![Carla Town03 Map](https://carla.readthedocs.io/en/latest/img/Town03.jpg)
 
 
 
@@ -59,4 +63,4 @@ The new research code developed is under APC_Monash folder
 
 
 
-###### written by : Andrew Josephwhat
+###### written by : Andrew Joseph Ng
