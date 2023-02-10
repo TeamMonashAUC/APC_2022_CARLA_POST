@@ -34,16 +34,16 @@ The new research code developed is under APC_Monash folder
     - [ ] Coasting on straights
     - [ ] Coasting on corners
 
+## current issues found during testing
+- [ ] Long sweeping turns
+- [ ] Roundabout
+- [ ] try to reduce tolerance needed to goals (as of now it is 1m)
+
 ### Add on features
 - [ ] Map system analysis using (OpenDRIVE standard 1.4) 
     - [ ] car can automatically decide which lane to use
 - [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)
 - [ ] Lidar SLAM research 
-
-current issues found during testing
-- [ ] Long sweeping turns
-- [ ] Roundabout
-- [ ] try to reduce tolerance needed to goals (as of now it is 1m)
 
 ![Carla Town03 Map](https://carla.readthedocs.io/en/latest/img/Town03.jpg)
 
