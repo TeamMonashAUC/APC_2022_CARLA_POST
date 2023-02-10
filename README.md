@@ -22,7 +22,7 @@ The new research code developed is under APC_Monash folder
     - [x] Straight line
     - [x] Corners 90
     - [ ] Corners any angle
-- [ ] Stop when detect moving obstacle (using camera or rader) 
+- [ ] Stop when detect moving obstacle (using camera or radar) 
     - [ ] Traffic light
     - [ ] pedestrian
     - [ ] car
