@@ -149,12 +149,17 @@ def intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle):
     # rospy.loginfo(str(diff_Angle*180/math.pi))
     # solve simultaneous equation
     A = np.array([
-        [math.sin(start_Angle), -math.sin(end_Angle)],
-        [math.cos(start_Angle), -math.cos(end_Angle)]
+        [math.cos(start_Angle), math.cos(end_Angle)],
+        [math.sin(start_Angle), math.sin(end_Angle)]
         ])
     B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
     C = np.linalg.solve(A,B)
-    Point =[end_Pos[0]-C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
+
+    # rospy.loginfo("m: "+str(C[0])+"  n: "+str(-C[1]))
+    
+    
+    Point =[start_Pos[0]+C[0]*math.cos(start_Angle)  ,  start_Pos[1]+C[0]*math.sin(start_Angle)]
+    # Point =[end_Pos[0]+C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
     # Point =[start_Pos[0]+C[1]*math.cos(start_Angle)  ,  start_Pos[1]+C[1]*math.sin(start_Angle)]
     # Point =[end_Pos[0]+C[0]*math.cos(end_Angle)  ,  start_Pos[1]-C[1]*math.sin(start_Angle)]
 
@@ -174,36 +179,38 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     rospy.loginfo("start: " + str(start_Pos))
     rospy.loginfo("end: " + str(end_Pos))
     
-    
-    
-    # solve simultaneous equation
-    # A = np.array([
-    #     [math.sin(start_Angle), -math.sin(end_Angle)],
-    #     [math.cos(start_Angle), -math.cos(end_Angle)]
-    #     ])
-    # B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
-    # C = np.linalg.solve(A,B)
-
-    # intersectionPoint = [start_Pos[0]-C[0]*math.cos(start_Angle)  ,  start_Pos[1]-C[0]*math.sin(start_Angle)]
-    # intersectionPoint = [end_Pos[0]-C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
+    # obtain intersectionPoint 
     intersectionPoint = intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle)
-    # rospy.loginfo("C0 sin start angle: " + str(-C[0]*math.sin(start_Angle)))
-    # rospy.loginfo("C0 cos start angle: " + str(-C[0]*math.cos(start_Angle)))
     rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
 
+
+    # convert angles to radians
     start_Angle = start_Angle*math.pi/180
     end_Angle = end_Angle*math.pi/180
-    # rospy.loginfo("C0: " + str(C[0]))
-    # rospy.loginfo("C1: " + str(C[1]))
+    
+    
+    turn_angle = -abs(end_Angle+start_Angle) /2
+    
+    # turn_angle = (math.pi+end_Angle+start_Angle)/4
+    offset = abs(turnRadius/math.tan(turn_angle))
+    # offset = turnRadius/math.tan(-22.5*math.pi/180)
+    
+    rospy.loginfo("turn_angle: " + str(turn_angle*180/math.pi))
+    rospy.loginfo("offset: " + str(offset))
 
     # apply offset to turn in using starting angle
-    turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
-                    intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
+    turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
+                    intersectionPoint[1]-offset*math.sin(start_Angle)]
+
+
+    # # apply offset to turn in using starting angle
+    # turnCoord = [   intersectionPoint[0]-turnRadius*math.cos(start_Angle),
+    #                 intersectionPoint[1]-turnRadius*math.sin(start_Angle)]
 
 
     # rospy.loginfo("offset x: " + str(-turnRadius*math.cos(start_Angle)))
     # rospy.loginfo("offset y: " + str(-turnRadius*math.sin(start_Angle)))
-    # rospy.loginfo("TurnCoord" + str(turnCoord))
+    rospy.loginfo("TurnCoord " + str(turnCoord))
     # rospy.loginfo("  ")
     # rospy.loginfo("  ")
 
@@ -213,6 +220,8 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
         rospy.ROSInterruptException  # allow control+C to exit the program
 
         angle = -math.asin(settings.wheelBase/turnRadius)
+        if(goal_position_from_car(end_Pos)[2]>0):
+            angle=-angle
         Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
         # rospy.loginfo(angle *180/math.pi)
 

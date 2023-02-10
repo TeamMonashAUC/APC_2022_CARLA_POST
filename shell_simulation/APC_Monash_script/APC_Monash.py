@@ -5,6 +5,7 @@ School: Monash University Malaysia
 
 Written by:     Team Monash SEM Intelligent Department
    			 1) Andrew Joseph Ng Man Loong
+             2) Nulan Dammage 
 
 Description: - Team Monash Shell Eco Marathon Autonomouse Programming Challenge Research code
    		 
@@ -79,31 +80,37 @@ def main():
     rospy.loginfo(str(Coordinate_System.intersect_Point([-63.1,2.8],180,[-105.3,-26.3],-135)))
     rospy.loginfo(str(Coordinate_System.intersect_Point([-63.1,2.8],180,[-85.4,17.9],135)))
     '''
+    # rospy.loginfo(str(Coordinate_System.intersect_Point([0,0],90,[-10,10],180))) #left
+    # rospy.loginfo(str(Coordinate_System.intersect_Point([0,0],90,[10,10],0)))   #right
+    # rospy.loginfo("  ")
+    # rospy.loginfo(str(Coordinate_System.intersect_Point([0,0],90,[5,15],45)))
     # '''
 	#   "spawn_point": {"x": -77.9, "y": -17.59, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
 
-
-    Coordinate_System.travel_to(15, [-77.6, -9.3])
-
-    # Coordinate_System.corner(15,5,90,[-101,-21.7],-135)
-
-
-    Coordinate_System.corner(15,10,90,[-107.8,3.2],-180)
-    Coordinate_System.travel_to(15, [-128.4,3.2])
-
-    Coordinate_System.corner(15,6,-180,[-149.2,-12.7],-90)
-    Coordinate_System.travel_to(15, [-149.2,-46.4])
-
-    Coordinate_System.travel_to(15, [-149.1,-80.1])
-    Coordinate_System.corner(15,20,-90,[-115.6,-136.7],0)
-    
-    Coordinate_System.travel_to(15, [-102,-136.4])
-    Coordinate_System.corner(15,10,0,[-77.5,-108.6],90)
+    # rospy.loginfo(str(Coordinate_System.intersect_Point([0,10],90,[-5,5],-135)))
+    # '''
+    # Coordinate_System.travel_to(15, [-77.9, -10])
 
 
-    # Coordinate_System.travel_to(15, [-145.5, -77.1])
-    # Coordinate_System.corner(15,5,90,[-136.4,-52.3],45)
+    Coordinate_System.travel_to(15, [-77.9, -10])
+    Coordinate_System.corner(15,5,90,[-104.5,-20],-135)
 
+    Coordinate_System.travel_to(15, [-125.8, -42.1])
+    Coordinate_System.corner(15,5,-135,[-142.2,-26.7],90)
+
+
+
+    # Coordinate_System.corner(15,5,90,[-104.5,-20],-150)
+
+    # Coordinate_System.corner(15,5,90,[-107.8,3.2],-180)
+    # Coordinate_System.travel_to(15, [-128.4,3.2])
+
+    # Coordinate_System.corner(15,6,-180,[-149.2,-12.7],-90)
+    # Coordinate_System.travel_to(15, [-149.2,-46.4])
+
+    # Coordinate_System.corner(15,3,90,[-131.8,-47.8],45)
+    # Coordinate_System.travel_to(15, [-117.4,-33.5])
+    # '''
 
 
 

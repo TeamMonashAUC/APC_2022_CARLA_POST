@@ -18,11 +18,11 @@ The new research code developed is under APC_Monash folder
 ### Mandatory features
 - [x] PID control
 - [x] Linear steering
-- [ ] Coordinate system for car travel
+- [x] Coordinate system for car travel
     - [x] Straight line
     - [x] Corners 90
-    - [ ] Corners any angle
-- [ ] Stop when detect moving obstacle (using camera or rader) 
+    - [x] Corners any angle
+- [ ] Stop when detect moving obstacle (using camera or radar) 
     - [ ] Traffic light
     - [ ] pedestrian
     - [ ] car
