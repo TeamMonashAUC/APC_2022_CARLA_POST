@@ -140,14 +140,24 @@ def travel_to(setSpeed,goal_coord):
                 break
    
 ################################################################################################################################################# 
-def intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle):
+'''
+Function Explanation :
+    intersect_Point()
+    - form two lines using their angle and coordinate
+    - it then find the intersection point of the two lines
+    - return the coordinate of the intersection point
 
+    - angle is in degrees
+'''
+def intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle):
+    # convert angles from degrees to radians
     start_Angle = start_Angle*math.pi/180
     end_Angle = end_Angle*math.pi/180
 
-    diff_Angle = start_Angle-end_Angle
-    # rospy.loginfo(str(diff_Angle*180/math.pi))
-    # solve simultaneous equation
+    # 1) the equation for finding the intersection point can be found in the documentation
+
+    # 2) solve given simultaneous equation using numpy libraries (ENG1005)
+    #    to get the unknown variables 
     A = np.array([
         [math.cos(start_Angle), math.cos(end_Angle)],
         [math.sin(start_Angle), math.sin(end_Angle)]
@@ -155,33 +165,31 @@ def intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle):
     B = np.array([end_Pos[0]-start_Pos[0],end_Pos[1]-start_Pos[1]])
     C = np.linalg.solve(A,B)
 
-    # rospy.loginfo("m: "+str(C[0])+"  n: "+str(-C[1]))
-    
-    
-    Point =[start_Pos[0]+C[0]*math.cos(start_Angle)  ,  start_Pos[1]+C[0]*math.sin(start_Angle)]
-    # Point =[end_Pos[0]+C[0]*math.sin(start_Angle)  ,  end_Pos[1]-C[0]*math.cos(start_Angle)]
-    # Point =[start_Pos[0]+C[1]*math.cos(start_Angle)  ,  start_Pos[1]+C[1]*math.sin(start_Angle)]
-    # Point =[end_Pos[0]+C[0]*math.cos(end_Angle)  ,  start_Pos[1]-C[1]*math.sin(start_Angle)]
+    # 3) use varaibles found in step 2 to find the coordinate    
+    Coordinate_Point = [start_Pos[0]+C[0]*math.cos(start_Angle)  ,  start_Pos[1]+C[0]*math.sin(start_Angle)]
+
+    return Coordinate_Point
 
 
-    return Point
-
-
-
+'''
+Function Explanation :
+    corner()
+    - allows the car to turn at the right place, given the required parameters
+'''
 def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
     # start_Angle = settings.car_direction_from_world[2]
-
-
+    '''
+    # use for troubleshooting
     rospy.loginfo("start_Angle: " + str(start_Angle ))
-    # rospy.loginfo("end_Angle: " + str(end_Angle))
-    # rospy.loginfo("  ")
-    # rospy.loginfo("start: " + str(start_Pos))
-    # rospy.loginfo("end: " + str(end_Pos))
-    
-    # obtain intersectionPoint 
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    rospy.loginfo("  ")
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
+    '''
+
+    # obtain intersection Point 
     intersectionPoint = intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle)
-    # rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
 
 
     # convert angles to radians
@@ -189,34 +197,44 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     end_Angle = end_Angle*math.pi/180
     
     
-    turn_angle = -abs(end_Angle+start_Angle) /2
-    
-    # turn_angle = (math.pi+end_Angle+start_Angle)/4
+    # solving for distance of circle hitting the line from intersection point (more info in documentation)
+    turn_angle = -abs(end_Angle+start_Angle) /2    
     offset = abs(turnRadius/math.tan(turn_angle))
-    # offset = turnRadius/math.tan(-22.5*math.pi/180)
     
-    # rospy.loginfo("turn_angle: " + str(turn_angle*180/math.pi))
-    # rospy.loginfo("offset: " + str(offset))
 
-    # apply offset to turn in using starting angle
+    
+    # apply offset to turn using starting angle 
     turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
                     intersectionPoint[1]-offset*math.sin(start_Angle)]
 
+    '''
+    # use for troubleshooting
+    rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
+    rospy.loginfo("turn_angle: " + str(turn_angle*180/math.pi))
+    rospy.loginfo("offset: " + str(offset))
     rospy.loginfo("TurnCoord " + str(turnCoord))
+    '''
 
+    # before turning - drive to the calculated coordinate to start turning
     travel_to(speed, turnCoord)    
+
+    # while turning - turn at constant angle
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program
 
+        # find angle to turn (in documentation or can be found here https://autoinfome.blogspot.com/p/turning-radius-turning-circle.html)     
         angle = -math.asin(settings.wheelBase/turnRadius)
+        
+        # invert angle when turning right
         if(goal_position_from_car(end_Pos)[2]>0):
             angle=-angle
 
+        # send turning command to Carla
         Movement_Control.carControl(targetSpeed = speed,steerAngle= angle *180/math.pi)
-        # rospy.loginfo(angle *180/math.pi)
 
-        if abs(goal_position_from_car(end_Pos)[2]- end_Angle) <= 15:
+        # exit when turned most of the way
+        if abs(goal_position_from_car(end_Pos)[2] - end_Angle) <= 15:
             break
-
-    # rospy.loginfo("finalTurn")
+    
+    # after turning - drive to final coordinate 
     travel_to(speed, end_Pos)
