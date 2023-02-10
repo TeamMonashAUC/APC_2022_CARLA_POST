@@ -17,6 +17,7 @@ def calculate_boxArea(x1,y1,x2,y2):
     area = width * height
     return area
 
+# test
 def show_image(img,output):
     try:
         # for each object detected, draw a bounding box
