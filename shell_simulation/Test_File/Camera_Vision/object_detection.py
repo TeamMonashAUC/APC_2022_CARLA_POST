@@ -8,11 +8,18 @@ from cv_bridge import CvBridge, CvBridgeError
 import torch
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 model.cuda() # use GPU
-
+print(model.names[0])
 bridge = CvBridge()
+
+def calculate_boxArea(x1,y1,x2,y2):
+    width = x2 - x1
+    height = y2 - y1
+    area = width * height
+    return area
 
 def show_image(img,output):
     try:
+        # for each object detected, draw a bounding box
         for i in range(len(output.xyxy)):
             for j in range(0,3):
                 # Get the coordinates of the bounding box
@@ -21,18 +28,25 @@ def show_image(img,output):
                 y1 = int(y1)
                 x2 = int(x2)
                 y2 = int(y2)
+                area = calculate_boxArea(x1,y1,x2,y2)
                 # Get the object label and probability
                 label = model.names[int(index)]
                 probability = probability * 100
+                colour = (255,0,0) # (B,G,R)
+                # if the area or person crosses threshold then warn user
+                if area > 50000 and probability > 50 or (int(index) == 0 and area > 10000):
+                    colour = (0,0,255)
+                    text = f"Too Close: {label}"
+                    cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
+                    # Draw the bounding box on the image                 
+                    cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
 
-                if probability > 50:
+                elif probability > 50:
                     # Display the object label and probability
                     text = f"{label}: {probability:.2f}%"
-                    cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-
-                    # Draw the bounding box on the image
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                    print(output.xyxy[0])
+                    cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
+                    # Draw the bounding box on the image                 
+                    cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
     except:
         pass
     cv2.imshow("Object Detection", img)
