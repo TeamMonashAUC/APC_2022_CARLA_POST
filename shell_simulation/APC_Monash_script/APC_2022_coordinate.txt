@@ -170,5 +170,50 @@
     travel_to(20, [-3.2, 182.4])
     travel_to(20, [-3.5, 172.6])
     travel_to(20,[-4.4, 124.7])
+
     travel_to(20,[-4.32,110.51] )
     rospy.loginfo ("15")
+
+
+
+
+
+
+
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////
+
+    '''
+    # "spawn_point": {"x": 113.6, "y": 132.2, "z": 8.2, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+    
+    # Right turn test
+    Coordinate_System.travel_to(15, [132.5, 132])
+    Coordinate_System.corner(15,5,0,[150.2, 113.8],-90)
+
+    Coordinate_System.travel_to(15, [149.9, 85.5])
+    Coordinate_System.corner(15,5,-90,[137.9, 75.7],-180)
+
+    Coordinate_System.travel_to(15, [96.1, 76.9])
+    Coordinate_System.corner(15,5,-180,[83.4, 87.7],90)
+
+    Coordinate_System.travel_to(15, [84.6, 113.5])
+    Coordinate_System.corner(15,5,90,[97.0, 132.4],0)
+
+    # Left turn test
+    Coordinate_System.travel_to(15, [132.5, 132])
+    Coordinate_System.corner(15,5,0,[154.5, 149.7],90)
+
+    Coordinate_System.travel_to(15, [155, 179])
+    Coordinate_System.corner(15,5,90,[135.8, 201.1],180)
+
+    Coordinate_System.travel_to(15, [98.8, 202])
+    Coordinate_System.corner(15,5,-180,[82.8,184],-90)
+
+
+    Coordinate_System.travel_to(15, [82.5, 150.5])
+    Coordinate_System.corner(15,5,-90,[99.6,132.8],0)
+    '''

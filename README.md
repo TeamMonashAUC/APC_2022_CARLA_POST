@@ -16,13 +16,13 @@ The new research code developed is under APC_Monash folder
 
 ## To-do list
 ### Mandatory features
-- [x] PID control
-- [x] Linear steering
-- [ ] Coordinate system for car travel
-    - [x] Straight line
-    - [x] Corners 90
-    - [ ] Corners any angle
-- [ ] Stop when detect moving obstacle (using camera or radar) 
+- [x] PID control   (Andrew)
+- [x] Linear steering (Andrew)
+- [x] Coordinate system for car travel
+    - [x] Straight line (Andrew)
+    - [x] Corners 90    (Andrew & Nulan)
+    - [x] Corners any angle (Andrew & Nulan)
+- [ ] Stop when detect moving obstacle (using camera or radar) (Lucas)
     - [ ] Traffic light
     - [ ] pedestrian
     - [ ] car
@@ -34,13 +34,18 @@ The new research code developed is under APC_Monash folder
     - [ ] Coasting on straights
     - [ ] Coasting on corners
 
+### Current issues (found during testing)
+- [ ] Long sweeping turns
+- [ ] Roundabout
+- [ ] try to reduce tolerance needed to goals (as of now it is 1m)
+
 ### Add on features
 - [ ] Map system analysis using (OpenDRIVE standard 1.4) 
     - [ ] car can automatically decide which lane to use
 - [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)
 - [ ] Lidar SLAM research 
 
-
+## Carla-Town03 Map (what we will be testing on prior to APC2023)
 ![Carla Town03 Map](https://carla.readthedocs.io/en/latest/img/Town03.jpg)
 
 
