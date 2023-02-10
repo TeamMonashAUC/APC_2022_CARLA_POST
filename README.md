@@ -16,13 +16,13 @@ The new research code developed is under APC_Monash folder
 
 ## To-do list
 ### Mandatory features
-- [x] PID control
-- [x] Linear steering
+- [x] PID control   (Andrew)
+- [x] Linear steering (Andrew)
 - [x] Coordinate system for car travel
-    - [x] Straight line
-    - [x] Corners 90
-    - [x] Corners any angle
-- [ ] Stop when detect moving obstacle (using camera or radar) 
+    - [x] Straight line (Andrew)
+    - [x] Corners 90    (Andrew & Nulan)
+    - [x] Corners any angle (Andrew & Nulan)
+- [ ] Stop when detect moving obstacle (using camera or radar) (Lucas)
     - [ ] Traffic light
     - [ ] pedestrian
     - [ ] car
@@ -40,6 +40,10 @@ The new research code developed is under APC_Monash folder
 - [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)
 - [ ] Lidar SLAM research 
 
+current issues found during testing
+- [ ] Long sweeping turns
+- [ ] Roundabout
+- [ ] try to reduce tolerance needed to goals (as of now it is 1m)
 
 ![Carla Town03 Map](https://carla.readthedocs.io/en/latest/img/Town03.jpg)
 
