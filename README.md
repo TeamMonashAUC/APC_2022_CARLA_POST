@@ -34,7 +34,7 @@ The new research code developed is under APC_Monash folder
     - [ ] Coasting on straights
     - [ ] Coasting on corners
 
-## current issues found during testing
+### Current issues (found during testing)
 - [ ] Long sweeping turns
 - [ ] Roundabout
 - [ ] try to reduce tolerance needed to goals (as of now it is 1m)
@@ -45,6 +45,7 @@ The new research code developed is under APC_Monash folder
 - [ ] Smart path planning using waypoint (make many smaller coordinate for the car to follow)
 - [ ] Lidar SLAM research 
 
+## Carla-Town03 Map (what we will be testing on prior to APC2023)
 ![Carla Town03 Map](https://carla.readthedocs.io/en/latest/img/Town03.jpg)
 
 
