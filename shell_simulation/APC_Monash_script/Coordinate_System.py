@@ -198,10 +198,10 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     
     
     # solving for distance of circle hitting the line from intersection point (more info in documentation)
-    turn_angle = -abs(end_Angle+start_Angle) /2    
-    offset = abs(turnRadius/math.tan(turn_angle))
+    turn_angle = abs(end_Angle+start_Angle)    
+    half_turn_angle = turn_angle /2    
+    offset = abs(turnRadius/math.tan(half_turn_angle))
     
-
     
     # apply offset to turn using starting angle 
     turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
@@ -237,4 +237,94 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
             break
     
     # after turning - drive to final coordinate 
+    travel_to(speed, end_Pos)
+
+
+def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of_points=10):
+    start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
+    # start_Angle = settings.car_direction_from_world[2]
+    '''
+    # use for troubleshooting
+    rospy.loginfo("start_Angle: " + str(start_Angle ))
+    rospy.loginfo("end_Angle: " + str(end_Angle))
+    rospy.loginfo("  ")
+    rospy.loginfo("start: " + str(start_Pos))
+    rospy.loginfo("end: " + str(end_Pos))
+    '''
+
+    # obtain intersection Point 
+    intersectionPoint = intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle)
+
+    
+
+    # convert angles to radians
+    start_Angle = start_Angle*math.pi/180
+    end_Angle = end_Angle*math.pi/180
+    
+    
+    # solving for distance of circle hitting the line from intersection point (more info in documentation)
+    turn_angle = -abs(end_Angle+start_Angle) /2    
+    offset = abs(turnRadius/math.tan(turn_angle))
+    
+
+    
+    # apply offset to turn using starting angle 
+    turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
+                    intersectionPoint[1]-offset*math.sin(start_Angle)]
+
+    
+    # use for troubleshooting
+    #rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
+    #rospy.loginfo("turn_angle: " + str(turn_angle*180/math.pi))
+    #rospy.loginfo("offset: " + str(offset))
+    rospy.loginfo("TurnCoord " + str(turnCoord))
+    
+
+    arc_center = [0, 0]
+    
+    # Using the angle seen by the car to the final position to identify if its a left or right turn
+    # If it is a left turn then the angles have to sweep counter clockwise
+    # If it is a right turn then the angles have to sweep clockwise
+    if goal_position_from_car(end_Pos)[2] >= 0:
+        sign = 1
+        rospy.loginfo("Right Turn")
+        angles = np.arange(np.pi/2 + start_Angle, np.pi/2 + end_Angle, -1/number_of_points)
+    else:
+        sign = -1
+        rospy.loginfo("Left turn")
+        angles = np.arange(start_Angle, abs(turn_angle)*2, 1/number_of_points)
+    
+    # The same idea as applying the offset, but this is the other distance(resolving)
+    # Unlike the offset, the center of the arc can be either to the left or to the right of the car, so we need to 
+    # either add or subtract the distance, both based on the direction of rotation.
+    arc_center = [   turnCoord[0]+sign*turnRadius*math.sin(start_Angle),
+                     turnCoord[1]+sign*turnRadius*math.cos(start_Angle)]
+
+    rospy.loginfo(f"Actual {arc_center}")
+        
+
+    #rospy.loginfo(f"The center of the circle is x = {arc_center[0]}, y = {arc_center[1]}")
+    
+    #rospy.loginfo(f"The angles {angles}")
+    
+    # Generate the x and y arcs as a parameter of the angle
+    # The parametric equation of a circle
+    arc_x = arc_center[0] + turnRadius*np.cos(angles)
+    arc_y = arc_center[1] + turnRadius*np.sin(angles)
+
+    # Uncomment to find if the travel arc is what we desire
+    #rospy.loginfo(f"The x coords are {arc_x}")
+    #rospy.loginfo(f"The y coords are {arc_y}")
+
+
+
+    # before turning - drive to the calculated coordinate to start turning
+    travel_to(speed, turnCoord)
+    
+    # suspecting that this might be the issue, alot of travel to, probably slows down when it gets close to the point.
+    # We are following the circular arc that was previously generated
+    for i in range(len(arc_x)):
+        #rospy.loginfo(f"{arc_x[i]}, {arc_y[i]}")
+        travel_to(speed, (arc_x[i], arc_y[i]))
+    
     travel_to(speed, end_Pos)
