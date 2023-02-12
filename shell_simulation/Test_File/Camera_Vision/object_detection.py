@@ -71,4 +71,8 @@ rospy.loginfo("Hello ROS!")
 while not rospy.is_shutdown():
     # sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_top/image", Image, image_callback)
     sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_front/image", Image, image_callback)
+<<<<<<< HEAD
     rospy.spin()
+=======
+    rospy.spin()
+>>>>>>> Coordinate-System
