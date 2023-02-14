@@ -6,9 +6,9 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 import torch
+
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 model.cuda() # use GPU
-print(model.names[0])
 bridge = CvBridge()
 
 def calculate_boxArea(x1,y1,x2,y2):
@@ -17,6 +17,41 @@ def calculate_boxArea(x1,y1,x2,y2):
     area = width * height
     return area
 
+def detect_trafficLight(img,x1,y1,x2,y2):
+    
+    crop_img = img[y1:y2,x1:x2]
+    # Convert cropped image to HSV color space
+    hsv = cv2.cvtColor(crop_img, cv2.COLOR_BGR2HSV)
+
+    # Define lower and upper HSV color ranges for green, orange, and red
+    green_lower = (40, 50, 50)
+    green_upper = (80, 255, 255)
+    yellow_lower = (20, 50, 50)
+    yellow_upper = (40, 255, 255)
+    red_lower = (0, 50, 50)
+    red_upper = (10, 255, 255)
+
+    # Create binary masks for each color
+    green_mask = cv2.inRange(hsv, green_lower, green_upper)
+    orange_mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
+    red_mask = cv2.inRange(hsv, red_lower, red_upper)
+
+    # Create range of coordinates that ensure only detect center traffic light
+    if x1 > 100 and x2 < 700:
+        in_range = True
+    else:
+        in_range = False
+
+    # Check if any pixels are in each binary mask and print the color to the console
+    if cv2.countNonZero(green_mask) > 0 and in_range:
+        print("Green")
+    elif cv2.countNonZero(orange_mask) > 0 and in_range:
+        print("Yellow")
+    elif cv2.countNonZero(red_mask) > 0 and in_range:
+        print("Red")
+    else:
+        print("No traffic light detected")
+    
 # test
 def show_image(img,output):
     try:
@@ -34,6 +69,11 @@ def show_image(img,output):
                 label = model.names[int(index)]
                 probability = probability * 100
                 colour = (255,0,0) # (B,G,R)
+
+                # check traffic light state
+                if int(index) == 9 and probability > 50:
+                    detect_trafficLight(img,x1,y1,x2,y2)
+
                 # if the area or person crosses threshold then warn user
                 if area > 50000 and probability > 50 or (int(index) == 0 and area > 10000):
                     colour = (0,0,255)
@@ -50,6 +90,7 @@ def show_image(img,output):
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
     except:
         pass
+
     cv2.imshow("Object Detection", img)
     cv2.waitKey(3)
 
