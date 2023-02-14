@@ -198,10 +198,10 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
     
     
     # solving for distance of circle hitting the line from intersection point (more info in documentation)
-    turn_angle = -abs(end_Angle+start_Angle) /2    
-    offset = abs(turnRadius/math.tan(turn_angle))
+    turn_angle = abs(end_Angle+start_Angle)    
+    half_turn_angle = turn_angle /2    
+    offset = abs(turnRadius/math.tan(half_turn_angle))
     
-
     
     # apply offset to turn using starting angle 
     turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
