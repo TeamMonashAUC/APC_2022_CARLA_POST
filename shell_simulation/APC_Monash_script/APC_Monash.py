@@ -43,26 +43,24 @@ import numpy as np
 #################################################################################################################################################
 
 def main():
-    
+    """
     # 135 degree corner turn
     Coordinate_System.travel_to(15, [-77.9, -10])
     #Coordinate_System.corner(15,5,90,[-104.5,-20],-135)
-    Coordinate_System.pointToPointCorner(15,4,90,[-104.5,-20],-135, 30)
+    Coordinate_System.pointToPointCorner(15,4,90,[-104.5,-20],-135, 10)
 
     
     Coordinate_System.travel_to(15, [-125.8, -42.1])
-    Coordinate_System.pointToPointCorner(15,4,-135,[-142.2,-26.7],90, 30)
+    Coordinate_System.pointToPointCorner(15,4,-135,[-142.2,-26.7],90, 10)
     #Coordinate_System.corner(15,5,-135,[-142.2,-26.7],90)
 
-    
+    """    
     # test with APC 2022 layout
-    '''
     Coordinate_System.travel_to(15, [-77.9, -17.6])
-    Coordinate_System.pointToPointCorner(5,10,90,[-50.9,-0.8],0)
+    Coordinate_System.pointToPointCorner(15,10,90,[-50.9,-0.8],0)
     #Coordinate_System.corner(15,10,90,[-50.9,-0.8],0)
     rospy.loginfo ("1")
-    '''
-    """
+
     Coordinate_System.travel_to(20,[-41.4,-0.7])
     Coordinate_System.travel_to(20,[-29.2,-2.5])
     Coordinate_System.travel_to(20, [-23.3, -7.6])
@@ -165,7 +163,7 @@ def main():
     Coordinate_System.travel_to(20,[-3.8,150.2])
     Coordinate_System.travel_to(50,[-6,57.8])
     rospy.loginfo ("14")
-    """
+    #"""
 
     # '''
     val=0
