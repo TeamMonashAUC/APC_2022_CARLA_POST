@@ -52,14 +52,18 @@ include_directories(
 #)
 catkin_install_python(
   PROGRAMS
-    scripts/car_control_master.py
-    scripts/efficiency.py
-    scripts/score.py
+    APC_Monash_scripts/APC_Monash.py
+    APC_Monash_scripts/Coordinate_System.py
+    APC_Monash_scripts/Movement_Control.py
+    APC_Monash_scripts/ROS_Communication.py
+    
+    APC_Monash_scripts/efficiency.py
+    APC_Monash_scripts/score.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY
-  scripts
+  APC_Monash_scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 ## Mark other files for installation (e.g. launch and bag files, etc.)

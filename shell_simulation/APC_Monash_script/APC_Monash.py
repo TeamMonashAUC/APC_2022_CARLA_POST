@@ -42,123 +42,63 @@ import numpy as np
 
 #################################################################################################################################################
 
+def R1():
+    Coordinate_System.travel_to(15, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(15, [-245.5,0.8]) 
+    Coordinate_System.travel_to(15, [-255.9,0.2]) # P2   #stop
+
+    Coordinate_System.corner(15,8,180,[-272.5,-18.7],-90) #turn left
+    Coordinate_System.travel_to(15, [-272.1,-43.9]) # P3
+    Coordinate_System.travel_to(15, [-272.0,-68.2]) 
+
+    # curve
+    Coordinate_System.travel_to(15, [-271.3,-75.5]) 
+    Coordinate_System.travel_to(15, [-268.2,-80.7]) 
+    Coordinate_System.travel_to(15, [-264.6,-84.3]) 
+    Coordinate_System.travel_to(15, [-253.8,-89.6]) 
+    Coordinate_System.travel_to(15, [-241.8,-91.2]) 
+
+    Coordinate_System.travel_to(15, [-230.0,-94.9]) # P4
+    Coordinate_System.travel_to(15, [-205.5,-95.0]) # P4
+    Coordinate_System.travel_to(15, [-205.3,-94.7]) # traffic light 
+
+def R2():
+    # curve
+    Coordinate_System.travel_to(15, [-195.0,-118.3]) 
+    Coordinate_System.travel_to(15, [-193.7,-127.2]) 
+    Coordinate_System.travel_to(15, [-191.8,-132.4]) 
+    Coordinate_System.travel_to(15, [-183.9,-144.2]) 
+    Coordinate_System.travel_to(15, [-175.5,-150.1]) 
+    # Coordinate_System.travel_to(15, [-165.0,-153.9]) 
+
+    Coordinate_System.travel_to(15, [-158.0,-151.1]) 
+    Coordinate_System.travel_to(15, [-151.0,-151.0]) #P6 
+    Coordinate_System.travel_to(15, [-145.6,-151.0]) # traffic light 
+
+
+    Coordinate_System.travel_to(15, [-121.0,-151.1]) 
+    Coordinate_System.travel_to(15, [-101.4,-154.7]) # P7
+
+    #curve
+    Coordinate_System.travel_to(15, [-85.8,-154.9]) 
+    Coordinate_System.travel_to(15, [-75.0,-152.7]) 
+    Coordinate_System.travel_to(15, [-65.8,-148.7]) 
+    Coordinate_System.travel_to(15, [-54.4,-136.6]) 
+
+    Coordinate_System.travel_to(15, [-47.8,-117.2]) # P8 
+    Coordinate_System.travel_to(15, [-47.4,-105.9]) 
+
+
 def main():
-    '''
-    # 135 degree corner turn
-    Coordinate_System.travel_to(15, [-77.9, -10])
-    Coordinate_System.corner(15,5,90,[-104.5,-20],-135)
-
-    Coordinate_System.travel_to(15, [-125.8, -42.1])
-    Coordinate_System.corner(15,5,-135,[-142.2,-26.7],90)
-    '''
-
-    # '''
-    # test with APC 2022 layout
-    Coordinate_System.travel_to(15, [-77.9, -15])
-    Coordinate_System.corner(15,10,90,[-50.9,-0.8],0)
-    rospy.loginfo ("1")
+    R1()
+    Coordinate_System.corner(15,6,0,[-195.0,-112.5],-90) #turn right
+    R2()
 
 
-    Coordinate_System.travel_to(20,[-41.4,-0.7])
-    Coordinate_System.travel_to(20,[-29.2,-2.5])
-    Coordinate_System.travel_to(20, [-23.3, -7.6])
-    Coordinate_System.travel_to(20,[-21.7,-11.5])
-    Coordinate_System.travel_to(20, [-16.4, -17.6])
-    Coordinate_System.travel_to(20,[-12.3,-21])
-    Coordinate_System.travel_to(20,[-8.3,-23.1])
-    Coordinate_System.travel_to(20,[-4.1, -23.7])
-    Coordinate_System.travel_to(20,[-1.77,-23.78])
-    rospy.loginfo ("2")
 
 
-    Coordinate_System.travel_to(20,[5.5, -23.3])
-    Coordinate_System.travel_to(20,[8.7, -22.4])
-    Coordinate_System.travel_to(20,[10.8,-20.30])
-    Coordinate_System.travel_to(20,[12.5,-20])
-    Coordinate_System.travel_to(20,[15.7,- 17.1])
-    Coordinate_System.travel_to(20,[18.2,-14.40])
-    Coordinate_System.travel_to(20,[20.5,-11])
-    Coordinate_System.travel_to(20,[22.2, -9.1])
-    Coordinate_System.travel_to(20,[24.1,-8.7])
-    Coordinate_System.travel_to(20,[26.9,-7.79])
-
-    Coordinate_System.travel_to(50,[30.6,-7.2])
-    Coordinate_System.travel_to(50,[36.9,-7.3])
-    Coordinate_System.travel_to(50, [45.2,-7.4])
-    Coordinate_System.travel_to(50,[79.56,-7.79])
-    rospy.loginfo ("3")
-    
-
-    Coordinate_System.travel_to(50,[192.6,-9.5])
-    Coordinate_System.travel_to(20,[217.1,-9.9])
-    Coordinate_System.corner(10,8,0,[231,-25.4],-90)
-    rospy.loginfo ("4")
-
-
-    Coordinate_System.travel_to(20,[231,-40.5])
-    Coordinate_System.corner(15,8,-90,[209.3,-58.6],180)
-    rospy.loginfo ("5")
-
-
-    Coordinate_System.travel_to(20,[188,-58.6])
-    Coordinate_System.corner(15,8,180,[167.4,-80.5],-90)
-    rospy.loginfo ("6")
-				
-
-    Coordinate_System.corner(15,32,-90,[116.3,-129.2],-180)
-    Coordinate_System.travel_to(50,[34.7,-130.1])
-    Coordinate_System.travel_to(20,[18.6,-130.4])
-    rospy.loginfo ("7")
-
-
-    Coordinate_System.corner(15,8,180,[-6,-146.6],-90)
-    Coordinate_System.travel_to(20,[-5.6,-187.6])
-    rospy.loginfo ("8")
-
-
-    Coordinate_System.corner(15,8,-90,[-25,-197.1],-180)
-    Coordinate_System.corner(15,32,-180,[-78.1,-149.1],90)
-    rospy.loginfo ("9")
-
-
-    Coordinate_System.corner(15,8,90,[-98.7,-132.6],-180)
-    Coordinate_System.corner(15,28,-180,[-145.5,-80.8],90)		
-    rospy.loginfo ("10")
-
-
-    Coordinate_System.travel_to(20,[-145.75,-9.2])
-    rospy.loginfo ("11")
-
-
-    Coordinate_System.corner(15,5,90,[-127.7,-0.3],0)	
-    Coordinate_System.travel_to(20,[-107.6,-0.4])
-    Coordinate_System.corner(15,8,0,[-77.9,21.4],90)
-    rospy.loginfo ("12")
-
-
-    Coordinate_System.travel_to(30,[-74.9,74.0])
-    Coordinate_System.travel_to(30,[-74.6,107.9])
-    Coordinate_System.travel_to(20,[-74.5,122.3])
-
-    Coordinate_System.travel_to(20,[-74.0,162.4])
-    Coordinate_System.corner(15,18,90,[-38.6,195.0],0)
-    Coordinate_System.travel_to(20,[-15.2,194.3])
-    rospy.loginfo ("13")
-
-
-    Coordinate_System.corner(15,8,0,[-3.1,175.0],-90)
-    Coordinate_System.travel_to(20,[-3.8,150.2])
-    Coordinate_System.travel_to(50,[-6,57.8])
-    rospy.loginfo ("14")
-    # '''
-    val=0
     while not rospy.is_shutdown():
-        rospy.ROSInterruptException  # allow control+C to exit the program
-
-
-        # val = val +1
-        # rospy.loginfo("total run = " + str(val))
-        
+        rospy.ROSInterruptException  # allow control+C to exit the program        
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
 
 

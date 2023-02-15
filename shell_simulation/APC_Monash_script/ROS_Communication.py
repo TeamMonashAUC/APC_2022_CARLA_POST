@@ -152,7 +152,7 @@ def receive_Speedometer(speeed_ms): # speed given by Speedometer is in m/s
 ###########################################################
 def receive_Gnss(gnss):
     # settings.latitude = gnss.latitude
-    # settings.longitude = gnss.longitude
+    # settings.longitude = gnss.longitudepenaltyCounter
     # settings.altitude = gnss.altitude
     pass
 
