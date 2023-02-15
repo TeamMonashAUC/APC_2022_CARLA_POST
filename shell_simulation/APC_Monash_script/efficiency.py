@@ -17,7 +17,7 @@ from std_srvs.srv import Empty
 #                subscribing to cpu_monitor
 #              - Record the Velocity, Acceleration, Energy, Drag Force and Inertial Force of the car at a defined period
 #                and plot several subgraphs consist of these data against time at the end
-
+passed =0
 def odom(msg):
 	global distance, energy, duration, start
 	global x0, y0, z0, v0, t0, end
@@ -39,21 +39,24 @@ def odom(msg):
 		rospy.sleep(1)
 		# rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 
-		
+		distance_km = distance/1000
+		energy_kWh = energy/3.6e6
 
 		rospy.loginfo("Results:")
 		rospy.loginfo("Time(s): %.1f" %( duration))
-		rospy.loginfo("Distance(km): %.3f" %(distance/1000))
-		rospy.loginfo("Energy(kWh): %.3f" %(energy/3.6e6))
-		rospy.loginfo("Efficiency(kWh/km): %.3f" %((energy/3.6e6) / (distance/1000)))
+		rospy.loginfo("Distance(km): %.3f" %(distance_km))
+		rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
+		rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
 
 		rospy.loginfo("")
-		rospy.loginfo("Penalties")
-		rospy.loginfo("Energy with penalties: " )
+		rospy.loginfo("Penalties Count: %d" %(penaltyCount))
+		energy_with_penalty = energy_kWh +  ((energy_kWh *0.02) * penaltyCount) #calculate penalty energy of 2% for every additional rule broken
+		rospy.loginfo("Energy with penalties: %.3f" %(energy_with_penalty))
 		
+		global score
 		rospy.loginfo("")
-		rospy.loginfo("Efficiency with penalties(kWh/km):" )
-		rospy.loginfo("Goals Passed:" )
+		rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
+		rospy.loginfo("Goals Passed: %d" %(score))
 		
 
 
@@ -154,15 +157,20 @@ def odom(msg):
 		t0 = rospy.get_time()
 		if velocity > 0.01:
 			start = True
-
+score=0
 # records the duration to reach each goal in an array
 def getscore(num):
-	global passed, goaltime
-
+	global passed, goaltime,score
+	score = num.data
 	if showgraph:
 		if (passed != num.data):
 			goaltime.append(duration)
 			passed = num.data
+
+penaltyCount =0
+def penalty_calc(data):
+	global penaltyCount
+	penaltyCount = data.data
 
 
 def srv_handler(request):
@@ -174,6 +182,7 @@ def listener():
 	rospy.init_node('efficiency_calc')
 	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, odom) # Get car position
 	rospy.Subscriber("/Monash/current_score", Int8, getscore)
+	rospy.Subscriber("/Monash/penalty_score", Int8,penalty_calc)   
 	rospy.Service("/disp_results",Empty,srv_handler)
 	rospy.spin()
 

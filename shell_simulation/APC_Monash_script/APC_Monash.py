@@ -43,9 +43,9 @@ import numpy as np
 #################################################################################################################################################
 
 def R1():
-    Coordinate_System.travel_to(15, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(15, [-245.5,0.8]) 
-    Coordinate_System.travel_to(15, [-255.9,0.2]) # P2   #stop
+    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(40, [-245.5,0.8]) 
+    Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(15,8,180,[-272.5,-18.7],-90) #turn left
     Coordinate_System.travel_to(15, [-272.1,-43.9]) # P3

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 import math
-from std_msgs.msg import Int8, Float64,Int8MultiArray
+from std_msgs.msg import Int8, Float64,Int8MultiArray,Float32
 from nav_msgs.msg import Odometry
 from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 
@@ -109,8 +109,16 @@ def LanePenaltyCounter(data):
 collisionCounter=0
 def CollisionPenaltyCounter(data):
     global collisionCounter 
-    collisionCounter=collisionCounter+1
+    collisionCounter += 1
     showStats()
+
+speedLimitCount=0
+def receive_Speedometer(speeed_ms): # speed given by Speedometer is in m/s
+    global speedLimitCount
+    speed_kmh = float(speeed_ms.data)*3.6
+    if(speed_kmh >48):
+        speedLimitCount += 1
+        showStats()
 
 ###########################################################
 def showStats():
@@ -121,23 +129,38 @@ def showStats():
     rospy.loginfo("dotted line crossed:" + str(laneCrossed.count(1)))
     rospy.loginfo("solid line crossed:" + str(laneCrossed.count(2)))
     rospy.loginfo("double line crossed:" + str(laneCrossed.count(3)))
-    rospy.loginfo("Other:" + str(laneCrossed.count(0)))
+    rospy.loginfo("Other crossed lines:" + str(laneCrossed.count(0)))
 
+    rospy.loginfo("")
     # collision
     rospy.loginfo("Collision:" + str(collisionCounter))
+    rospy.loginfo("OverSpeed Count:" + str(speedLimitCount))
 
+    rospy.loginfo("")
     rospy.loginfo("Score:" + str(goalPassed))
     rospy.loginfo("/////////////////////////////")
+
+    penaltyCount = laneCrossed.count(2)+laneCrossed.count(3)+laneCrossed.count(0)
+    if(speedLimitCount>=1):
+        penaltyCount+=1
+
+    
+    publish_penalty_score.publish(penaltyCount) # updating ros publisher data
 ###########################################################
 
 
 
 def listener():
-    rospy.init_node('score') # intiialising score node in ros
+    rospy.init_node('Penalty_score') # intiialising score node in ros
     score = Score() # initialising object Score
     rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, score.odom) # Get car position
     rospy.Subscriber("/carla/ego_vehicle/lane_invasion",  CarlaLaneInvasionEvent, LanePenaltyCounter) 
     rospy.Subscriber("/carla/ego_vehicle/collision",  CarlaCollisionEvent, CollisionPenaltyCounter)  
+    rospy.Subscriber('/carla/ego_vehicle/speedometer',Float32,receive_Speedometer)   
+
+    global publish_penalty_score
+    publish_penalty_score = rospy.Publisher("/Monash/penalty_score", Int8, queue_size = 10) #initialising publisher to ros
+
     rospy.spin() # prevents node from exiting
 
 if __name__ == '__main__':
