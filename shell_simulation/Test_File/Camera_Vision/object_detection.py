@@ -17,6 +17,42 @@ def calculate_boxArea(x1,y1,x2,y2):
     area = width * height
     return area
 
+def detect_trafficLight(img,x1,y1,x2,y2):
+    
+    crop_img = img[y1:y2,x1:x2]
+    # Convert cropped image to HSV color space
+    hsv = cv2.cvtColor(crop_img, cv2.COLOR_BGR2HSV)
+
+    # Define lower and upper HSV color ranges for green, orange, and red
+    green_lower = (40, 50, 50)
+    green_upper = (80, 255, 255)
+    yellow_lower = (20, 50, 50)
+    yellow_upper = (40, 255, 255)
+    red_lower = (0, 50, 50)
+    red_upper = (10, 255, 255)
+
+     # Create binary masks for each color
+    green_mask = cv2.inRange(hsv, green_lower, green_upper)
+    orange_mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
+    red_mask = cv2.inRange(hsv, red_lower, red_upper)
+
+    # Create range of coordinates that ensure only detect center traffic light
+    if x1 > 100 and x2 < 700:
+        in_range = True
+    else:
+        in_range = False
+
+    # Check if any pixels are in each binary mask and print the color to the console
+    if cv2.countNonZero(green_mask) > 0 and in_range:
+        print("Green")
+    elif cv2.countNonZero(orange_mask) > 0 and in_range:
+        print("Yellow")
+    elif cv2.countNonZero(red_mask) > 0 and in_range:
+        print("Red")
+    else:
+        print("No traffic light detected")
+
+# test
 def show_image(img,output):
     try:
         # for each object detected, draw a bounding box
@@ -49,6 +85,7 @@ def show_image(img,output):
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
     except:
         pass
+    # To show the detection tab
     cv2.imshow("Object Detection", img)
     cv2.waitKey(3)
 
@@ -71,8 +108,10 @@ rospy.loginfo("Hello ROS!")
 while not rospy.is_shutdown():
     # sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_top/image", Image, image_callback)
     sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_front/image", Image, image_callback)
-<<<<<<< HEAD
     rospy.spin()
-=======
-    rospy.spin()
->>>>>>> Coordinate-System
+
+## Problems 
+# Cannot detect the changes in traffic lights to stop or move the car 
+# Traffic light is too far to be detected pass the line while it may be still red 
+# We also need to include bicycle and motorcycle in the person too close list technically they wont go over 50000
+# or we can just set the confident threshold to a much higher confidence rate so area thingy is not of importance as the closer we get the higher the confidence rate
