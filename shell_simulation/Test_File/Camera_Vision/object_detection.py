@@ -6,9 +6,9 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 import torch
+
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 model.cuda() # use GPU
-print(model.names[0])
 bridge = CvBridge()
 
 def calculate_boxArea(x1,y1,x2,y2):
@@ -31,7 +31,7 @@ def detect_trafficLight(img,x1,y1,x2,y2):
     red_lower = (0, 50, 50)
     red_upper = (10, 255, 255)
 
-     # Create binary masks for each color
+    # Create binary masks for each color
     green_mask = cv2.inRange(hsv, green_lower, green_upper)
     orange_mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
     red_mask = cv2.inRange(hsv, red_lower, red_upper)
@@ -51,7 +51,7 @@ def detect_trafficLight(img,x1,y1,x2,y2):
         print("Red")
     else:
         print("No traffic light detected")
-
+    
 # test
 def show_image(img,output):
     try:
@@ -69,6 +69,11 @@ def show_image(img,output):
                 label = model.names[int(index)]
                 probability = probability * 100
                 colour = (255,0,0) # (B,G,R)
+
+                # check traffic light state
+                if int(index) == 9 and probability > 50:
+                    detect_trafficLight(img,x1,y1,x2,y2)
+
                 # if the area or person crosses threshold then warn user
                 if area > 50000 and probability > 50 or (int(index) == 0 and area > 10000):
                     colour = (0,0,255)
@@ -85,7 +90,7 @@ def show_image(img,output):
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
     except:
         pass
-    # To show the detection tab
+
     cv2.imshow("Object Detection", img)
     cv2.waitKey(3)
 
@@ -109,9 +114,3 @@ while not rospy.is_shutdown():
     # sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_top/image", Image, image_callback)
     sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_front/image", Image, image_callback)
     rospy.spin()
-
-## Problems 
-# Cannot detect the changes in traffic lights to stop or move the car 
-# Traffic light is too far to be detected pass the line while it may be still red 
-# We also need to include bicycle and motorcycle in the person too close list technically they wont go over 50000
-# or we can just set the confident threshold to a much higher confidence rate so area thingy is not of importance as the closer we get the higher the confidence rate
