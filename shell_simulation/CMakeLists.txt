@@ -52,18 +52,18 @@ include_directories(
 #)
 catkin_install_python(
   PROGRAMS
-    APC_Monash_scripts/APC_Monash.py
-    APC_Monash_scripts/Coordinate_System.py
-    APC_Monash_scripts/Movement_Control.py
-    APC_Monash_scripts/ROS_Communication.py
+    scripts/APC_Monash.py
+    scripts/Coordinate_System.py
+    scripts/Movement_Control.py
+    scripts/ROS_Communication.py
     
-    APC_Monash_scripts/efficiency.py
-    APC_Monash_scripts/score.py
+    scripts/efficiency.py
+    scripts/score.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY
-  APC_Monash_scripts
+  scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 ## Mark other files for installation (e.g. launch and bag files, etc.)

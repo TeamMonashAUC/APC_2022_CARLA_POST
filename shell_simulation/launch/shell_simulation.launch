@@ -24,13 +24,10 @@
   <node name="goals" pkg="airsim_py" type="goals.py" output="screen"/> -->
 
   <node name="APC_Monash" pkg="shell_simulation" type="APC_Monash.py" output="screen"/>
-<<<<<<< HEAD
+  <node name="Coordinate_System" pkg="shell_simulation" type="Coordinate_System.py" output="screen"/>
+  <node name="Movement_Control" pkg="shell_simulation" type="Movement_Control.py" output="screen"/>
+  <node name="ROS_Communication" pkg="shell_simulation" type="ROS_Communication.py" output="screen"/>
   <node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/>
   <node name="score" pkg="shell_simulation" type="score.py" output="screen"/>
-=======
-<node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/>
-<node name="score" pkg="shell_simulation" type="score.py" output="screen"/>
-<node name="test" pkg="shell_simulation" type="test.py" output="screen"/>
->>>>>>> 7627d79f85046a23f8d5224cf6f6341922a6a3e6
   <!--<node name="APC_Monash" pkg="airsim_cpp" type="APC_Monash" output="screen"/> -->
 </launch>
