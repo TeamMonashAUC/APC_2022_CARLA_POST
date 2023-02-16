@@ -27,6 +27,7 @@
   <node name="Coordinate_System" pkg="shell_simulation" type="Coordinate_System.py" output="screen"/>
   <node name="Movement_Control" pkg="shell_simulation" type="Movement_Control.py" output="screen"/>
   <node name="ROS_Communication" pkg="shell_simulation" type="ROS_Communication.py" output="screen"/>
+  <node name="settings" pkg="shell_simulation" type="settings.py" output="screen"/>
   <node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/>
   <node name="score" pkg="shell_simulation" type="score.py" output="screen"/>
   <!--<node name="APC_Monash" pkg="airsim_cpp" type="APC_Monash" output="screen"/> -->

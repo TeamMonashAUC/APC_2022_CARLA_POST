@@ -56,6 +56,7 @@ catkin_install_python(
     scripts/Coordinate_System.py
     scripts/Movement_Control.py
     scripts/ROS_Communication.py
+    scripts/settings.py
     
     scripts/efficiency.py
     scripts/score.py
