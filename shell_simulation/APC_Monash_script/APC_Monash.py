@@ -50,6 +50,10 @@ def main():
     Coordinate_System.pointToPointCorner(15,4,90,[-104.5,-20],-135, 10)
 
     
+    '''
+    # test straight line function 1
+    travel_to(80,[-71.6,150])
+    travel_to(20,[-71.6,194])
     Coordinate_System.travel_to(15, [-125.8, -42.1])
     Coordinate_System.pointToPointCorner(15,4,-135,[-142.2,-26.7],90, 10)
     #Coordinate_System.corner(15,5,-135,[-142.2,-26.7],90)
