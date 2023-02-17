@@ -54,7 +54,7 @@ def main():
     Coordinate_System.pointToPointCorner(15,4,-135,[-142.2,-26.7],90, 10)
     #Coordinate_System.corner(15,5,-135,[-142.2,-26.7],90)
 
-    """    
+    """   
     # test with APC 2022 layout
     Coordinate_System.travel_to(15, [-77.9, -17.6])
     Coordinate_System.pointToPointCorner(15,10,90,[-50.9,-0.8],0)
@@ -123,15 +123,15 @@ def main():
 
     #Coordinate_System.corner(15,8,-90,[-25,-197.1],-180)
     #Coordinate_System.corner(15,32,-180,[-78.1,-149.1],90)
-    Coordinate_System.pointToPointCorner(15,8,-90,[-25,-197.1],-180)
-    Coordinate_System.pointToPointCorner(15,30,-180,[-78.1,-149.1],90, 100)
+    Coordinate_System.pointToPointCorner(15,8,-90,[-25,-197.1],-180) # works ok
+    Coordinate_System.pointToPointCorner(15,32,180,[-78.1,-149.1],90) # probably should tell andrew
     rospy.loginfo ("9")
 
 
     #Coordinate_System.corner(15,8,90,[-98.7,-132.6],-180)
     #Coordinate_System.corner(15,28,-180,[-145.5,-80.8],90)		
-    Coordinate_System.pointToPointCorner(15,8,90,[-98.7,-132.6],-180)
-    Coordinate_System.pointToPointCorner(15,28,-180,[-145.5,-80.8],90)
+    Coordinate_System.pointToPointCorner(15,8,90,[-98.7,-132.6],180) # Probably tell andrew
+    Coordinate_System.pointToPointCorner(15,28,180,[-145.5,-80.8],90) # Probably tell andrew
     rospy.loginfo ("10")
 
 
@@ -163,9 +163,53 @@ def main():
     Coordinate_System.travel_to(20,[-3.8,150.2])
     Coordinate_System.travel_to(50,[-6,57.8])
     rospy.loginfo ("14")
-    #"""
+    
 
+    # Testing the turning(LEFT)
+    """
+    Coordinate_System.travel_to(15, [133.3, 75.7])
+    Coordinate_System.pointToPointCorner(15, 10, 0, [146.3, 88.8], 90)
+    rospy.loginfo("1")
+
+    Coordinate_System.travel_to(15, [146.6, 112.3])
+    Coordinate_System.pointToPointCorner(15, 10, 90, [133.7, 128.7], 180)
+    rospy.loginfo("2")
+
+    Coordinate_System.travel_to(15, [102.8, 129.2])
+    Coordinate_System.pointToPointCorner(15, 10, 180, [87.7, 117.8], -90)
+    rospy.loginfo("3")
+
+    Coordinate_System.travel_to(15, [87.2, 89.1])
+    Coordinate_System.pointToPointCorner(15, 10, -90, [97.4, 76.8], 0)
+    rospy.loginfo("4")
+
+    Coordinate_System.travel_to(15, [124.1, 76.4])
+    rospy.loginfo("5")
+    """
+
+    # Testing the turning(RIGHT)
+    """
+    Coordinate_System.travel_to(15, [102.5, 76.5])
+    Coordinate_System.pointToPointCorner(15, 10, 180, [87.3, 85.0], 90)
+    rospy.loginfo("1")
+
+    Coordinate_System.travel_to(15, [88.1, 117.8])
+    Coordinate_System.pointToPointCorner(15, 10, 90, [98.7, 129.1], 0)
+    rospy.loginfo("2")
+
+    Coordinate_System.travel_to(15, [133.5, 128.1])
+    Coordinate_System.pointToPointCorner(15, 10, 0, [147.0, 118.6], -90)
+    rospy.loginfo("3")
+
+    Coordinate_System.travel_to(15, [145.6, 87.2])
+    Coordinate_System.pointToPointCorner(15, 10, -90, [133.9, 75.8], 180)
+    rospy.loginfo("4")
+
+    Coordinate_System.travel_to(15, [124.1, 76.4])
+    rospy.loginfo("5")
+    
     # '''
+    """
     val=0
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program

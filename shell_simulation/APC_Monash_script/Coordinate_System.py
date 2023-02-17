@@ -241,6 +241,27 @@ def corner(speed,turnRadius,start_Angle,end_Pos,end_Angle):
 
 
 def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of_points=10):
+    """
+    Function: pointToPointCorner()
+    Paramters:  speed - The speed which the car has to turn
+                turnRadius - The radius of the imaginary circle we trace out when turning
+                start_Angle - The angle which we start at***
+                end_Angle - The angle which we end at***
+                number_of_points - The number of points on the imaginary turning circle we generate(more points smoother curve**)
+    
+    *** Due to angle generation issues do not use -180, use +180, since they mean the same thing but it makes the angle generation easier.
+    ** Small number of points will suffice, sometimes have the issue of missing a point if too many points are used.(need to do more testing)
+
+    This function works very similarly to the corner() function, where we find the intersection point, then offset that to find the turning point.
+    However in this function, we use the turning radius and resolve it to find the center of the circle we need to follow to make the turn.
+    Once the center is found, we find the angles required to take the curved path, then using the parameteric equation of the circle:
+        x = r*cos(theta) + x0
+        y = r*sin(theta) + y0
+    We generate the arc by giving the valid range of theta, the travelling to the corresponding x and y.
+
+    # TODO currently the turning works for 90 degree turns, havent tested different angle turns since fixing the angle generation issue.
+    """
+
     start_Pos = [settings.car_coordinate_from_world[0],settings.car_coordinate_from_world[1]]
     # start_Angle = settings.car_direction_from_world[2]
     '''
@@ -255,67 +276,58 @@ def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of
     # obtain intersection Point 
     intersectionPoint = intersect_Point(start_Pos,start_Angle,end_Pos,end_Angle)
 
-    
-
     # convert angles to radians
     start_Angle = start_Angle*math.pi/180
     end_Angle = end_Angle*math.pi/180
-    
     
     # solving for distance of circle hitting the line from intersection point (more info in documentation)
     turn_angle = -abs(end_Angle+start_Angle) /2    
     offset = abs(turnRadius/math.tan(turn_angle))
     
-
-    
     # apply offset to turn using starting angle 
     turnCoord = [   intersectionPoint[0]-offset*math.cos(start_Angle),
                     intersectionPoint[1]-offset*math.sin(start_Angle)]
 
-    
-    # use for troubleshooting
-    #rospy.loginfo("intersectionPoint: " + str(intersectionPoint))
-    rospy.loginfo("turn_angle: " + str(turn_angle*180/math.pi))
-    #rospy.loginfo("offset: " + str(offset))
-    rospy.loginfo("TurnCoord " + str(turnCoord))
-    
 
     arc_center = [0, 0]
     
-    # Using the angle seen by the car to the final position to identify if its a left or right turn
+    # Using the angle seen by the car to the final position to identify if its a left or right turn,
+    # if the angle is negative its a left turn, otherwise its a right turn.
+
     # If it is a left turn then the angles have to sweep counter clockwise
     # If it is a right turn then the angles have to sweep clockwise
+    # There are two edge cases, which are placed in the angle finding
+    # These two edge cases exist as at 180 if we add 90, we reach 270 which is what we want but when we command python to generate (270:0) angles 
+    # it generates as 270 260 250... 30 20 0, what we actually want is 270 280 290.. 250 360/0, so we dont allow that to happen, similar issue comes
+    # comes on the negative side as well.
+
+    # sign is used later to find the center of the arc, since according to the direction of rotation the center could be to the left
+    # or the right of the car.
     if goal_position_from_car(end_Pos)[2] >= 0:
         sign = 1
         rospy.loginfo(f"Right Turn")
+        angles = np.linspace(start_Angle + np.pi/2, end_Angle + np.pi/2 if end_Angle + np.pi/2 <= np.pi else np.pi/2 - end_Angle, number_of_points)
         
     else:
         sign = -1
+        angles = np.linspace(start_Angle - np.pi/2, end_Angle - np.pi/2 if end_Angle - np.pi/2 > -np.pi else abs(end_Angle - np.pi/2), number_of_points)
         rospy.loginfo("Left Turn")
-    
+        
+
+        
+    # Same way we apply the offset we find the center of rotation using resolving.
+    # this case its more complicated since according to the direction of rotation, the center of rotation can be on the left or the right
     arc_center[0] = turnCoord[0] + (sign)*turnRadius*np.sin(start_Angle)
     arc_center[1] = turnCoord[1] - (sign)*turnRadius*np.cos(start_Angle)
     
-    
-    # The same idea as applying the offset, but this is the other distance(resolving)
-    # Unlike the offset, the center of the arc can be either to the left or to the right of the car, so we need to 
-    # either add or subtract the distance, both based on the direction of rotation.
-    # arc_center = [   turnCoord[0]+sign*turnRadius*math.sin(start_Angle),
-    #                  turnCoord[1]+sign*turnRadius*math.cos(start_Angle)]
 
     #rospy.loginfo(f"The tan of the angle, {np.tan(start_Angle)}, the arctan of the other angle {np.arctan(-1/np.tan(start_Angle))}")
 
-    rospy.loginfo(f"Actual arc center: {arc_center}")
-    try:
-        initial_angle = np.pi - abs(np.arctan(-1/np.tan(start_Angle)))
-    except RuntimeWarning:
-        pass
-    rospy.loginfo(f"{initial_angle}")
-    angles = np.linspace(initial_angle,  abs(initial_angle) - abs(turn_angle*2), number_of_points)
+    #rospy.loginfo(f"Actual arc center: {arc_center}")
 
     #rospy.loginfo(f"The center of the circle is x = {arc_center[0]}, y = {arc_center[1]}")
     
-    rospy.loginfo(f"The angles {angles*180/np.pi}")
+    #rospy.loginfo(f"The angles {angles*180/np.pi}")
     
     # Generate the x and y arcs as a parameter of the angle
     # The parametric equation of a circle
@@ -323,8 +335,8 @@ def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of
     arc_y = arc_center[1] + turnRadius*np.sin(angles)
 
     # Uncomment to find if the travel arc is what we desire
-    rospy.loginfo(f"The x coords are {arc_x}")
-    rospy.loginfo(f"The y coords are {arc_y}")
+    #rospy.loginfo(f"The x coords are {arc_x}")
+    #rospy.loginfo(f"The y coords are {arc_y}")
 
 
 
@@ -334,7 +346,7 @@ def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of
     # suspecting that this might be the issue, alot of travel to, probably slows down when it gets close to the point.
     # We are following the circular arc that was previously generated
     for i in range(len(arc_x)):
-        rospy.loginfo(f"{arc_x[i]}, {arc_y[i]}")
+        #rospy.loginfo(f"{arc_x[i]}, {arc_y[i]}")
         travel_to(speed, (arc_x[i], arc_y[i]))
     
     travel_to(speed, end_Pos)
