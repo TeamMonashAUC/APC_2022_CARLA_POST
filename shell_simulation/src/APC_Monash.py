@@ -29,10 +29,10 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 # import other prgramming files
 
 import settings  # settings.py is used to store all global variables between files
-
-import ROS_Communication     # does communications with rostopics & roscore (Level 1 code)
-import Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
-import Coordinate_System   	 # move car to coordinate points on the map (Level 3 code)
+# from shell_simulation.ROS_Communication import test
+from shell_simulation.ROS_Communication import ROS_Start  # does communications with rostopics & roscore (Level 1 code)
+import shell_simulation.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
+import shell_simulation.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
 #################################################################################################################################################
 # import libraries
@@ -112,23 +112,24 @@ def main():
 
 
 #################################################################################################################################################
-try:
-    # single time setup
+if __name__ == '__main__':
+    try:
+        # single time setup
+        # test()
+        # start rosnode
+        rospy.init_node('APC_Monash')
+        rate = rospy.Rate(100) # publish data at 100Hz
+        rospy.loginfo("APC_Monash started")
 
-    # start rosnode
-    rospy.init_node('APC_Monash')
-    rate = rospy.Rate(100) # publish data at 100Hz
-    rospy.loginfo("APC_Monash started")
+        # start ros communications with rostopics
+        ROS_Start()
 
-    # start ros communications with rostopics
-    ROS_Communication.ROS_Start()
+        while not rospy.is_shutdown():
+            # infinite loop
+            main()
+            rate.sleep()
 
-    while not rospy.is_shutdown():
-        # infinite loop
-        main()
-        rate.sleep()
-
-except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
-    
-    rospy.loginfo("Exit program successful") # Exit message
-    pass
+    except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
+        
+        rospy.loginfo("Exit program successful") # Exit message
+        pass

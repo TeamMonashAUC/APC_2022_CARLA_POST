@@ -215,7 +215,7 @@ if __name__ == '__main__':
 	area = 2.22 # Car front chassis area [m^2]
 
 	# Graph
-	showgraph = False
+	showgraph = True
 	if (showgraph == True):
 		v_array = []  # velocity array
 		a_array = []  # acceleration array

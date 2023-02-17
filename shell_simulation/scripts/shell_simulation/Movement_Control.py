@@ -17,8 +17,8 @@ to work properly (not including manipulating the speed or steering angle)
 
 #################################################################################################################################################
 # import other prgramming files
-import settings
-import ROS_Communication
+import shell_simulation.settings as settings 
+import shell_simulation.ROS_Communication as ROS_Communication 
 
 
 #################################################################################################################################################
