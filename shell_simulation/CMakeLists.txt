@@ -25,7 +25,9 @@ catkin_package(
   CATKIN_DEPENDS tf
 )
 
-
+# add_library(${PROJECT_NAME}
+#   scripts/ROS_Communication.py
+# )
 ###########
 ## Build ##
 ###########
@@ -50,20 +52,24 @@ include_directories(
 #install(TARGETS car_control_master
 #  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
+
+catkin_python_setup()
+
 catkin_install_python(
   PROGRAMS
-    APC_Monash_scripts/APC_Monash.py
-    APC_Monash_scripts/Coordinate_System.py
-    APC_Monash_scripts/Movement_Control.py
-    APC_Monash_scripts/ROS_Communication.py
+    src/APC_Monash.py
+    scripts/shell_simulation/Coordinate_System.py
+    scripts/shell_simulation/Movement_Control.py
+    scripts/shell_simulation/ROS_Communication.py
+    scripts/shell_simulation/settings.py
     
-    APC_Monash_scripts/efficiency.py
-    APC_Monash_scripts/score.py
+    src/efficiency.py
+    src/score.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY
-  APC_Monash_scripts
+  scripts
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 ## Mark other files for installation (e.g. launch and bag files, etc.)

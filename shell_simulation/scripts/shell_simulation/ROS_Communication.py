@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 ROS_Communication (Level 1 code)
 File purpose:
@@ -28,7 +29,7 @@ rostopic used (corresponding rosmsg):
 
 #################################################################################################################################################
 # import other prgramming files
-import settings # adds global variables
+import shell_simulation.settings as settings # adds global variables
 
 
 
@@ -84,7 +85,8 @@ def ROS_Start():
     publish_carla_data = rospy.Publisher('/carla/ego_vehicle/vehicle_control_cmd',CarlaEgoVehicleControl, queue_size=10)
 
 
-
+# def test():
+    # rospy.loginfo("Success! You just have imported a Python module in another package")
 
 
 

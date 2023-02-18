@@ -15,7 +15,7 @@
   <depend>geometry_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>tf</depend>
-
+  <depend>python3-numpy</depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

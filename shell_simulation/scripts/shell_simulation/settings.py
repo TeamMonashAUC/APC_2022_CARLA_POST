@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 settings (Level 1 code)
 File purpose:

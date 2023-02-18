@@ -17,7 +17,7 @@ from std_srvs.srv import Empty
 #                subscribing to cpu_monitor
 #              - Record the Velocity, Acceleration, Energy, Drag Force and Inertial Force of the car at a defined period
 #                and plot several subgraphs consist of these data against time at the end
-
+passed =0
 def odom(msg):
 	global distance, energy, duration, start
 	global x0, y0, z0, v0, t0, end
@@ -37,7 +37,34 @@ def odom(msg):
 
 	if diff_radius < 3 and not end: # reached the end goal
 		rospy.sleep(1)
-		rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+		# rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+
+		distance_km = distance/1000
+		energy_kWh = energy/3.6e6
+
+		rospy.loginfo("Results:")
+		rospy.loginfo("Time(s): %.1f" %( duration))
+		rospy.loginfo("Distance(km): %.3f" %(distance_km))
+		rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
+		rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
+
+		rospy.loginfo("")
+		rospy.loginfo("Penalties Count: %d" %(penaltyCount))
+		energy_with_penalty = energy_kWh +  ((energy_kWh *0.02) * penaltyCount) #calculate penalty energy of 2% for every additional rule broken
+		rospy.loginfo("Energy with penalties: %.3f" %(energy_with_penalty))
+		
+		global score
+		rospy.loginfo("")
+		rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
+		rospy.loginfo("Goals Passed: %d" %(score))
+		
+
+
+
+
+		# rospy.loginfo("Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+		# rospy.loginfo("Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+		# rospy.loginfo("cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		end = 1
 
 		if showgraph: # plot a graph if enabled
@@ -98,11 +125,11 @@ def odom(msg):
 
 		# Calculate dt and save
 		t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
-		#dt = t - t0
-		dt = 0.05
+		dt = t - t0
+		# dt = 0.05
 		t0 = t
-		#if dt == 0:
-		#	dt = 0.001
+		if dt == 0:
+			dt = 0.001
 		duration += dt
 
 		# Calculate acceleration
@@ -128,17 +155,22 @@ def odom(msg):
 			e_array.append(e)
 	else:
 		t0 = rospy.get_time()
-		if velocity > -0.01:
+		if velocity > 0.01:
 			start = True
-
+score=0
 # records the duration to reach each goal in an array
 def getscore(num):
-	global passed, goaltime
-
+	global passed, goaltime,score
+	score = num.data
 	if showgraph:
 		if (passed != num.data):
 			goaltime.append(duration)
 			passed = num.data
+
+penaltyCount =0
+def penalty_calc(data):
+	global penaltyCount
+	penaltyCount = data.data
 
 
 def srv_handler(request):
@@ -149,15 +181,16 @@ def listener():
 	global goal_type
 	rospy.init_node('efficiency_calc')
 	rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, odom) # Get car position
-	rospy.Subscriber("/current_score", Int8, getscore)
+	rospy.Subscriber("/Monash/current_score", Int8, getscore)
+	rospy.Subscriber("/Monash/penalty_score", Int8,penalty_calc)   
 	rospy.Service("/disp_results",Empty,srv_handler)
 	rospy.spin()
 
 
 if __name__ == '__main__':
 	# Initialize variables
-	goals = [[44.50, -65.75], [0, -256], [-84.5,-198.22], [-135, 1.50]] # Our common final goals
-	last_goal = goals[3] # If using a different final goal, change here
+	goals = [[-47.4,-105.9]] # Our common final goals
+	last_goal = goals[0] # If using a different final goal, change here
 	v0 = 0
 	v_x0 = 0
 	v_y0 = 0
@@ -187,7 +220,7 @@ if __name__ == '__main__':
 	g = 9.81 # Gravitational constant [m/s^2]
 	friction = 0.01 # Rolling friction coefficient
 	rho = 1.2 # Air density at NTP [kg/m^3]
-	drag_coeff = 0.15000000596 # Drag coefficient
+	drag_coeff = 0.15000000596046448 # Drag coefficient
 	area = 2.22 # Car front chassis area [m^2]
 
 	# Graph
@@ -202,3 +235,4 @@ if __name__ == '__main__':
 		goaltime = []
 		passed = 0
 	listener()
+
