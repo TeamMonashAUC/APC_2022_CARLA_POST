@@ -37,21 +37,32 @@ def detect_trafficLight(img,x1,y1,x2,y2):
     red_mask = cv2.inRange(hsv, red_lower, red_upper)
 
     # Create range of coordinates that ensure only detect center traffic light
-    if x1 > 100 and x2 < 700:
+    if x1 > 200 and x2 < 600:
         in_range = True
     else:
         in_range = False
 
     # Check if any pixels are in each binary mask and print the color to the console
     if cv2.countNonZero(green_mask) > 0 and in_range:
-        print("Green")
+        print("3") # Green
     elif cv2.countNonZero(orange_mask) > 0 and in_range:
-        print("Yellow")
+        print("2") # Yellow
     elif cv2.countNonZero(red_mask) > 0 and in_range:
-        print("Red")
+        print("1") # Red
     else:
-        print("No traffic light detected")
-    
+        print("0") # No traffic light detected
+
+# Assuming we should use ros com instead cuz we are not controlling the car here so we just need to read the code colour ryg or nothing and move accordingly.
+# Problem comes with what rostopic is this under. then we just need to read it since the words can only be the 4 types gyr no traffic we can technically hard code it
+# being that only yellow or red it will proceed to decelerate if not it will continue to move.
+
+# Something like this except this is not using rosnodes.
+# def traffic_stop(img,x1,x2,y1,y2):
+     # if cv2.countNonZero(green_mask) > 0 and in_range:
+        # move
+     # else stop
+
+
 # test
 def show_image(img,output):
     try:
@@ -71,7 +82,7 @@ def show_image(img,output):
                 colour = (255,0,0) # (B,G,R)
 
                 # check traffic light state
-                if int(index) == 9 and probability > 50:
+                if int(index) == 9 and probability > 30:
                     detect_trafficLight(img,x1,y1,x2,y2)
 
                 # if the area or person crosses threshold then warn user
@@ -93,7 +104,7 @@ def show_image(img,output):
 
     cv2.imshow("Object Detection", img)
     cv2.waitKey(3)
-
+  
 
 def image_callback(img_msg):
     #rospy.loginfo(img_msg.header)
@@ -104,8 +115,12 @@ def image_callback(img_msg):
         rospy.logerr("CvBridge Error: {0}")
 
     # pass image through YOLOv5
-    output = model(cv_image)
-    show_image(cv_image,output)
+    resize = cv2.resize(cv_image, (1280,1280))
+    resize1 = resize[300:1000,300:1000]
+    resized = cv2.resize(resize1,(1280,1280))
+    output = model(resized)
+    show_image(resized,output)
+ 
 
 rospy.init_node('opencv_example',anonymous=True)
 rospy.loginfo("Hello ROS!")
@@ -114,3 +129,5 @@ while not rospy.is_shutdown():
     # sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_top/image", Image, image_callback)
     sub_image = rospy.Subscriber("/carla/ego_vehicle/rgb_front/image", Image, image_callback)
     rospy.spin()
+
+# Problems traffic light of other lanes is detected and stll cant detect own lane cuz too far
