@@ -8,3 +8,9 @@ bin/
 
 # Catkin custom files
 CATKIN_IGNORE
+shell_simulation/yolov5s.pt
+.gitignore
+.gitignore
+shell_simulation/yolov8x.pt
+shell_simulation/APC_Monash_script/__pycache__/Coordinate_System.cpython-38.pyc
+shell_simulation/APC_Monash_script/__pycache__/settings.cpython-38.pyc

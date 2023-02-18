@@ -23,7 +23,7 @@ def detect_trafficLight(img,x1,y1,x2,y2):
     # Convert cropped image to HSV color space
     hsv = cv2.cvtColor(crop_img, cv2.COLOR_BGR2HSV)
 
-    # Define lower and upper HSV color ranges for green, orange, and red
+    # Define lower and upper HSV color ranges for green, yellow, and red
     green_lower = (40, 50, 50)
     green_upper = (80, 255, 255)
     yellow_lower = (20, 50, 50)
@@ -33,7 +33,7 @@ def detect_trafficLight(img,x1,y1,x2,y2):
 
     # Create binary masks for each color
     green_mask = cv2.inRange(hsv, green_lower, green_upper)
-    orange_mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
+    yellow_mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
     red_mask = cv2.inRange(hsv, red_lower, red_upper)
 
     # Create range of coordinates that ensure only detect center traffic light
@@ -45,10 +45,12 @@ def detect_trafficLight(img,x1,y1,x2,y2):
     # Check if any pixels are in each binary mask and print the color to the console
     if cv2.countNonZero(green_mask) > 0 and in_range:
         print("Green")
-    elif cv2.countNonZero(orange_mask) > 0 and in_range:
+    elif cv2.countNonZero(yellow_mask) > 0 and in_range:
         print("Yellow")
     elif cv2.countNonZero(red_mask) > 0 and in_range:
         print("Red")
+    elif not in_range:
+        print("Out of range")
     else:
         print("No traffic light detected")
     
