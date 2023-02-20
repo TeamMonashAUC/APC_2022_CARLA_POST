@@ -22,18 +22,19 @@ The new research code developed is under APC_Monash folder
     - [x] Straight line (Andrew)
     - [x] Corners 90    (Andrew & Nulan)
     - [x] Corners any angle (Andrew & Nulan)
-- [ ] Stop when detect moving obstacle (using camera or radar) (Lucas)
-    - [ ] Traffic light
-    - [ ] pedestrian
+- [ ] Stop when detect moving obstacle (using camera or radar) (Lucas & Qi Shiun & Guan Yuan)
+    - [ ] Traffic light (not needeed for APC2023)
+    - [ ] pedestrian (not needeed for APC2023)
     - [ ] car
-- [ ] Lane centering using camera (opencv2)   
+- [ ] Lane centering using camera (opencv2)   (Nulan &  Derrick)
     - [ ] Straight line
     - [ ] Corners
 - [ ] Energy Saving   
     - [ ] Soft accelerate
     - [ ] Coasting on straights
     - [ ] Coasting on corners
-
+- [ ] Route Planning (Omar)
+     
 ### Current issues (found during testing)
 - [ ] Long sweeping turns
 - [ ] Roundabout

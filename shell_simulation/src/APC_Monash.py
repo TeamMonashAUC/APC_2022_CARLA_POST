@@ -93,13 +93,15 @@ def main():
     R1()
     Coordinate_System.corner(15,6,0,[-195.0,-112.5],-90) #turn right
     R2()
-
+    
 
 
 
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
+        rate.sleep()
+        # rospy.spin()
 
 
 

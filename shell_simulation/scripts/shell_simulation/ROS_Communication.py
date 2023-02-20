@@ -45,7 +45,7 @@ ROS msg are formats that ROS uses to send over topics
 importing these files are needed so that we can apply their format and send to the rostopis without any issues
 '''
 
-from std_msgs.msg import String, Float64, Float32
+from std_msgs.msg import String, Float64, Float32,Bool
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped, Point
 import tf2_ros
@@ -80,13 +80,40 @@ def ROS_Start():
     
 
     ####################################################
+    ''' 
+    # used this to talk to carla directly
+
     # publish data to carla using rostopic
     global publish_carla_data # store as global variable in this file to publish data to this node
+    
     publish_carla_data = rospy.Publisher('/carla/ego_vehicle/vehicle_control_cmd',CarlaEgoVehicleControl, queue_size=10)
+    '''
+    ####################################################
+    '''
+    for APC 2023, we are required to write our car control data to the following topics
+    '''
+    global pub_gear
+    global pub_brake
+    global pub_steering
+    global pub_throttle
+    global pub_handbrake
 
+    pub_gear = rospy.Publisher("/gear_command", String, queue_size = 1)
+    pub_throttle = rospy.Publisher("/throttle_command", Float64, queue_size = 1)
+    pub_steering = rospy.Publisher("/steering_command", Float64, queue_size = 1)
+    pub_brake = rospy.Publisher("/brake_command", Float64, queue_size = 1)
+    pub_handbrake = rospy.Publisher("/handbrake_command", Bool, queue_size = 1)
 
-# def test():
-    # rospy.loginfo("Success! You just have imported a Python module in another package")
+    global throttle_data
+    global steering_data 
+    global brake_data
+    global gear_data
+    global handbrake_data
+
+    throttle_data = steering_data = brake_data =  Float64()
+    gear_data = String()
+    handbrake_data = Bool()
+    ####################################################
 
 
 
@@ -97,8 +124,6 @@ Function Explanation :
     publish rostopics directly to carla to control the car     
 '''
 def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_reverse = False, car_handBrake = False):
-    global publish_carla_data
-    controls = CarlaEgoVehicleControl() # apply this format to be sent using ROS
  
     # set limits for carla
     if car_throttle > 1:
@@ -116,7 +141,11 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
     elif car_brake < 0:
         car_brake = 0    
 
-    # set parameters to send
+    ''' 
+    # set parameters to send to carla directly
+    global publish_carla_data
+    controls = CarlaEgoVehicleControl() # apply this format to be sent using ROS
+    
     controls.throttle    	 = car_throttle
     controls.steer    		 = car_steer
     controls.brake   		 = car_brake
@@ -125,7 +154,39 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
 
     # publish to carla
     publish_carla_data.publish(controls)
+
+    '''
+
+    ########################################################
+    # publish data as per the rules for APC 2023
+
+    global throttle_data
+    global steering_data 
+    global brake_data
+    global gear_data
+    global handbrake_data
+
+    throttle_data = steering_data = brake_data =  Float64()
+    gear_data = String()
+    handbrake_data = Bool()
+
+    throttle_data = car_throttle
+    steering_data = car_steer
+    brake_data = car_brake
+    handbrake_data = car_handBrake
     
+    
+    pub_throttle.publish(throttle_data)
+    pub_steering.publish(steering_data)
+    pub_brake.publish(brake_data)
+    pub_handbrake.publish(handbrake_data)
+
+    if (car_reverse == True):
+        pub_gear.publish("reverse")
+    else :
+        pub_gear.publish("forward")
+
+
 
 
 
