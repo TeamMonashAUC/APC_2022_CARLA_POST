@@ -22,6 +22,7 @@ The new research code developed is under APC_Monash folder
     - [x] Straight line (Andrew)
     - [x] Corners 90    (Andrew & Nulan)
     - [x] Corners any angle (Andrew & Nulan)
+    - [ ] Corners using many smaller waypoints (Nulan)
 - [ ] Stop when detect moving obstacle (using camera or radar) (Lucas & Qi Shiun & Guan Yuan)
     - [ ] Traffic light (not needeed for APC2023)
     - [ ] pedestrian (not needeed for APC2023)

@@ -189,7 +189,8 @@ def listener():
 
 if __name__ == '__main__':
 	# Initialize variables
-	goals = [[-47.4,-105.9]] # Our common final goals
+	goals = [[39.1,172.8]] # Our common final goals
+	# goals = [[-47.4,-105.9]] # Our common final goals
 	last_goal = goals[0] # If using a different final goal, change here
 	v0 = 0
 	v_x0 = 0
@@ -224,6 +225,7 @@ if __name__ == '__main__':
 	area = 2.22 # Car front chassis area [m^2]
 
 	# Graph
+	# showgraph = False
 	showgraph = True
 	if (showgraph == True):
 		v_array = []  # velocity array
