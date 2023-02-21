@@ -30,7 +30,7 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 
 import settings  # settings.py is used to store all global variables between files
 # from shell_simulation.ROS_Communication import test
-from shell_simulation.ROS_Communication import ROS_Start  # does communications with rostopics & roscore (Level 1 code)
+import shell_simulation.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
 import shell_simulation.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
 import shell_simulation.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
@@ -190,8 +190,22 @@ def R13():
 
 def R14():
     pass
+
+
 def main():
-    Coordinate_System.travel_to(-15, [-171.60,4.00]) 
+
+    # reverse for first coordinate 
+    diff_goal = 3
+    while not rospy.is_shutdown():
+        rospy.ROSInterruptException  # allow control+C to exit the program        
+        Movement_Control.carControl(targetSpeed = -10,steerAngle = 0)
+        rate.sleep()
+        goal_coord_from_car = Coordinate_System.goal_position_from_car([-171.60,4.00])
+        diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
+        if(diff_goal<2.5):
+            break
+
+
     R1()
     Coordinate_System.corner(15,6,0,[-195.0,-112.5],-90) #turn right
     R2()
@@ -263,7 +277,7 @@ if __name__ == '__main__':
         rospy.loginfo("APC_Monash started")
 
         # start ros communications with rostopics
-        ROS_Start()
+        ROS_Communication.ROS_Start()
 
         while not rospy.is_shutdown():
             # infinite loop
