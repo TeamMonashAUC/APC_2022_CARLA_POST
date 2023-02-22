@@ -193,7 +193,7 @@ def R14():
 
 
 def main():
-
+    '''
     # reverse for first coordinate 
     diff_goal = 3
     while not rospy.is_shutdown():
@@ -233,7 +233,7 @@ def main():
     Coordinate_System.travel_to(15, [37.2,105.6]) 
     Coordinate_System.travel_to(15, [38,132.2]) 
     Coordinate_System.corner(15,5,90,[47.9,146.0],0) #turn right
-
+                                                                                                                                                                                                                                                                      
     R6()
 
     Coordinate_System.travel_to(15, [87.6,5.1]) 
@@ -244,10 +244,48 @@ def main():
     Coordinate_System.travel_to(15, [37.2,105.6]) 
     Coordinate_System.travel_to(15, [38,132.2]) 
     Coordinate_System.travel_to(15, [39.1,172.8]) 
+    '''
+    # R14()
+    
+    #Final ring
+    Coordinate_System.travel_to(10, [39.1,176.1])
+    
+    # Coordinate_System.corner(10,5,90[59.0,190.0],0)
+    Coordinate_System.travel_to(10, [39.6,188.5])
+    Coordinate_System.travel_to(10, [44.0,189.4])
+    # Coordinate_System.travel_to(30, [50.0,190.0])
+    Coordinate_System.travel_to(10, [50.0,190.2])
+    Coordinate_System.travel_to(15, [52.0,190.5])
+    Coordinate_System.travel_to(20, [54.0,190.5]) 
+    Coordinate_System.travel_to(30, [74.0,190.5])   #P18 (74.0, 190.0)
 
+    # Cutting to the side lane 
+    Coordinate_System.travel_to(10, [95.1,194.0])
+    Coordinate_System.travel_to(10, [95.5,194.0])
+    Coordinate_System.travel_to(20, [108.0,193.7])
+    Coordinate_System.travel_to(20, [115.8,192.5])
+    Coordinate_System.travel_to(20, [122.0,191.5])
+    Coordinate_System.travel_to(20, [126.0,190.5])
+    Coordinate_System.travel_to(20, [131.5,188.8])
+    Coordinate_System.travel_to(20, [135.0,187.5])
+    Coordinate_System.travel_to(20, [140.0,185.5])
+    Coordinate_System.travel_to(20, [145.7,182.2])
+    Coordinate_System.travel_to(15, [148.1,181.0])
+    Coordinate_System.travel_to(15, [154.1,177.3])  #P19
+    Coordinate_System.travel_to(15, [165.0,168.0])
+    Coordinate_System.travel_to(15, [174.5,158.0])
+    Coordinate_System.travel_to(15, [180.2,150.6])
+    Coordinate_System.travel_to(15, [190.0,131.6])
+    Coordinate_System.travel_to(15, [192.5,123.1])
+    Coordinate_System.travel_to(15, [195.6,101.3])
 
-
-
+    Coordinate_System.travel_to(5, [189.0,52.8])   #P20
+    '''
+    Coordinate_System.travel_to(5, [189.2,50.0])
+    Coordinate_System.travel_to(5, [189.2,-95.0])
+    Coordinate_System.travel_to(5, [180.0,-140.0])
+    Coordinate_System.travel_to(5, [174.4,-148.0])
+    '''
 
 
     while not rospy.is_shutdown():
