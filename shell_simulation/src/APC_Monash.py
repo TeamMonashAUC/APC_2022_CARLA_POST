@@ -45,10 +45,10 @@ import numpy as np
 def R1():
     Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
     Coordinate_System.travel_to(40, [-245.5,0.8]) 
-    Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
+    Coordinate_System.travel_to(30, [-255.9,0.2]) # P2   #stop
 
-    Coordinate_System.corner(15,8,180,[-272.5,-18.7],-90) #turn left
-    Coordinate_System.travel_to(15, [-272.1,-43.9]) # P3
+    Coordinate_System.corner(20,8,180,[-272.5,-18.7],-90) #turn left
+    Coordinate_System.travel_to(20, [-272.1,-43.9]) # P3
     Coordinate_System.travel_to(15, [-272.0,-68.2]) 
 
     # curve
@@ -58,7 +58,7 @@ def R1():
     Coordinate_System.travel_to(15, [-253.8,-89.6]) 
     Coordinate_System.travel_to(15, [-241.8,-91.2]) 
 
-    Coordinate_System.travel_to(15, [-230.0,-94.9]) # P4
+    Coordinate_System.travel_to(15, [-219.0,-94.6]) # P4
     Coordinate_System.travel_to(15, [-205.5,-95.0]) # P4
     Coordinate_System.travel_to(15, [-205.3,-94.7]) # traffic light 
 
@@ -193,7 +193,6 @@ def R14():
 
 
 def main():
-    '''
     # reverse for first coordinate 
     diff_goal = 3
     while not rospy.is_shutdown():
@@ -207,8 +206,9 @@ def main():
 
 
     R1()
-    Coordinate_System.corner(15,6,0,[-195.0,-112.5],-90) #turn right
-    R2()
+   
+    # R2()
+    '''
     Coordinate_System.corner(15,6,90,[-65.8,-87.9],0) #turn left
     R3()
     if (False):
@@ -247,6 +247,7 @@ def main():
     '''
     # R14()
     
+    '''
     #Final ring
     Coordinate_System.travel_to(10, [39.1,176.1])
     
@@ -280,7 +281,6 @@ def main():
     Coordinate_System.travel_to(15, [195.6,101.3])
 
     Coordinate_System.travel_to(5, [189.0,52.8])   #P20
-    '''
     Coordinate_System.travel_to(5, [189.2,50.0])
     Coordinate_System.travel_to(5, [189.2,-95.0])
     Coordinate_System.travel_to(5, [180.0,-140.0])
