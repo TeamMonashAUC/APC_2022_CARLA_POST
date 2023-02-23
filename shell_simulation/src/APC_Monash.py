@@ -42,13 +42,17 @@ import numpy as np
 
 #################################################################################################################################################
 
-def R1():
+def R1(valid_coordinates):
     Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
+
     Coordinate_System.travel_to(40, [-245.5,0.8]) 
     Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
 
     Coordinate_System.corner(15,8,180,[-272.5,-18.7],-90) #turn left
     Coordinate_System.travel_to(15, [-272.1,-43.9]) # P3
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
     Coordinate_System.travel_to(15, [-272.0,-68.2]) 
 
     # curve
@@ -59,10 +63,13 @@ def R1():
     Coordinate_System.travel_to(15, [-241.8,-91.2]) 
 
     Coordinate_System.travel_to(15, [-230.0,-94.9]) # P4
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
     Coordinate_System.travel_to(15, [-205.5,-95.0]) # P4
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
     Coordinate_System.travel_to(15, [-205.3,-94.7]) # traffic light 
+    
 
-def R2():
+def R2(valid_coordinates):
     # curve
     Coordinate_System.travel_to(15, [-195.0,-118.3]) 
     Coordinate_System.travel_to(15, [-193.7,-127.2]) 
@@ -73,11 +80,13 @@ def R2():
 
     Coordinate_System.travel_to(15, [-158.0,-151.1]) 
     Coordinate_System.travel_to(15, [-151.0,-151.0]) #P6 
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
     Coordinate_System.travel_to(15, [-145.6,-151.0]) # traffic light 
 
 
     Coordinate_System.travel_to(15, [-121.0,-151.1]) 
     Coordinate_System.travel_to(15, [-101.4,-154.7]) # P7
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
 
     #curve
     Coordinate_System.travel_to(15, [-85.8,-154.9]) 
@@ -86,6 +95,8 @@ def R2():
     Coordinate_System.travel_to(15, [-54.4,-136.6]) 
 
     Coordinate_System.travel_to(15, [-47.8,-117.2]) # P8 
+    rospy.loginfo(f"{Coordinate_System.distances(valid_coordinates)}")
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
     Coordinate_System.travel_to(15, [-47.4,-105.9]) 
 
 def R3():
@@ -195,6 +206,12 @@ def R14():
 def main():
 
     # reverse for first coordinate 
+
+    # the valid coordinates are known.
+    valid_coordinates = Coordinate_System.generate_random_coordinates()
+    #valid_coordinates = np.array([[-47.8, -117.2, 0]])
+    goal_predict = []
+
     diff_goal = 3
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
@@ -202,15 +219,22 @@ def main():
         rate.sleep()
         goal_coord_from_car = Coordinate_System.goal_position_from_car([-171.60,4.00])
         diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
+
+        Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))
+
         if(diff_goal<2.5):
             break
 
 
-    R1()
+    R1(valid_coordinates)
     Coordinate_System.corner(15,6,0,[-195.0,-112.5],-90) #turn right
-    R2()
+    R2(valid_coordinates)
     Coordinate_System.corner(15,6,90,[-65.8,-87.9],0) #turn left
+
+    rospy.loginfo(f"The valid coordinates: {valid_coordinates}")
+    quit()
     R3()
+
     if (False):
         R4()
     else:
