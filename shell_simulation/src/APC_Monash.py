@@ -30,9 +30,9 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 
 import settings  # settings.py is used to store all global variables between files
 # from shell_simulation.ROS_Communication import test
-import shell_simulation.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
-import shell_simulation.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
-import shell_simulation.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
+import shell_simulation_2.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
+import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
+import shell_simulation_2.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
 #################################################################################################################################################
 # import libraries
@@ -193,6 +193,7 @@ def R14():
 
 
 def main():
+    '''
     # reverse for first coordinate 
     diff_goal = 3
     while not rospy.is_shutdown():
@@ -206,9 +207,8 @@ def main():
 
 
     R1()
-   
-    # R2()
-    '''
+    Coordinate_System.travel_to(15, [-191.8,-107])
+    R2()
     Coordinate_System.corner(15,6,90,[-65.8,-87.9],0) #turn left
     R3()
     if (False):
@@ -246,47 +246,99 @@ def main():
     Coordinate_System.travel_to(15, [39.1,172.8]) 
     '''
     # R14()
-    
     '''
     #Final ring
     Coordinate_System.travel_to(10, [39.1,176.1])
-    
     # Coordinate_System.corner(10,5,90[59.0,190.0],0)
     Coordinate_System.travel_to(10, [39.6,188.5])
     Coordinate_System.travel_to(10, [44.0,189.4])
     # Coordinate_System.travel_to(30, [50.0,190.0])
-    Coordinate_System.travel_to(10, [50.0,190.2])
-    Coordinate_System.travel_to(15, [52.0,190.5])
+    Coordinate_System.travel_to(15, [50.0,190.2])
+    Coordinate_System.travel_to(20, [52.0,190.5])
     Coordinate_System.travel_to(20, [54.0,190.5]) 
     Coordinate_System.travel_to(30, [74.0,190.5])   #P18 (74.0, 190.0)
 
     # Cutting to the side lane 
-    Coordinate_System.travel_to(10, [95.1,194.0])
-    Coordinate_System.travel_to(10, [95.5,194.0])
-    Coordinate_System.travel_to(20, [108.0,193.7])
-    Coordinate_System.travel_to(20, [115.8,192.5])
-    Coordinate_System.travel_to(20, [122.0,191.5])
-    Coordinate_System.travel_to(20, [126.0,190.5])
-    Coordinate_System.travel_to(20, [131.5,188.8])
-    Coordinate_System.travel_to(20, [135.0,187.5])
-    Coordinate_System.travel_to(20, [140.0,185.5])
-    Coordinate_System.travel_to(20, [145.7,182.2])
-    Coordinate_System.travel_to(15, [148.1,181.0])
+    Coordinate_System.travel_to(15, [95.1,193.7])
+    Coordinate_System.travel_to(15, [95.5,193.7])
+    Coordinate_System.travel_to(15, [108.0,193.7])
+    Coordinate_System.travel_to(15, [115.8,192.5])
+    Coordinate_System.travel_to(15, [122.0,191.5])
+    Coordinate_System.travel_to(15, [126.0,190.5])
+    Coordinate_System.travel_to(15, [131.5,188.8])
+    Coordinate_System.travel_to(15, [135.0,187.5])
+    Coordinate_System.travel_to(15, [140.0,185.5])
+    Coordinate_System.travel_to(15, [145.7,182.2])
+    Coordinate_System.travel_to(15, [148.1,181.0])  
     Coordinate_System.travel_to(15, [154.1,177.3])  #P19
     Coordinate_System.travel_to(15, [165.0,168.0])
     Coordinate_System.travel_to(15, [174.5,158.0])
     Coordinate_System.travel_to(15, [180.2,150.6])
-    Coordinate_System.travel_to(15, [190.0,131.6])
-    Coordinate_System.travel_to(15, [192.5,123.1])
+    Coordinate_System.travel_to(15, [184.1,143.5])
+    Coordinate_System.travel_to(15, [187.5,137.1])
+    Coordinate_System.travel_to(15, [190.0,130.7])
+    Coordinate_System.travel_to(15, [192.5,121.4])
+    Coordinate_System.travel_to(15, [193.7,117.3])
     Coordinate_System.travel_to(15, [195.6,101.3])
+    
+    Coordinate_System.travel_to(15, [189.1,72.0])   #189.3?
+    Coordinate_System.travel_to(15, [189.2,52.8])   #P20
+    Coordinate_System.travel_to(20, [189.2,50.0])
+    Coordinate_System.travel_to(20, [190.0,-4.0])
+    Coordinate_System.travel_to(20, [189.5,-80.0])
+    Coordinate_System.travel_to(20, [188.9,-104.7])
+    Coordinate_System.travel_to(20, [187.4,-116.4])
+    Coordinate_System.travel_to(20, [183.9,-129.5])
+    Coordinate_System.travel_to(20, [181.5,-135.7])
+    Coordinate_System.travel_to(15, [179.0,-140.0])
+    Coordinate_System.travel_to(15, [175.5,-146.0])
+    Coordinate_System.travel_to(15, [174.4,-148.0]) #P21
 
-    Coordinate_System.travel_to(5, [189.0,52.8])   #P20
-    Coordinate_System.travel_to(5, [189.2,50.0])
-    Coordinate_System.travel_to(5, [189.2,-95.0])
-    Coordinate_System.travel_to(5, [180.0,-140.0])
-    Coordinate_System.travel_to(5, [174.4,-148.0])
+    Coordinate_System.travel_to(15, [168.5,-156.0])
+    Coordinate_System.travel_to(15, [156.6,-168.0])
+    Coordinate_System.travel_to(15, [143.5,-176.9])
+    Coordinate_System.travel_to(15, [134.7,-180.9])
+    Coordinate_System.travel_to(15, [123.1,-185.0])
+    Coordinate_System.travel_to(15, [111.1,-187.4])
+    Coordinate_System.travel_to(15, [104.2,-187.8])
+    Coordinate_System.travel_to(15, [100.0,-187.9])
+    Coordinate_System.travel_to(15, [95.6,-187.8])
+    Coordinate_System.travel_to(40, [10.2,-187.9]) #P22
     '''
+    Coordinate_System.travel_to(10, [10.0,-187.9]) #P22
+    Coordinate_System.travel_to(20, [-145.8,-190.9]) #P23 what is 8.6 for z
+    Coordinate_System.travel_to(15, [-152.0,-190.7])
+    Coordinate_System.travel_to(10, [-158.5,-189.7])
+    Coordinate_System.travel_to(15, [-166.2,-187.9])
+    Coordinate_System.travel_to(15, [-193.3,-177.6])
+    Coordinate_System.travel_to(15, [-196.6,-175.9])
+    Coordinate_System.travel_to(15, [-201.3,-172.6])
+    Coordinate_System.travel_to(15, [-205.4,-169.2])
+    Coordinate_System.travel_to(15, [-212.5,-161.2])
+    Coordinate_System.travel_to(15, [-219.7,-150.9])
+    Coordinate_System.travel_to(15, [-225.2,-141.4])
+    Coordinate_System.travel_to(15, [-229.0,-132.3])
+    Coordinate_System.travel_to(15, [-230.7,-125.9])
+    Coordinate_System.travel_to(15, [-232.4,-118.1])
+    Coordinate_System.travel_to(15, [-233.5,-111.5])
+    Coordinate_System.travel_to(15, [-233.8,-103.8])
+    Coordinate_System.travel_to(20, [-233.6,-84.3])
+    Coordinate_System.travel_to(40, [-232.6,28.1]) #P24 10 for z
 
+    Coordinate_System.travel_to(30, [-233.9,98.7])
+    Coordinate_System.travel_to(15, [-226.8,124.3])
+    Coordinate_System.travel_to(15, [-224.1,130.0])
+
+    Coordinate_System.travel_to(15, [-210.5,151.2])
+    Coordinate_System.travel_to(30, [-181.6,176.0])
+    Coordinate_System.travel_to(15, [-155.8,189.2])
+    Coordinate_System.travel_to(15, [-119.4,186.6]) #P25 10 for z
+
+  
+
+                        #[-145.80,-190.90,8.60],#P23
+                        #[-232.60,28.10,10.00], #P24
+                        #[-119.40,186.60,10.00]
 
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
