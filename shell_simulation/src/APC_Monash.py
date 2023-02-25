@@ -225,15 +225,20 @@ def main():
         if(diff_goal<2.5):
             break
 
+
+
     # provided array is in settings.coord_distance
     rospy.loginfo(np.array(settings.coord_distance))
 
-    # valid_coordinates = np.array(settings.coord_distance)
-    valid_coordinates = Coordinate_System.generate_random_coordinates()
+    # valid_coordinates = Coordinate_System.generate_random_coordinates()
+    # valid_distance = Coordinate_System.distances(valid_coordinates)
+    valid_distance = np.array(settings.coord_distance)
 
-    
-    rospy.loginfo(Coordinate_System.distances(valid_coordinates))
-    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates ) )}")
+    rospy.loginfo(valid_distance)
+
+    rospy.loginfo("")
+    rospy.loginfo("actual coord: ")
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(valid_distance )}")
     
     '''
     R1()

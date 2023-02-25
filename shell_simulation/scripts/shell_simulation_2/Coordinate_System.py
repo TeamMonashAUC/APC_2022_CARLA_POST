@@ -304,9 +304,9 @@ def findGoalPoint(distancesToValidCoordinates):
 # Generates the random coordinates
 def generate_random_coordinates():
 
-    # implemented_coords = [1,2,3,4,6,7,8]
-    implemented_coords = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
-    valid_coords = random.sample(implemented_coords, k=15)
+    implemented_coords = [1,2,3,4,6,7,8]
+    # implemented_coords = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
+    valid_coords = random.sample(implemented_coords, k=3)
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
                         [-206.40,4.20,0.00],   #P1
                         [-255.90,0.20,0.00],   #P2
