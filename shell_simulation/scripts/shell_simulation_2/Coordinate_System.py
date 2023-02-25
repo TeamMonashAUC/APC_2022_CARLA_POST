@@ -16,9 +16,9 @@ This function main purpose is to enables the car to goal to a designated corodin
 
 #################################################################################################################################################
 # import other prgramming files
-import shell_simulation.settings as settings 
-import shell_simulation.ROS_Communication as ROS_Communication 
-import shell_simulation.Movement_Control as Movement_Control 
+import shell_simulation_2.settings as settings 
+import shell_simulation_2.ROS_Communication as ROS_Communication 
+import shell_simulation_2.Movement_Control as Movement_Control 
 
 #################################################################################################################################################
 # import used libraries

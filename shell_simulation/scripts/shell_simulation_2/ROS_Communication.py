@@ -29,7 +29,7 @@ rostopic used (corresponding rosmsg):
 
 #################################################################################################################################################
 # import other prgramming files
-import shell_simulation.settings as settings # adds global variables
+import shell_simulation_2.settings as settings # adds global variables
 
 
 
