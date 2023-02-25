@@ -226,6 +226,9 @@ def main():
             break
 
 
+    valid_coordinates = Coordinate_System.generate_random_coordinates()
+    rospy.loginfo(f"{Coordinate_System.distances(valid_coordinates )}")
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates ))}")
     R1()
    
     R2()
