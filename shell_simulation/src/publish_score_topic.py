@@ -82,6 +82,22 @@ class PublisherPyNode:
 		
 
 		# allow us to select which coordinate at which points using index
+		# self.sample15goals = [  possible_goals[0],
+        #                         possible_goals[1],
+        #                         possible_goals[2],
+        #                         possible_goals[3],
+        #                         possible_goals[4],
+        #                         possible_goals[5],
+        #                         possible_goals[6],
+        #                         possible_goals[7],
+        #                         possible_goals[8],
+        #                         possible_goals[9],
+        #                         possible_goals[10],
+        #                         possible_goals[11],
+        #                         possible_goals[12],
+        #                         possible_goals[13],
+        #                         possible_goals[14]
+		# ]
 		self.sample15goals = [  possible_goals[0],
                                 possible_goals[0],
                                 possible_goals[0],

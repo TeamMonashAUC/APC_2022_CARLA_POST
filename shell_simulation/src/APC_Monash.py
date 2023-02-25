@@ -28,7 +28,7 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 ################################################################################################################################################# 
 # import other prgramming files
 
-import settings  # settings.py is used to store all global variables between files
+import shell_simulation_2.settings as settings # settings.py is used to store all global variables between files
 # from shell_simulation.ROS_Communication import test
 import shell_simulation_2.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
 import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
@@ -225,10 +225,17 @@ def main():
         if(diff_goal<2.5):
             break
 
+    # provided array is in settings.coord_distance
+    rospy.loginfo(np.array(settings.coord_distance))
 
+    # valid_coordinates = np.array(settings.coord_distance)
     valid_coordinates = Coordinate_System.generate_random_coordinates()
-    rospy.loginfo(f"{Coordinate_System.distances(valid_coordinates )}")
-    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates ))}")
+
+    
+    rospy.loginfo(Coordinate_System.distances(valid_coordinates))
+    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates ) )}")
+    
+    '''
     R1()
    
     R2()
@@ -359,7 +366,7 @@ def main():
                         #[-145.80,-190.90,8.60],#P23
                         #[-232.60,28.10,10.00], #P24
                         #[-119.40,186.60,10.00]
-
+    '''
 
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        

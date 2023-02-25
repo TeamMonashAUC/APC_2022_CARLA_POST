@@ -41,6 +41,9 @@ car_direction_from_world = [0,0,0]  # euler angle [roll, pitch, yaw]
 turns = 0
 current_quadrant = 1
 prev_quadrant = 1
+
+
+coord_distance =  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 #################################################################################################################################################
 '''
 The goal types are described using numbers and are represented as follow
@@ -67,6 +70,7 @@ Moving backward
 '''
 pose_seq 		= []   # [x, y, target direction] coordinate
 pose_type		= []   # [turn type, speed limit]
+
 
 # odom = Odometry ()
 #rosdata

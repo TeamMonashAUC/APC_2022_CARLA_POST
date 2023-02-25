@@ -297,15 +297,16 @@ def findGoalPoint(distancesToValidCoordinates):
     # if there are no possible goal points nearby then the possible_distances will be an empty array, whic if we use to index
     # will give us an error, so the following if statement is a simple way of checking the array is empty
     if possible_distances.shape[0] != 0:
-        actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances) <= 3].min() # min because we may have more than one point
+        actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances) <= 0.1].min() # min because we may have more than one point
         print("Coords")
         return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
 
 # Generates the random coordinates
 def generate_random_coordinates():
 
-    implemented_coords = [1,2,3,4,6,7,8]
-    valid_coords = random.sample(implemented_coords, k=3)
+    # implemented_coords = [1,2,3,4,6,7,8]
+    implemented_coords = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
+    valid_coords = random.sample(implemented_coords, k=15)
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
                         [-206.40,4.20,0.00],   #P1
                         [-255.90,0.20,0.00],   #P2
