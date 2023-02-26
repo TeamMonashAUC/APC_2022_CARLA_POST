@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from cmath import cos
 import rospy
 import math
 from std_msgs.msg import Float32, Float64, Int8

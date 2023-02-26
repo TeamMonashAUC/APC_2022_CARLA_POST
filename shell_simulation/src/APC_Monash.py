@@ -28,7 +28,7 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 ################################################################################################################################################# 
 # import other prgramming files
 
-import settings  # settings.py is used to store all global variables between files
+import shell_simulation.settings as settings# settings.py is used to store all global variables between files
 # from shell_simulation.ROS_Communication import test
 import shell_simulation.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
 import shell_simulation.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
