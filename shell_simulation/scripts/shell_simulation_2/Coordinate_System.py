@@ -16,9 +16,9 @@ This function main purpose is to enables the car to goal to a designated corodin
 
 #################################################################################################################################################
 # import other prgramming files
-import shell_simulation.settings as settings 
-import shell_simulation.ROS_Communication as ROS_Communication 
-import shell_simulation.Movement_Control as Movement_Control 
+import shell_simulation_2.settings as settings 
+import shell_simulation_2.ROS_Communication as ROS_Communication 
+import shell_simulation_2.Movement_Control as Movement_Control 
 
 #################################################################################################################################################
 # import used libraries
@@ -27,6 +27,10 @@ import math
 import numpy as np
 # used for picking the points, TODO remove later since we dont need
 import random
+<<<<<<< HEAD:shell_simulation/scripts/shell_simulation/Coordinate_System.py
+=======
+
+>>>>>>> score_topic:shell_simulation/scripts/shell_simulation_2/Coordinate_System.py
 
 #################################################################################################################################################
 
@@ -412,11 +416,11 @@ def findGoalPoint(distancesToValidCoordinates):
         print("Coords")
         return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
 
-
 # Generates the random coordinates
 def generate_random_coordinates():
 
     implemented_coords = [1,2,3,4,6,7,8]
+    # implemented_coords = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
     valid_coords = random.sample(implemented_coords, k=3)
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
                         [-206.40,4.20,0.00],   #P1

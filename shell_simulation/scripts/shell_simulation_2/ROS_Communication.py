@@ -29,7 +29,7 @@ rostopic used (corresponding rosmsg):
 
 #################################################################################################################################################
 # import other prgramming files
-import shell_simulation.settings as settings # adds global variables
+import shell_simulation_2.settings as settings # adds global variables
 
 
 
@@ -37,6 +37,8 @@ import shell_simulation.settings as settings # adds global variables
 #################################################################################################################################################
 # ros msg & libraries
 import rospy
+from shell_simulation.msg import Score
+
 import math
 
 
@@ -77,6 +79,7 @@ def ROS_Start():
     # rospy.Subscriber('/carla/ego_vehicle/gnss',NavSatFix,receive_Gnss)   
     # rospy.Subscriber('/carla/ego_vehicle/imu',Imu,receive_IMU)   
     rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)   
+    rospy.Subscriber("/Score", Score,receive_Score)   
     
 
     ####################################################
@@ -336,3 +339,14 @@ def euler_from_quaternion(x, y, z, w):
         degree_yaw_z = yaw_z*180/math.pi
         
         return degree_roll_x, degree_pitch_y, degree_yaw_z # in degree
+
+###########################################################
+
+
+
+def receive_Score(data):
+    # data.closest_approach = []		# goal distance
+    settings.coord_distance = data.closest_approach
+    # rospy.loginfo(settings.coord_distance)
+
+

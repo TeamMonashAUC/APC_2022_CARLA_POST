@@ -7,6 +7,7 @@ from nav_msgs.msg import Odometry
 from matplotlib import pyplot as plt
 from tf.transformations import euler_from_quaternion
 from std_srvs.srv import Empty
+# from shell_simulation.msg import Score
 
 # efficiency.py
 # Author(s): Navaneeth Nair, Khai Hoe
@@ -18,6 +19,8 @@ from std_srvs.srv import Empty
 #              - Record the Velocity, Acceleration, Energy, Drag Force and Inertial Force of the car at a defined period
 #                and plot several subgraphs consist of these data against time at the end
 passed =0
+
+
 def odom(msg):
 	global distance, energy, duration, start
 	global x0, y0, z0, v0, t0, end
@@ -35,12 +38,15 @@ def odom(msg):
 	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2) + car_z*car_z) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
 	velocity = math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
 
+
+
+	
 	if diff_radius < 3 and not end: # reached the end goal
 		rospy.sleep(1)
 		# rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-
 		distance_km = distance/1000
 		energy_kWh = energy/3.6e6
+
 
 		rospy.loginfo("Results:")
 		rospy.loginfo("Time(s): %.1f" %( duration))
@@ -57,7 +63,7 @@ def odom(msg):
 		rospy.loginfo("")
 		rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
 		rospy.loginfo("Goals Passed: %d" %(score))
-		
+
 
 
 
@@ -184,11 +190,14 @@ def listener():
 	rospy.Subscriber("/Monash/current_score", Int8, getscore)
 	rospy.Subscriber("/Monash/penalty_score", Int8,penalty_calc)   
 	rospy.Service("/disp_results",Empty,srv_handler)
+
 	rospy.spin()
+
 
 
 if __name__ == '__main__':
 	# Initialize variables
+
 	goals = [[39.1,172.8]] # Our common final goals
 	# goals = [[-47.4,-105.9]] # Our common final goals
 	last_goal = goals[0] # If using a different final goal, change here

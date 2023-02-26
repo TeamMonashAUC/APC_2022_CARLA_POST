@@ -104,7 +104,10 @@ def LanePenaltyCounter(data):
     for x in data.crossed_lane_markings:
         # rospy.loginfo(x)
         laneCrossed.append(x)
-    showStats()
+        if(laneCrossed[-1]!=1):
+            showStats()
+
+    
 
 collisionCounter=0
 def CollisionPenaltyCounter(data):
@@ -137,7 +140,7 @@ def showStats():
     rospy.loginfo("OverSpeed Count:" + str(speedLimitCount))
 
     rospy.loginfo("")
-    rospy.loginfo("Score:" + str(goalPassed))
+    rospy.loginfo("goal_Passed:" + str(goalPassed))
     rospy.loginfo("/////////////////////////////")
 
     penaltyCount = laneCrossed.count(2)+laneCrossed.count(3)+laneCrossed.count(0)
