@@ -9,8 +9,8 @@
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <depend>python-rosdep</depend>
-  <depend>python-rospkg</depend>
+  <depend>python3-rosdep</depend>
+  <depend>python3-rospkg</depend>
   <depend>nav_msgs</depend>
   <depend>rospy</depend>
   <depend>std_msgs</depend>
