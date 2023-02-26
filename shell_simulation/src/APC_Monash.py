@@ -237,7 +237,6 @@ def main():
             break
 
 
-
     # provided array is in settings.coord_distance
     rospy.loginfo(np.array(settings.coord_distance))
 
@@ -261,18 +260,10 @@ def main():
     rospy.loginfo(f"The valid coordinates: {valid_coordinates}")
     quit()
     R3()
-<<<<<<< HEAD
-
-    if (False):
-        R4()
-    else:
-        R5()
-=======
     
     R4()
 
     R5()
->>>>>>> score_topic
 
     Coordinate_System.corner(15,5,0,[29.4,75.5],-90) #turn right
     R12()

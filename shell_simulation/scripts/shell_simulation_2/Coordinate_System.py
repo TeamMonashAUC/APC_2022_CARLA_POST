@@ -27,10 +27,6 @@ import math
 import numpy as np
 # used for picking the points, TODO remove later since we dont need
 import random
-<<<<<<< HEAD:shell_simulation/scripts/shell_simulation/Coordinate_System.py
-=======
-
->>>>>>> score_topic:shell_simulation/scripts/shell_simulation_2/Coordinate_System.py
 
 #################################################################################################################################################
 
@@ -404,15 +400,14 @@ def findGoalPoint(distancesToValidCoordinates):
                         ])
     
     distance_to_possible_points = distances(possible_coords) # find the distances to the possible coordinates from the current position
-
     #print(distance_to_possible_points)
     # find where the distance to the goal is less than or equal to 3m, that will be a confirmed goal point
-    possible_distances = distancesToValidCoordinates[np.where(distancesToValidCoordinates <= 3)]
+    possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
     
     # if there are no possible goal points nearby then the possible_distances will be an empty array, whic if we use to index
     # will give us an error, so the following if statement is a simple way of checking the array is empty
     if possible_distances.shape[0] != 0:
-        actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances) <= 0.1].min() # min because we may have more than one point
+        actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances.min()) <= 0.1].min() # min because we may have more than one point
         print("Coords")
         return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
 
