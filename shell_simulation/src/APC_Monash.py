@@ -240,10 +240,11 @@ def main():
 
     # valid_coordinates = Coordinate_System.generate_random_coordinates()
     # valid_distance = Coordinate_System.distances(valid_coordinates)
-    valid_distance = np.array(settings.coord_distance)
+    #valid_distance = np.array(settings.coord_distance)
 
     rospy.loginfo("Actual coords: ")
-    Coordinate_System.findGoalPoint(valid_distance, goal_predict)
+    #Coordinate_System.findGoalPoint(valid_distance, goal_predict)
+    Coordinate_System.findGoalPointRobust(settings.coord_distance, goal_predict)
     rospy.loginfo(f"The goal coordinates {goal_predict}")
     
     '''
