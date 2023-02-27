@@ -354,7 +354,7 @@ def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of
     travel_to(speed, end_Pos)
 
 
-def findGoalPoint(distancesToValidCoordinates):
+def findGoalPoint(distancesToValidCoordinates, goalPredict):
     
 
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
@@ -409,6 +409,7 @@ def findGoalPoint(distancesToValidCoordinates):
     if possible_distances.shape[0] != 0:
         actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances.min()) <= 0.1].min() # min because we may have more than one point
         print("Coords")
+        goalPredict.append(possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :])
         return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
 
 # Generates the random coordinates

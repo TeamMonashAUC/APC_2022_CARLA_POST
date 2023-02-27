@@ -231,8 +231,6 @@ def main():
         goal_coord_from_car = Coordinate_System.goal_position_from_car([-171.60,4.00])
         diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
 
-        Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))
-
         if(diff_goal<2.5):
             break
 
@@ -248,7 +246,8 @@ def main():
 
     rospy.loginfo("")
     rospy.loginfo("actual coord: ")
-    rospy.loginfo(f"{Coordinate_System.findGoalPoint(valid_distance )}")
+    Coordinate_System.findGoalPoint(valid_distance, goal_predict)
+    rospy.loginfo(f"The goal coordinates {goal_predict}")
     
     '''
     R1()
