@@ -402,15 +402,19 @@ def findGoalPoint(distancesToValidCoordinates, goalPredict):
     distance_to_possible_points = distances(possible_coords) # find the distances to the possible coordinates from the current position
     #print(distance_to_possible_points)
     # find where the distance to the goal is less than or equal to 3m, that will be a confirmed goal point
-    possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
+    #possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
     
     # if there are no possible goal points nearby then the possible_distances will be an empty array, whic if we use to index
     # will give us an error, so the following if statement is a simple way of checking the array is empty
-    if possible_distances.shape[0] != 0:
-        actual_point = distance_to_possible_points[abs(distance_to_possible_points - possible_distances.min()) <= 0.1].min() # min because we may have more than one point
-        print("Coords")
-        goalPredict.append(possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :])
-        return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
+    #if possible_distances.shape[0] != 0:
+    #actual_point = distance_to_possible_points[abs(distance_to_possible_points - distance_to_possible_points) <= 0.1].min() # min because we may have more than one point
+
+    correct_distances = distance_to_possible_points[np.isin(np.round(distance_to_possible_points, 0), np.round(distancesToValidCoordinates, 0))]
+    validPoints = possible_coords[np.isin(distance_to_possible_points, correct_distances)]
+    
+    goalPredict.append(validPoints)
+    #goalPredict.append(possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :])
+    #return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
 
 # Generates the random coordinates
 def generate_random_coordinates():
