@@ -465,7 +465,7 @@ def generate_random_coordinates():
                         ])
     return np.array([possible_coords[coord, :] for coord in valid_coords])
 
-def distances(coordinates):
+def distances2D(coordinates):
 
     """Function to find the distances between the current position of the car and a set of coordinates,
      may it be the distances to all the coordinates or the distance to the valid coordinates
@@ -476,7 +476,19 @@ def distances(coordinates):
     return distances
 
 
-def findGoalPointRobust(distancesToValidCoordinates, goalPredict):
+def distances3D(coordinates):
+
+    """Function to find the distances between the current position of the car and a set of coordinates,
+     may it be the distances to all the coordinates or the distance to the valid coordinates
+     Expect a ndarry for the coordinates"""
+
+    current_pos = np.array([settings.car_coordinate_from_world])
+    distances = np.sqrt(np.sum(np.square(coordinates - current_pos), axis=1))
+    return distances
+
+
+
+def findGoalPointRobust2D(distancesToValidCoordinates, goalPredict):
     
 
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
@@ -521,7 +533,7 @@ def findGoalPointRobust(distancesToValidCoordinates, goalPredict):
                         [24.60,-30.70,0.00]    #P39
                         ])
     
-    distance_to_possible_points = distances(possible_coords) # find the distances to the possible coordinates from the current position
+    distance_to_possible_points = distances2D(possible_coords) # find the distances to the possible coordinates from the current position
     
     # Assuming that the distance supplied is a normal python list
     for distance in distancesToValidCoordinates:
@@ -541,3 +553,56 @@ def findGoalPointRobust(distancesToValidCoordinates, goalPredict):
     # validPoints = possible_coords[np.isin(distance_to_possible_points, correct_distances)]
     
     # goalPredict.append(validPoints)
+
+def findGoalPointRobust3D(distancesToValidCoordinates, goalPredict):
+    
+
+    possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
+                        [-206.40,4.20,0.00],   #P1
+                        [-255.90,0.20,0.00],   #P2
+                        [-272.10,-43.90,0.00], #P3
+                        [-205.50,-95.00,0.00], #P4
+                        [-185.50,-142.40,0.00], #P5 #changed
+                        [-151.10,-151.00,0.00],#P6
+                        [-101.40,-154.70,0.00],#P7
+                        [-47.80,-117.20,0.00], #P8
+                        [-43.80,-56.80,0.00],  #P9
+                        [-43.90,-17.10,0.00],  #P10
+                        [3.00,-2.70,0.00],     #P11
+                        [47.80,-1.80,0.00],    #P12
+                        [89.00,-5.50,0.00],    #P13
+                        [45.90,-84.90,0.00],   #P14
+                        [31.30,19.30,0.00],    #P15
+                        [36.30,67.20,0.00],    #P16
+                        [38.60,155.10,0.00],   #P17
+                        [74.00,190.20,0.00],   #P18 # changed
+                        [154.10,177.30,0.00],  #P19
+                        [189.20,52.80,0.00],   #P20
+                        [174.40,-148.00,0.00], #P21
+                        [10.20,-187.90,0.00],  #P22
+                        [-145.80,-190.90,8.60],#P23
+                        [-232.60,28.10,10.00], #P24
+                        [-119.40,186.60,10.00],#P25
+                        [84.70,144.10,0.00],   #P26
+                        [148.10,112.20,0.00],  #P27
+                        [151.40,15.20,0.00],   #P28
+                        [124.70,1.90,0.00],    #P29
+                        [96.20,-28.60,0.00],   #P30
+                        [-9.50,-88.30,0.00],   #P31
+                        [-83.20,-87.70,0.00],  #P32
+                        [-124.30,-42.40,0.00], #P33
+                        [-121.80,28.10,0.00],  #P34
+                        [-124.40,106.30,0.00], #P35
+                        [-80.20,133.30,0.00],  #P36
+                        [-20.70,87.90,0.00],   #P37
+                        [25.70,65.40,0.00],    #P38
+                        [24.60,-30.70,0.00]    #P39
+                        ])
+    
+    distance_to_possible_points = distances3D(possible_coords) # find the distances to the possible coordinates from the current position
+    
+    # Assuming that the distance supplied is a normal python list
+    for distance in distancesToValidCoordinates:
+        possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
+        if possible_distance.shape[0] != 0:
+            goalPredict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())

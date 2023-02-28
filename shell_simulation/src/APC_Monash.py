@@ -244,7 +244,7 @@ def main():
 
     rospy.loginfo("Actual coords: ")
     # Coordinate_System.findGoalPoint(settings.coord_distance, goal_predict)
-    Coordinate_System.findGoalPointRobust(settings.coord_distance, goal_predict)
+    Coordinate_System.findGoalPointRobust3D(settings.coord_distance, goal_predict)
     rospy.loginfo(f"The goal coordinates {goal_predict}")
     
     '''
