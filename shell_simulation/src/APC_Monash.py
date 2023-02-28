@@ -213,6 +213,30 @@ def R13():
 def R14():
     pass
 
+coord_2d = [[]]
+coord_3d = [[]]
+
+def update_Coord():
+    global coord_2d
+    global coord_3d    
+    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    rospy.loginfo(" ")
+    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
+
+
+    rospy.loginfo(" ")
+    rospy.loginfo(" ")
+    for value in Coordinate_System.findGoalPointRobust2D(settings.coord_distance):
+        if value not in coord_2d:
+            coord_2d.append(value)
+    for value in Coordinate_System.findGoalPointRobust3D(settings.coord_distance):
+        if value not in coord_3d:
+            coord_3d.append(value)
+    
+    print(f"The goal 2Dcoordinates {coord_2d}")
+    print(f"The goal 3Dcoordinates {coord_3d}")
+
+
 
 def main():
     # reverse for first coordinate 
@@ -233,31 +257,11 @@ def main():
         if(diff_goal<2.5):
             break
 
-
-    # provided array is in settings.coord_distance
-    #rospy.loginfo(np.array(settings.coord_distance))
-
-    # valid_coordinates = Coordinate_System.generate_random_coordinates()
-    # valid_distance = Coordinate_System.distances(valid_coordinates)
-    #valid_distance = np.array(settings.coord_distance)
-
-    rospy.loginfo("Actual coords: ")
-    # Coordinate_System.findGoalPoint(settings.coord_distance, goal_predict)
-    
-    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
-    rospy.loginfo(" ")
-    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
-    
+    update_Coord()
     R1()
-    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
-    rospy.loginfo(" ")
-    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
-    
+    update_Coord()
     R2()
-    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
-    rospy.loginfo(" ")
-    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
-    
+    update_Coord()
     '''
    
     
