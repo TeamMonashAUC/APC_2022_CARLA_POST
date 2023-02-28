@@ -35,7 +35,13 @@ Function Explanation :
 def PID_SetSpeed(targetSpeed):
 
     # PID parameters setting
-    pid = PID(Kp = 0.4, Ki = 0.3, Kd = 0.2, setpoint= targetSpeed)
+
+
+    if targetSpeed>15:
+        pid = PID(Kp = 0.4, Ki = 0.3, Kd = 0.2, setpoint= targetSpeed)
+
+    else: # speed below 15
+        pid = PID(Kp = 0.2, Ki = 0.0, Kd = 0.0, setpoint= targetSpeed)
 
     return pid(settings.currentCarSpeed) # apply global variable (currentCarSpeed of the car, updated from carla rostopic)
 
@@ -89,7 +95,7 @@ def carControl(targetSpeed = 0, steerAngle = 0):
         if calc >= 0:     
             car_throttle = abs(calc)
         else:   		 
-            car_brake = abs(calc)*0.2  # 0.2 is to reduce the braking effect on the car
+            car_brake = abs(calc)/10  # 0.2 is to reduce the braking effect on the car
 
 
     elif targetSpeed < 0: # car is moving in reverse
