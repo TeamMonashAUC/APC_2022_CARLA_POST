@@ -8,6 +8,7 @@ project(shell_simulation)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
   nav_msgs
   geometry_msgs
   rospy
@@ -15,8 +16,17 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf
 )
-
+add_message_files(
+  FILES
+  Score.msg
+)
+catkin_python_setup()
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 catkin_package(
+  CATKIN_DEPENDS message_runtime
   CATKIN_DEPENDS std_msgs
   CATKIN_DEPENDS nav_msgs
   CATKIN_DEPENDS geometry_msgs
@@ -53,16 +63,17 @@ include_directories(
 #  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
 
-catkin_python_setup()
+
+
 
 catkin_install_python(
   PROGRAMS
     src/APC_Monash.py
-    scripts/shell_simulation/Coordinate_System.py
-    scripts/shell_simulation/Movement_Control.py
-    scripts/shell_simulation/ROS_Communication.py
-    scripts/shell_simulation/settings.py
-    
+    scripts/shell_simulation_2/Coordinate_System.py
+    scripts/shell_simulation_2/Movement_Control.py
+    scripts/shell_simulation_2/ROS_Communication.py
+    scripts/shell_simulation_2/settings.py
+    src/publish_score_topic.py
     src/efficiency.py
     src/score.py
 

@@ -28,11 +28,11 @@ simple pid  -  "pip install simple-pid"  (https://pypi.org/project/simple-pid/)
 ################################################################################################################################################# 
 # import other prgramming files
 
-import settings  # settings.py is used to store all global variables between files
+import shell_simulation_2.settings as settings # settings.py is used to store all global variables between files
 # from shell_simulation.ROS_Communication import test
-import shell_simulation.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
-import shell_simulation.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
-import shell_simulation.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
+import shell_simulation_2.ROS_Communication as ROS_Communication  # does communications with rostopics & roscore (Level 1 code)
+import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
+import shell_simulation_2.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
 #################################################################################################################################################
 # import libraries
@@ -41,6 +41,7 @@ import math
 import numpy as np
 
 #################################################################################################################################################
+
 
 def R1():
     Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
@@ -212,9 +213,39 @@ def R13():
 def R14():
     pass
 
+coord_2d = [[]]
+coord_3d = [[]]
+
+def update_Coord():
+    global coord_2d
+    global coord_3d    
+    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    rospy.loginfo(" ")
+    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
+
+
+    rospy.loginfo(" ")
+    rospy.loginfo(" ")
+    for value in Coordinate_System.findGoalPointRobust2D(settings.coord_distance):
+        if value not in coord_2d:
+            coord_2d.append(value)
+    for value in Coordinate_System.findGoalPointRobust3D(settings.coord_distance):
+        if value not in coord_3d:
+            coord_3d.append(value)
+    
+    print(f"The goal 2Dcoordinates {coord_2d}")
+    print(f"The goal 3Dcoordinates {coord_3d}")
+
+
 
 def main():
     # reverse for first coordinate 
+
+    # the valid coordinates are known.
+    valid_coordinates = Coordinate_System.generate_random_coordinates()
+    #valid_coordinates = np.array([[-47.8, -117.2, 0]])
+   
+
     diff_goal = 3
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
@@ -222,15 +253,22 @@ def main():
         rate.sleep()
         goal_coord_from_car = Coordinate_System.goal_position_from_car([-171.60,4.00])
         diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
+
         if(diff_goal<2.5):
             break
 
-
+    update_Coord()
     R1()
-   
+    update_Coord()
     R2()
+    update_Coord()
+    '''
+   
     
     Coordinate_System.corner(15,6,90,[-65.8,-87.9],0) #turn left
+
+    rospy.loginfo(f"The valid coordinates: {valid_coordinates}")
+    quit()
     R3()
     
     R4()
@@ -356,7 +394,7 @@ def main():
                         #[-145.80,-190.90,8.60],#P23
                         #[-232.60,28.10,10.00], #P24
                         #[-119.40,186.60,10.00]
-
+    '''
 
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
