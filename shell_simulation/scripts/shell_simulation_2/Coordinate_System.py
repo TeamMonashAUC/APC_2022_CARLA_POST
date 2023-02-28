@@ -488,8 +488,8 @@ def distances3D(coordinates):
 
 
 
-def findGoalPointRobust2D(distancesToValidCoordinates, goalPredict):
-    
+def findGoalPointRobust2D(distancesToValidCoordinates):
+    goal_predict = []
 
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
                         [-206.40,4.20,0.00],   #P1
@@ -539,7 +539,8 @@ def findGoalPointRobust2D(distancesToValidCoordinates, goalPredict):
     for distance in distancesToValidCoordinates:
         possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
         if possible_distance.shape[0] != 0:
-            goalPredict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
+            goal_predict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
+    return goal_predict
     #print(distance_to_possible_points)
     # find where the distance to the goal is less than or equal to 3m, that will be a confirmed goal point
     #possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
@@ -554,8 +555,8 @@ def findGoalPointRobust2D(distancesToValidCoordinates, goalPredict):
     
     # goalPredict.append(validPoints)
 
-def findGoalPointRobust3D(distancesToValidCoordinates, goalPredict):
-    
+def findGoalPointRobust3D(distancesToValidCoordinates):
+    goal_predict = []
 
     possible_coords = np.array([ [-171.60,4.00,0.00],   #P0
                         [-206.40,4.20,0.00],   #P1
@@ -605,4 +606,5 @@ def findGoalPointRobust3D(distancesToValidCoordinates, goalPredict):
     for distance in distancesToValidCoordinates:
         possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
         if possible_distance.shape[0] != 0:
-            goalPredict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
+            goal_predict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
+    return goal_predict

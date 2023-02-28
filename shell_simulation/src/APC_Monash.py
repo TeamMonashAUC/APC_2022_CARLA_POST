@@ -42,10 +42,9 @@ import numpy as np
 
 #################################################################################################################################################
 
-def R1(valid_coordinates):
-    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
-    rospy.loginfo(f"{Coordinate_System.findGoalPoint(Coordinate_System.distances(valid_coordinates))}")
 
+def R1():
+    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
     Coordinate_System.travel_to(40, [-245.5,0.8]) 
     Coordinate_System.travel_to(30, [-255.9,0.2]) # P2   #stop
 
@@ -64,7 +63,7 @@ def R1(valid_coordinates):
     Coordinate_System.travel_to(25, [-205.5,-95.0]) # P4
     Coordinate_System.travel_to(25, [-205.3,-94.7]) # traffic light 
 
-def R2(valid_coordinates):
+def R2():
     # curve
     Coordinate_System.travel_to(15, [-199.1,-95.0])
     Coordinate_System.travel_to(20, [-195.0,-104.6]) 
@@ -221,7 +220,7 @@ def main():
     # the valid coordinates are known.
     valid_coordinates = Coordinate_System.generate_random_coordinates()
     #valid_coordinates = np.array([[-47.8, -117.2, 0]])
-    goal_predict = []
+   
 
     diff_goal = 3
     while not rospy.is_shutdown():
@@ -244,13 +243,23 @@ def main():
 
     rospy.loginfo("Actual coords: ")
     # Coordinate_System.findGoalPoint(settings.coord_distance, goal_predict)
-    Coordinate_System.findGoalPointRobust3D(settings.coord_distance, goal_predict)
-    rospy.loginfo(f"The goal coordinates {goal_predict}")
+    
+    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    rospy.loginfo(" ")
+    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
+    
+    R1()
+    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    rospy.loginfo(" ")
+    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
+    
+    R2()
+    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    rospy.loginfo(" ")
+    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
     
     '''
-    R1()
    
-    R2()
     
     Coordinate_System.corner(15,6,90,[-65.8,-87.9],0) #turn left
 
