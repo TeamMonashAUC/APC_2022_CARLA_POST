@@ -99,20 +99,20 @@ class PublisherPyNode:
         #                         possible_goals[14]
 		# ]
 		self.sample15goals = [  possible_goals[0],
-                                possible_goals[1],
+                                possible_goals[7],
                                 possible_goals[2],
-                                possible_goals[3],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0],
-                                possible_goals[0]
+                                possible_goals[4],
+                                possible_goals[14],
+                                possible_goals[10],
+                                possible_goals[32],
+                                possible_goals[25],
+                                possible_goals[18],
+                                possible_goals[5],
+                                possible_goals[17],
+                                possible_goals[16],
+                                possible_goals[21],
+                                possible_goals[29],
+                                possible_goals[30]
 		]
 		self.frame_count = 0
       # Initialise a publisher

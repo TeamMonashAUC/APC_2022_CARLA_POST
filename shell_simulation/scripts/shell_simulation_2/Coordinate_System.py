@@ -525,9 +525,9 @@ def findGoalPointRobust(distancesToValidCoordinates, goalPredict):
     
     # Assuming that the distance supplied is a normal python list
     for distance in distancesToValidCoordinates:
-        possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
+        possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 3]
         if possible_distance.shape[0] != 0:
-            goalPredict.append(possible_coords[int(np.where(distance_to_possible_points == possible_distance)[0]), :])
+            goalPredict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
     #print(distance_to_possible_points)
     # find where the distance to the goal is less than or equal to 3m, that will be a confirmed goal point
     #possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
