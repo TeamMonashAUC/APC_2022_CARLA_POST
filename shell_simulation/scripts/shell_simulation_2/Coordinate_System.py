@@ -525,7 +525,7 @@ def findGoalPointRobust(distancesToValidCoordinates, goalPredict):
     
     # Assuming that the distance supplied is a normal python list
     for distance in distancesToValidCoordinates:
-        possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 3]
+        possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
         if possible_distance.shape[0] != 0:
             goalPredict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
     #print(distance_to_possible_points)

@@ -98,28 +98,28 @@ class PublisherPyNode:
         #                         possible_goals[13],
         #                         possible_goals[14]
 		# ]
-		self.sample15goals = [  possible_goals[0],
-                                possible_goals[7],
-                                possible_goals[2],
-                                possible_goals[4],
-                                possible_goals[14],
-                                possible_goals[10],
-                                possible_goals[32],
-                                possible_goals[25],
-                                possible_goals[18],
-                                possible_goals[5],
-                                possible_goals[17],
-                                possible_goals[16],
+		self.sample15goals = [  possible_goals[20],
                                 possible_goals[21],
+                                possible_goals[22],
+                                possible_goals[23],
+                                possible_goals[24],
+                                possible_goals[24],
+                                possible_goals[24],
+                                possible_goals[24],
+                                possible_goals[28],
                                 possible_goals[29],
-                                possible_goals[30]
+                                possible_goals[7],
+                                possible_goals[8],
+                                possible_goals[12],
+                                possible_goals[13],
+                                possible_goals[14]
 		]
 		self.frame_count = 0
       # Initialise a publisher
 
         
 	# def timerCallback(self, distance, energy, speed, goals, x, y, penalty, count):
-	def timerCallback(self, x, y):
+	def timerCallback(self, x, y,z):
 		msg = Score()
     # Initialise an empty message of the custom type
 
@@ -138,7 +138,8 @@ class PublisherPyNode:
 
 		# variables for closest distance
 		for coor in self.sample15goals:
-			dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2))
+			# dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2))
+			dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2)+ math.pow(coor[2] - z,2))
 			msg.closest_approach.append(dist_diff)
 
 
@@ -157,7 +158,7 @@ class PublisherPyNode:
 		car_x = msg.pose.pose.position.x
 		car_y = msg.pose.pose.position.y
 		car_z = msg.pose.pose.position.z
-		self.timerCallback(car_x, car_y)
+		self.timerCallback(car_x, car_y,car_z)
 
 def listener():	
 	node = PublisherPyNode()
