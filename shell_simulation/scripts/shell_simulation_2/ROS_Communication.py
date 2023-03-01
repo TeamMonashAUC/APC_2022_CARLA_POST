@@ -32,6 +32,7 @@ rostopic used (corresponding rosmsg):
 import shell_simulation_2.settings as settings # adds global variables
 
 
+from shell_simulation.msg import ActualCoord
 
 
 #################################################################################################################################################
@@ -107,6 +108,9 @@ def ROS_Start():
     pub_brake = rospy.Publisher("/brake_command", Float64, queue_size = 1)
     pub_handbrake = rospy.Publisher("/handbrake_command", Bool, queue_size = 1)
 
+    global pub_coord_2D
+    pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size=10, latch=False)
+    
     global throttle_data
     global steering_data 
     global brake_data
@@ -121,7 +125,7 @@ def ROS_Start():
 
 
 
-#################################################################################################################################################
+################################################################################################################################################# 
 '''
 Function Explanation :
     publish rostopics directly to carla to control the car     
@@ -189,6 +193,31 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
     else :
         pub_gear.publish("forward")
 
+
+    # global msg_2d
+    msg_2d = ActualCoord
+    # msg_2d.P0.append(1)
+    msg_2d.P0 = 1
+    msg_2d.P1 = 2
+    msg_2d.P2 = 3
+    msg_2d.P3 = 4
+    # msg_2d.P4 = [1,2]
+    # msg_2d.P5 = [1,2]
+    # msg_2d.P6 = [1,2]
+    # msg_2d.P7 = [1,2]
+    # msg_2d.P8 = [1,2]
+    # msg_2d.P9 = [1,2]
+    # msg_2d.P10 = [1,2]
+    # msg_2d.P11 = [1,2]
+    # msg_2d.P12 = [1,2]
+    # msg_2d.P13 = [1,2]
+    # msg_2d.P14 = [1,2]
+    # msg_2d.P0 = [1,2]
+    # msg_2d.P1 = [1,2]
+    # msg_2d.P2 = [1,2]
+    # msg_2d.P0.append([1,2])
+
+    pub_coord_2D.publish(msg_2d)
 
 
 

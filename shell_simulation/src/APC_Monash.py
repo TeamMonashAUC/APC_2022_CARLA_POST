@@ -34,6 +34,7 @@ import shell_simulation_2.ROS_Communication as ROS_Communication  # does communi
 import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
 import shell_simulation_2.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
+
 #################################################################################################################################################
 # import libraries
 import rospy
@@ -219,13 +220,13 @@ coord_3d = [[]]
 def update_Coord():
     global coord_2d
     global coord_3d    
-    rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
-    rospy.loginfo(" ")
-    rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
+    # rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
+    # rospy.loginfo(" ")
+    # rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
 
 
-    rospy.loginfo(" ")
-    rospy.loginfo(" ")
+    # rospy.loginfo(" ")
+    # rospy.loginfo(" ")
     for value in Coordinate_System.findGoalPointRobust2D(settings.coord_distance):
         if value not in coord_2d:
             coord_2d.append(value)
@@ -233,12 +234,16 @@ def update_Coord():
         if value not in coord_3d:
             coord_3d.append(value)
     
-    print(f"The goal 2Dcoordinates {coord_2d}")
-    print(f"The goal 3Dcoordinates {coord_3d}")
-
+    # print(f"The goal 2Dcoordinates {coord_2d}")
+    # print(f"The goal 3Dcoordinates {coord_3d}")
+    global pub_coord_2D 
+    # global pub_coord_3D 
+    
+   
 
 def main():
-    # reverse for first coordinate 
+    # reverse for first coordinate
+    ''' 
     diff_goal = 3
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
@@ -248,7 +253,13 @@ def main():
         diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
         if(diff_goal<2.5):
             break
-        
+    '''
+    # while True:
+        # update_Coord()
+        # rate.sleep()
+    update_Coord()
+    Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
+    
     update_Coord()
 
 
@@ -425,6 +436,11 @@ if __name__ == '__main__':
 
         # start ros communications with rostopics
         ROS_Communication.ROS_Start()
+
+
+        # global pub_coord_2D
+        # global pub_coord_3D 
+        # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size = 10)
 
         while not rospy.is_shutdown():
             # infinite loop

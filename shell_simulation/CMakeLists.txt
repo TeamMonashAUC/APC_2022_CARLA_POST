@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Score.msg
+  ActualCoord.msg
 )
 catkin_python_setup()
 generate_messages(
