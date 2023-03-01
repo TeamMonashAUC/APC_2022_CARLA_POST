@@ -11,13 +11,20 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
   <depend>message_runtime</depend>
+  <depend>python3-rosdep</depend>
+  <depend>python3-rospkg</depend>
   <depend>nav_msgs</depend>
   <depend>rospy</depend>
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>tf</depend>
   <depend>python3-numpy</depend>
+  <depend>python3-simple-pid-pip</depend>
+  <depend>python3-matplotlib</depend>
+  <depend>python3-pygame</depend>
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
