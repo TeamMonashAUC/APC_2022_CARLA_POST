@@ -141,7 +141,7 @@ def travel_to(setSpeed,goal_coord):
             if diff_goal<=1:
                 break
 
-            
+        # obtain coordinates of goal points every 3 seconds
         if((settings.curr_time - prev_time_coord) > 3):
             prev_time_coord = settings.curr_time
             update_Coord()
