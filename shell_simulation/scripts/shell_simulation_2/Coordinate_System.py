@@ -116,6 +116,7 @@ def travel_to(setSpeed,goal_coord):
     
     # set up local variable to ensure output signal updates at 50Hz
     prev_time = settings.curr_time
+    prev_time_coord = settings.curr_time
 
     while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
         rospy.ROSInterruptException  # allow ctrl+C to exit the program    
@@ -136,10 +137,16 @@ def travel_to(setSpeed,goal_coord):
             # 3) send commands to carla to control the car
             Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
 
-
             # stop the loop when the goal is within 0.6m of the car
             if diff_goal<=1:
                 break
+
+            
+        if((settings.curr_time - prev_time_coord) > 3):
+            prev_time_coord = settings.curr_time
+            update_Coord()
+
+    
    
 ################################################################################################################################################# 
 '''
@@ -353,7 +360,7 @@ def pointToPointCorner(speed,turnRadius,start_Angle,end_Pos,end_Angle, number_of
     
     travel_to(speed, end_Pos)
 
-
+'''
 def findGoalPoint(distancesToValidCoordinates, goalPredict):
     
 
@@ -415,7 +422,7 @@ def findGoalPoint(distancesToValidCoordinates, goalPredict):
     goalPredict.append(validPoints)
     #goalPredict.append(possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :])
     #return possible_coords[int(np.where(distance_to_possible_points == actual_point)[0]), :]
-
+'''
 # Generates the random coordinates
 def generate_random_coordinates():
 
@@ -608,3 +615,21 @@ def findGoalPointRobust3D(distancesToValidCoordinates):
         if possible_distance.shape[0] != 0:
             goal_predict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
     return goal_predict
+
+
+coord_2d = [[]]
+coord_3d = [[]]
+def update_Coord():
+    for value in findGoalPointRobust2D(settings.coord_distance):
+        if value not in coord_2d:
+            coord_2d.append(value)
+    for value in findGoalPointRobust3D(settings.coord_distance):
+        if value not in coord_3d:
+            coord_3d.append(value)
+    
+    # print(f"The goal 2Dcoordinates {coord_2d}")
+    # print(f"The goal 3Dcoordinates {coord_3d}")
+
+    settings.coord_2d = coord_2d
+    settings.coord_3d = coord_3d
+   

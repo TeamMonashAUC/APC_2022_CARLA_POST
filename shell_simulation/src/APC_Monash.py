@@ -103,7 +103,6 @@ def R3():
     Coordinate_System.travel_to(40, [-124.50,73.0])  
     
 def R4():
-    # [-80.20,133.30,0.00],  #P36
     Coordinate_System.travel_to(40, [-124.4,106.3])
     Coordinate_System.travel_to(30, [-124.4,123.3]) #P35
     Coordinate_System.travel_to(25, [-123.9,136.8])
@@ -126,10 +125,6 @@ def R4():
 
 
 def R5():
-    # "spawn_point": {"x": -124.9, "y": 55.5, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
-    # Coordinate_System.corner(15,5,90,[-106.2,88.1],0) #turn right
-    # Coordinate_System.travel_to(30, [-65.8,87.9]) 
-    # Coordinate_System.travel_to(25, [-33.5,87.9]) 
     Coordinate_System.travel_to(20, [-20.70,87.90]) # P37
     Coordinate_System.travel_to(15, [16,87.8]) 
 
@@ -212,109 +207,7 @@ def R13():
     Coordinate_System.travel_to(25, [36.30,67.2]) #P16
     Coordinate_System.travel_to(25, [36.5,74.5]) 
 
-def R14():
-    pass
-
-coord_2d = [[]]
-coord_3d = [[]]
-
-def update_Coord():
-    for value in Coordinate_System.findGoalPointRobust2D(settings.coord_distance):
-        if value not in coord_2d:
-            coord_2d.append(value)
-    for value in Coordinate_System.findGoalPointRobust3D(settings.coord_distance):
-        if value not in coord_3d:
-            coord_3d.append(value)
-    
-    print(f"The goal 2Dcoordinates {coord_2d}")
-    print(f"The goal 3Dcoordinates {coord_3d}")
-
-    settings.coord_2d = coord_2d
-    settings.coord_3d = coord_3d
-   
-
-def main():
-    # reverse for first coordinate
-    ''' 
-    diff_goal = 3
-    while not rospy.is_shutdown():
-        rospy.ROSInterruptException  # allow control+C to exit the program        
-        Movement_Control.carControl(targetSpeed = -10,steerAngle = 0)
-        rate.sleep()
-        goal_coord_from_car = Coordinate_System.goal_position_from_car([-171.60,4.00])
-        diff_goal = math.sqrt(goal_coord_from_car[0]**2 + goal_coord_from_car[1]**2)
-        if(diff_goal<2.5):
-            break
-    '''
-    # while True:
-        # update_Coord()
-        # rate.sleep()
-    Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
-    # m =[[-43.9, -17.1, 0.0]]
-    # rospy.loginfo( f"testing: {m[0]}")
-    update_Coord()
-
-
-    R1()
-    update_Coord()
-    R2()
-    update_Coord()
-
-    Coordinate_System.corner(20,6,90,[-65.8,-87.9],0) #turn left
-    R3()
-    update_Coord()
-    
-    R4()
-    update_Coord()
-
-    R5()
-    update_Coord()
-
-    Coordinate_System.corner(20,5,0,[29.4,75.5],-90) #turn right
-    R12()
-    update_Coord()
-
-    R10()
-    update_Coord()
-    Coordinate_System.corner(15,5,-90,[14.7,-88],-180) #turn right
-    R8()
-    update_Coord()
-    Coordinate_System.corner(15,5,-180,[-43.7,-73.9],90) #turn right
-    R9()
-    update_Coord()
-    R11()
-    update_Coord()
-    Coordinate_System.corner(15,5,0,[96.2,-14.9],-90) #turn right
-    R7()
-    update_Coord()
-    Coordinate_System.corner(15,5,-180,[31.7,-68.7],90) #turn right
-    Coordinate_System.travel_to(15, [31.7,-16.2]) 
-    R13()
-    update_Coord()
-
-    Coordinate_System.travel_to(25, [37.2,105.6]) 
-    Coordinate_System.travel_to(20, [38,132.2]) 
-    Coordinate_System.corner(15,5,90,[47.9,146.0],0) #turn right
-                                                                                                                                                                                                                                                                      
-    R6()
-    update_Coord()
-
-    Coordinate_System.travel_to(25, [87.6,5.1]) 
-    Coordinate_System.travel_to(20, [44.7,5.2]) 
-    Coordinate_System.corner(15,5,180,[31.6,15.4],90) #turn right
-
-    R13()
-    update_Coord()
-    Coordinate_System.travel_to(25, [37.2,105.6]) 
-    Coordinate_System.travel_to(25, [38,132.2]) 
-    Coordinate_System.travel_to(25, [39.1,172.8]) 
-    # R14()
-    
-    
-    #Final ring
-
-    Coordinate_System.travel_to(15, [39.1,180.2])
-    Coordinate_System.corner(15,6,90,[48.3,190.2],0)
+def R14():#Final ring
 
     Coordinate_System.travel_to(25, [50.0,190.2])
     Coordinate_System.travel_to(20, [52.0,190.5])
@@ -391,13 +284,52 @@ def main():
     Coordinate_System.travel_to(30, [-163.7,186.8])
     Coordinate_System.travel_to(30, [-125.8,186.5])
     Coordinate_System.travel_to(30, [-119.4,186.6]) #P25 
-    update_Coord()
 
-  
 
-                        #[-145.80,-190.90,8.60],#P23
-                        #[-232.60,28.10,10.00], #P24
-                        #[-119.40,186.60,10.00]
+
+def main():
+    Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
+    R1()
+    R2()
+
+    Coordinate_System.corner(20,6,90,[-65.8,-87.9],0) #turn left
+    R3()
+    R4()
+    R5()
+    Coordinate_System.corner(20,5,0,[29.4,75.5],-90) #turn right
+    R12()
+
+    R10()
+    Coordinate_System.corner(15,5,-90,[14.7,-88],-180) #turn right
+    R8()
+    Coordinate_System.corner(15,5,-180,[-43.7,-73.9],90) #turn right
+    R9()
+    R11()
+    Coordinate_System.corner(15,5,0,[96.2,-14.9],-90) #turn right
+    R7()
+    Coordinate_System.corner(15,5,-180,[31.7,-68.7],90) #turn right
+    Coordinate_System.travel_to(15, [31.7,-16.2]) 
+    R13()
+
+    Coordinate_System.travel_to(25, [37.2,105.6]) 
+    Coordinate_System.travel_to(20, [38,132.2]) 
+    Coordinate_System.corner(15,5,90,[47.9,146.0],0) #turn right
+                                                                                                                                                                                                                                                                      
+    R6()
+
+    Coordinate_System.travel_to(25, [87.6,5.1]) 
+    Coordinate_System.travel_to(20, [44.7,5.2]) 
+    Coordinate_System.corner(15,5,180,[31.6,15.4],90) #turn right
+
+    R13()
+    Coordinate_System.travel_to(25, [37.2,105.6]) 
+    Coordinate_System.travel_to(25, [38,132.2]) 
+    Coordinate_System.travel_to(25, [39.1,172.8]) 
+
+    Coordinate_System.travel_to(15, [39.1,180.2])
+    Coordinate_System.corner(15,6,90,[48.3,190.2],0)
+    R14()
+    
 
 
     while not rospy.is_shutdown():

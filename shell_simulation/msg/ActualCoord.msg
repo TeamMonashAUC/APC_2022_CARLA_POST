@@ -1,5 +1,6 @@
 Header header
 
+int32 length
 float64[] P0
 float64[] P1
 float64[] P2
@@ -15,3 +16,5 @@ float64[] P11
 float64[] P12
 float64[] P13
 float64[] P14
+float64[] P15
+float64[] P16
