@@ -34,6 +34,7 @@ import shell_simulation_2.ROS_Communication as ROS_Communication  # does communi
 import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
 import shell_simulation_2.Coordinate_System as Coordinate_System  	 # move car to coordinate points on the map (Level 3 code)
 
+from shell_simulation.msg import ActualCoord
 
 #################################################################################################################################################
 # import libraries
@@ -218,15 +219,6 @@ coord_2d = [[]]
 coord_3d = [[]]
 
 def update_Coord():
-    global coord_2d
-    global coord_3d    
-    # rospy.loginfo(f"The goal 2Dcoordinates {Coordinate_System.findGoalPointRobust2D(settings.coord_distance)}")
-    # rospy.loginfo(" ")
-    # rospy.loginfo(f"The goal 3Dcoordinates {Coordinate_System.findGoalPointRobust3D(settings.coord_distance)}")
-
-
-    # rospy.loginfo(" ")
-    # rospy.loginfo(" ")
     for value in Coordinate_System.findGoalPointRobust2D(settings.coord_distance):
         if value not in coord_2d:
             coord_2d.append(value)
@@ -234,11 +226,11 @@ def update_Coord():
         if value not in coord_3d:
             coord_3d.append(value)
     
-    # print(f"The goal 2Dcoordinates {coord_2d}")
-    # print(f"The goal 3Dcoordinates {coord_3d}")
-    global pub_coord_2D 
-    # global pub_coord_3D 
-    
+    print(f"The goal 2Dcoordinates {coord_2d}")
+    print(f"The goal 3Dcoordinates {coord_3d}")
+
+    settings.coord_2d = coord_2d
+    settings.coord_3d = coord_3d
    
 
 def main():
@@ -257,9 +249,9 @@ def main():
     # while True:
         # update_Coord()
         # rate.sleep()
-    update_Coord()
     Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
-    
+    # m =[[-43.9, -17.1, 0.0]]
+    # rospy.loginfo( f"testing: {m[0]}")
     update_Coord()
 
 

@@ -108,8 +108,6 @@ def ROS_Start():
     pub_brake = rospy.Publisher("/brake_command", Float64, queue_size = 1)
     pub_handbrake = rospy.Publisher("/handbrake_command", Bool, queue_size = 1)
 
-    global pub_coord_2D
-    pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size=10, latch=False)
     
     global throttle_data
     global steering_data 
@@ -122,6 +120,9 @@ def ROS_Start():
     handbrake_data = Bool()
     ####################################################
 
+    # publish coordinate data
+    global pub_coord_2D
+    pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size =10000, latch=False)
 
 
 
@@ -193,31 +194,9 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
     else :
         pub_gear.publish("forward")
 
-
-    # global msg_2d
-    msg_2d = ActualCoord
-    # msg_2d.P0.append(1)
-    msg_2d.P0 = 1
-    msg_2d.P1 = 2
-    msg_2d.P2 = 3
-    msg_2d.P3 = 4
-    # msg_2d.P4 = [1,2]
-    # msg_2d.P5 = [1,2]
-    # msg_2d.P6 = [1,2]
-    # msg_2d.P7 = [1,2]
-    # msg_2d.P8 = [1,2]
-    # msg_2d.P9 = [1,2]
-    # msg_2d.P10 = [1,2]
-    # msg_2d.P11 = [1,2]
-    # msg_2d.P12 = [1,2]
-    # msg_2d.P13 = [1,2]
-    # msg_2d.P14 = [1,2]
-    # msg_2d.P0 = [1,2]
-    # msg_2d.P1 = [1,2]
-    # msg_2d.P2 = [1,2]
-    # msg_2d.P0.append([1,2])
-
-    pub_coord_2D.publish(msg_2d)
+    # publish current car coordinate after sending driving info
+    coord_publish()
+  
 
 
 
@@ -379,3 +358,37 @@ def receive_Score(data):
     # rospy.loginfo(settings.coord_distance)
 
 
+def coord_publish():
+    global pub_coord_2D 
+    
+     # global msg_2d
+    msg_2d = ActualCoord()
+    msg_2d.header.stamp.secs=int(settings.curr_time)
+    msg_2d.header.stamp.nsecs= int((settings.curr_time - int(settings.curr_time))*1e9)
+
+
+    # rospy.loginfo(len(settings.coord_2d))
+    if(len(settings.coord_2d)>=16):
+        # rospy.loginfo("sending")
+        # rospy.loginfo(settings.coord_2d[1][0])
+        msg_2d.P0 = settings.coord_2d[1][0]
+        msg_2d.P1 = settings.coord_2d[2][0]
+        msg_2d.P2 = settings.coord_2d[3][0]
+        msg_2d.P3 = settings.coord_2d[4][0]
+        msg_2d.P4 = settings.coord_2d[5][0]
+        msg_2d.P5 = settings.coord_2d[6][0]
+        msg_2d.P6 = settings.coord_2d[7][0]
+        msg_2d.P7 = settings.coord_2d[8][0]
+        msg_2d.P8 = settings.coord_2d[9][0]
+        msg_2d.P9 = settings.coord_2d[10][0]
+        msg_2d.P10 = settings.coord_2d[11][0]
+        msg_2d.P11 = settings.coord_2d[12][0]
+        msg_2d.P12 = settings.coord_2d[13][0]
+        msg_2d.P13 = settings.coord_2d[14][0]
+        msg_2d.P14 = settings.coord_2d[15][0]
+
+    pub_coord_2D.publish(msg_2d)
+
+
+
+    # global pub_coord_3D 

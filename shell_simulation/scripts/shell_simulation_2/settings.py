@@ -28,13 +28,13 @@ from carla_msgs.msg import CarlaEgoVehicleControl, CarlaEgoVehicleInfo,CarlaEgoV
 #################################################################################################################################################
 # global variables
 currentCarSpeed     = 0
-curr_time = 0  
+curr_time = 0  # in seconds, with decimal points until nanosecond
 
 #car_variables
 max_steer_angle = math.degrees(1.221730351448059) # about 70 degree'
 wheelBase = 3  # 3m obtain from rostopic vehicle_info, by getting the difference in position of the front wheel and back wheels
 
-curr_time = 0 # in seconds, with decimal points until nanosecond
+# curr_time = 0 
 car_coordinate_from_world = [0,0,0] # car coordinate in [x,y,z] 
 car_direction_from_world = [0,0,0]  # euler angle [roll, pitch, yaw] 
 
@@ -44,6 +44,10 @@ prev_quadrant = 1
 
 
 coord_distance =  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+# coord_2d=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+# coord_3d=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+coord_2d=[[]]
+coord_3d=[[]]
 #################################################################################################################################################
 '''
 The goal types are described using numbers and are represented as follow
