@@ -15,7 +15,7 @@ from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 
 class PublisherPyNode:
 	def __init__(self):
-		self.m_publisher = rospy.Publisher("/Score", Score, queue_size=10, latch=False)
+		self.m_publisher = rospy.Publisher("/score", Score, queue_size=10, latch=False)
 		self.sum_speed = 0
 
 		# sample for normal use with coordinates directly

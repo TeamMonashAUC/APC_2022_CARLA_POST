@@ -76,7 +76,7 @@ catkin_install_python(
     scripts/shell_simulation_2/settings.py
     src/publish_score_topic.py
     src/efficiency.py
-    src/score.py
+    src/score_test.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
