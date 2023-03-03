@@ -350,28 +350,34 @@ def main():
 
 #################################################################################################################################################
 if __name__ == '__main__':
-    try:
-        # single time setup
-        # test()
-        # start rosnode
-        rospy.init_node('APC_Monash')
-        rate = rospy.Rate(100) # publish data at 100Hz
-        rospy.loginfo("APC_Monash started")
-
-        # start ros communications with rostopics
-        ROS_Communication.ROS_Start()
+    # try:
 
 
-        # global pub_coord_2D
-        # global pub_coord_3D 
-        # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size = 10)
+    # single time setup
+    # test()
+    # start rosnode
+    rospy.init_node('APC_Monash')
+    rate = rospy.Rate(100) # publish data at 100Hz
+    rospy.loginfo("APC_Monash started")
 
-        while not rospy.is_shutdown():
-            # infinite loop
-            main()
-            rate.sleep()
+    # start ros communications with rostopics
+    ROS_Communication.ROS_Start()
 
-    except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
+
+    # global pub_coord_2D
+    # global pub_coord_3D 
+    # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size = 10)
+
+    while not rospy.is_shutdown():
+    #try: 
+        # infinite loop
+        main()
+        rate.sleep()
+ 
+    # except ValueError:
+    #     print("Oops!  That was no valid number.  Try again...")
+
+    # except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
         
-        rospy.loginfo("Exit program successful") # Exit message
-        pass
+    #     rospy.loginfo("Exit program successful") # Exit message
+    #     pass

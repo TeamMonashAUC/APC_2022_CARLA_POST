@@ -80,7 +80,7 @@ def ROS_Start():
     # rospy.Subscriber('/carla/ego_vehicle/gnss',NavSatFix,receive_Gnss)   
     # rospy.Subscriber('/carla/ego_vehicle/imu',Imu,receive_IMU)   
     rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)   
-    rospy.Subscriber("/score", Score,receive_Score)   
+    # rospy.Subscriber("/score", Score,receive_Score)   
     
 
     ####################################################
@@ -121,11 +121,11 @@ def ROS_Start():
     ####################################################
 
     # publish coordinate data
-    global pub_coord_2D
-    pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size =10000, latch=False)
+    # global pub_coord_2D
+    # pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size =10000, latch=False)
 
-    global pub_coord_3D
-    pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size =10000, latch=False)
+    # global pub_coord_3D
+    # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size =10000, latch=False)
 
 
 
@@ -198,7 +198,7 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
         pub_gear.publish("forward")
 
     # publish current car coordinate after sending driving info
-    coord_publish()
+    # coord_publish()
   
 
 
@@ -361,211 +361,211 @@ def receive_Score(data):
     # rospy.loginfo(settings.coord_distance)
 
 
-def coord_publish():
-    global pub_coord_2D 
+# def coord_publish():
+#     global pub_coord_2D 
     
-    msg_2d = ActualCoord()
-    msg_2d.header.stamp.secs=int(settings.curr_time)
-    msg_2d.header.stamp.nsecs= int((settings.curr_time - int(settings.curr_time))*1e9)
-    msg_2d.length = len(settings.coord_2d)-1
+#     msg_2d = ActualCoord()
+#     msg_2d.header.stamp.secs=int(settings.curr_time)
+#     msg_2d.header.stamp.nsecs= int((settings.curr_time - int(settings.curr_time))*1e9)
+#     msg_2d.length = len(settings.coord_2d)-1
 
-    # rospy.loginfo(len(settings.coord_2d))
-    if(len(settings.coord_2d)>=19):
-        # rospy.loginfo(len(settings.coord_2d))
-        rospy.loginfo(settings.coord_2d)
-        msg_2d.P0 = settings.coord_2d[1][0]
-        msg_2d.P1 = settings.coord_2d[2][0]
-        msg_2d.P2 = settings.coord_2d[3][0]
-        msg_2d.P3 = settings.coord_2d[4][0]
-        msg_2d.P4 = settings.coord_2d[5][0]
-        msg_2d.P5 = settings.coord_2d[6][0]
-        msg_2d.P6 = settings.coord_2d[7][0]
-        msg_2d.P7 = settings.coord_2d[8][0]
-        msg_2d.P8 = settings.coord_2d[9][0]
-        msg_2d.P9 = settings.coord_2d[10][0]
-        msg_2d.P10 = settings.coord_2d[11][0]
-        msg_2d.P11 = settings.coord_2d[12][0]
-        msg_2d.P12 = settings.coord_2d[13][0]
-        msg_2d.P13 = settings.coord_2d[14][0]
-        msg_2d.P14 = settings.coord_2d[15][0]
-        msg_2d.P15 = settings.coord_2d[16][0]
-        msg_2d.P16 = settings.coord_2d[17][0]
-    elif(len(settings.coord_2d)>=16):
-        msg_2d.P0 = settings.coord_2d[1][0]
-        msg_2d.P1 = settings.coord_2d[2][0]
-        msg_2d.P2 = settings.coord_2d[3][0]
-        msg_2d.P3 = settings.coord_2d[4][0]
-        msg_2d.P4 = settings.coord_2d[5][0]
-        msg_2d.P5 = settings.coord_2d[6][0]
-        msg_2d.P6 = settings.coord_2d[7][0]
-        msg_2d.P7 = settings.coord_2d[8][0]
-        msg_2d.P8 = settings.coord_2d[9][0]
-        msg_2d.P9 = settings.coord_2d[10][0]
-        msg_2d.P10 = settings.coord_2d[11][0]
-        msg_2d.P11 = settings.coord_2d[12][0]
-        msg_2d.P12 = settings.coord_2d[13][0]
-        msg_2d.P13 = settings.coord_2d[14][0]
-        msg_2d.P14 = settings.coord_2d[15][0]
-    elif(len(settings.coord_2d)>=15):
-            msg_2d.P0 = settings.coord_2d[1][0]
-            msg_2d.P1 = settings.coord_2d[2][0]
-            msg_2d.P2 = settings.coord_2d[3][0]
-            msg_2d.P3 = settings.coord_2d[4][0]
-            msg_2d.P4 = settings.coord_2d[5][0]
-            msg_2d.P5 = settings.coord_2d[6][0]
-            msg_2d.P6 = settings.coord_2d[7][0]
-            msg_2d.P7 = settings.coord_2d[8][0]
-            msg_2d.P8 = settings.coord_2d[9][0]
-            msg_2d.P9 = settings.coord_2d[10][0]
-            msg_2d.P10 = settings.coord_2d[11][0]
-            msg_2d.P11 = settings.coord_2d[12][0]
-            msg_2d.P12 = settings.coord_2d[13][0]
-            msg_2d.P13 = settings.coord_2d[14][0]
-    elif(len(settings.coord_2d)>=14):
-            msg_2d.P0 = settings.coord_2d[1][0]
-            msg_2d.P1 = settings.coord_2d[2][0]
-            msg_2d.P2 = settings.coord_2d[3][0]
-            msg_2d.P3 = settings.coord_2d[4][0]
-            msg_2d.P4 = settings.coord_2d[5][0]
-            msg_2d.P5 = settings.coord_2d[6][0]
-            msg_2d.P6 = settings.coord_2d[7][0]
-            msg_2d.P7 = settings.coord_2d[8][0]
-            msg_2d.P8 = settings.coord_2d[9][0]
-            msg_2d.P9 = settings.coord_2d[10][0]
-            msg_2d.P10 = settings.coord_2d[11][0]
-            msg_2d.P11 = settings.coord_2d[12][0]
-            msg_2d.P12 = settings.coord_2d[13][0]
-    elif(len(settings.coord_2d)>=13):
-            msg_2d.P0 = settings.coord_2d[1][0]
-            msg_2d.P1 = settings.coord_2d[2][0]
-            msg_2d.P2 = settings.coord_2d[3][0]
-            msg_2d.P3 = settings.coord_2d[4][0]
-            msg_2d.P4 = settings.coord_2d[5][0]
-            msg_2d.P5 = settings.coord_2d[6][0]
-            msg_2d.P6 = settings.coord_2d[7][0]
-            msg_2d.P7 = settings.coord_2d[8][0]
-            msg_2d.P8 = settings.coord_2d[9][0]
-            msg_2d.P9 = settings.coord_2d[10][0]
-            msg_2d.P10 = settings.coord_2d[11][0]
-            msg_2d.P11 = settings.coord_2d[12][0]
-    elif(len(settings.coord_2d)>=12):
-            msg_2d.P0 = settings.coord_2d[1][0]
-            msg_2d.P1 = settings.coord_2d[2][0]
-            msg_2d.P2 = settings.coord_2d[3][0]
-            msg_2d.P3 = settings.coord_2d[4][0]
-            msg_2d.P4 = settings.coord_2d[5][0]
-            msg_2d.P5 = settings.coord_2d[6][0]
-            msg_2d.P6 = settings.coord_2d[7][0]
-            msg_2d.P7 = settings.coord_2d[8][0]
-            msg_2d.P8 = settings.coord_2d[9][0]
-            msg_2d.P9 = settings.coord_2d[10][0]
-            msg_2d.P10 = settings.coord_2d[11][0]
+#     # rospy.loginfo(len(settings.coord_2d))
+#     if(len(settings.coord_2d)>=19):
+#         # rospy.loginfo(len(settings.coord_2d))
+#         rospy.loginfo(settings.coord_2d)
+#         msg_2d.P0 = settings.coord_2d[1][0]
+#         msg_2d.P1 = settings.coord_2d[2][0]
+#         msg_2d.P2 = settings.coord_2d[3][0]
+#         msg_2d.P3 = settings.coord_2d[4][0]
+#         msg_2d.P4 = settings.coord_2d[5][0]
+#         msg_2d.P5 = settings.coord_2d[6][0]
+#         msg_2d.P6 = settings.coord_2d[7][0]
+#         msg_2d.P7 = settings.coord_2d[8][0]
+#         msg_2d.P8 = settings.coord_2d[9][0]
+#         msg_2d.P9 = settings.coord_2d[10][0]
+#         msg_2d.P10 = settings.coord_2d[11][0]
+#         msg_2d.P11 = settings.coord_2d[12][0]
+#         msg_2d.P12 = settings.coord_2d[13][0]
+#         msg_2d.P13 = settings.coord_2d[14][0]
+#         msg_2d.P14 = settings.coord_2d[15][0]
+#         msg_2d.P15 = settings.coord_2d[16][0]
+#         msg_2d.P16 = settings.coord_2d[17][0]
+#     elif(len(settings.coord_2d)>=16):
+#         msg_2d.P0 = settings.coord_2d[1][0]
+#         msg_2d.P1 = settings.coord_2d[2][0]
+#         msg_2d.P2 = settings.coord_2d[3][0]
+#         msg_2d.P3 = settings.coord_2d[4][0]
+#         msg_2d.P4 = settings.coord_2d[5][0]
+#         msg_2d.P5 = settings.coord_2d[6][0]
+#         msg_2d.P6 = settings.coord_2d[7][0]
+#         msg_2d.P7 = settings.coord_2d[8][0]
+#         msg_2d.P8 = settings.coord_2d[9][0]
+#         msg_2d.P9 = settings.coord_2d[10][0]
+#         msg_2d.P10 = settings.coord_2d[11][0]
+#         msg_2d.P11 = settings.coord_2d[12][0]
+#         msg_2d.P12 = settings.coord_2d[13][0]
+#         msg_2d.P13 = settings.coord_2d[14][0]
+#         msg_2d.P14 = settings.coord_2d[15][0]
+#     elif(len(settings.coord_2d)>=15):
+#             msg_2d.P0 = settings.coord_2d[1][0]
+#             msg_2d.P1 = settings.coord_2d[2][0]
+#             msg_2d.P2 = settings.coord_2d[3][0]
+#             msg_2d.P3 = settings.coord_2d[4][0]
+#             msg_2d.P4 = settings.coord_2d[5][0]
+#             msg_2d.P5 = settings.coord_2d[6][0]
+#             msg_2d.P6 = settings.coord_2d[7][0]
+#             msg_2d.P7 = settings.coord_2d[8][0]
+#             msg_2d.P8 = settings.coord_2d[9][0]
+#             msg_2d.P9 = settings.coord_2d[10][0]
+#             msg_2d.P10 = settings.coord_2d[11][0]
+#             msg_2d.P11 = settings.coord_2d[12][0]
+#             msg_2d.P12 = settings.coord_2d[13][0]
+#             msg_2d.P13 = settings.coord_2d[14][0]
+#     elif(len(settings.coord_2d)>=14):
+#             msg_2d.P0 = settings.coord_2d[1][0]
+#             msg_2d.P1 = settings.coord_2d[2][0]
+#             msg_2d.P2 = settings.coord_2d[3][0]
+#             msg_2d.P3 = settings.coord_2d[4][0]
+#             msg_2d.P4 = settings.coord_2d[5][0]
+#             msg_2d.P5 = settings.coord_2d[6][0]
+#             msg_2d.P6 = settings.coord_2d[7][0]
+#             msg_2d.P7 = settings.coord_2d[8][0]
+#             msg_2d.P8 = settings.coord_2d[9][0]
+#             msg_2d.P9 = settings.coord_2d[10][0]
+#             msg_2d.P10 = settings.coord_2d[11][0]
+#             msg_2d.P11 = settings.coord_2d[12][0]
+#             msg_2d.P12 = settings.coord_2d[13][0]
+#     elif(len(settings.coord_2d)>=13):
+#             msg_2d.P0 = settings.coord_2d[1][0]
+#             msg_2d.P1 = settings.coord_2d[2][0]
+#             msg_2d.P2 = settings.coord_2d[3][0]
+#             msg_2d.P3 = settings.coord_2d[4][0]
+#             msg_2d.P4 = settings.coord_2d[5][0]
+#             msg_2d.P5 = settings.coord_2d[6][0]
+#             msg_2d.P6 = settings.coord_2d[7][0]
+#             msg_2d.P7 = settings.coord_2d[8][0]
+#             msg_2d.P8 = settings.coord_2d[9][0]
+#             msg_2d.P9 = settings.coord_2d[10][0]
+#             msg_2d.P10 = settings.coord_2d[11][0]
+#             msg_2d.P11 = settings.coord_2d[12][0]
+#     elif(len(settings.coord_2d)>=12):
+#             msg_2d.P0 = settings.coord_2d[1][0]
+#             msg_2d.P1 = settings.coord_2d[2][0]
+#             msg_2d.P2 = settings.coord_2d[3][0]
+#             msg_2d.P3 = settings.coord_2d[4][0]
+#             msg_2d.P4 = settings.coord_2d[5][0]
+#             msg_2d.P5 = settings.coord_2d[6][0]
+#             msg_2d.P6 = settings.coord_2d[7][0]
+#             msg_2d.P7 = settings.coord_2d[8][0]
+#             msg_2d.P8 = settings.coord_2d[9][0]
+#             msg_2d.P9 = settings.coord_2d[10][0]
+#             msg_2d.P10 = settings.coord_2d[11][0]
 
-    pub_coord_2D.publish(msg_2d)
-
-
+#     pub_coord_2D.publish(msg_2d)
 
 
 
 
 
-    global pub_coord_3D 
+
+
+#     global pub_coord_3D 
     
-    msg_3d = ActualCoord()
-    msg_3d.header.stamp.secs=int(settings.curr_time)
-    msg_3d.header.stamp.nsecs= int((settings.curr_time - int(settings.curr_time))*1e9)
-    msg_3d.length = len(settings.coord_3d)-1
+#     msg_3d = ActualCoord()
+#     msg_3d.header.stamp.secs=int(settings.curr_time)
+#     msg_3d.header.stamp.nsecs= int((settings.curr_time - int(settings.curr_time))*1e9)
+#     msg_3d.length = len(settings.coord_3d)-1
 
-    # rospy.loginfo(len(settings.coord_3d))
-    if(len(settings.coord_3d)>=19):
-        # rospy.loginfo(len(settings.coord_3d))
-        rospy.loginfo(settings.coord_3d)
-        msg_3d.P0 = settings.coord_3d[1][0]
-        msg_3d.P1 = settings.coord_3d[2][0]
-        msg_3d.P2 = settings.coord_3d[3][0]
-        msg_3d.P3 = settings.coord_3d[4][0]
-        msg_3d.P4 = settings.coord_3d[5][0]
-        msg_3d.P5 = settings.coord_3d[6][0]
-        msg_3d.P6 = settings.coord_3d[7][0]
-        msg_3d.P7 = settings.coord_3d[8][0]
-        msg_3d.P8 = settings.coord_3d[9][0]
-        msg_3d.P9 = settings.coord_3d[10][0]
-        msg_3d.P10 = settings.coord_3d[11][0]
-        msg_3d.P11 = settings.coord_3d[12][0]
-        msg_3d.P12 = settings.coord_3d[13][0]
-        msg_3d.P13 = settings.coord_3d[14][0]
-        msg_3d.P14 = settings.coord_3d[15][0]
-        msg_3d.P15 = settings.coord_3d[16][0]
-        msg_3d.P16 = settings.coord_3d[17][0]
-    elif(len(settings.coord_3d)>=16):
-        msg_3d.P0 = settings.coord_3d[1][0]
-        msg_3d.P1 = settings.coord_3d[2][0]
-        msg_3d.P2 = settings.coord_3d[3][0]
-        msg_3d.P3 = settings.coord_3d[4][0]
-        msg_3d.P4 = settings.coord_3d[5][0]
-        msg_3d.P5 = settings.coord_3d[6][0]
-        msg_3d.P6 = settings.coord_3d[7][0]
-        msg_3d.P7 = settings.coord_3d[8][0]
-        msg_3d.P8 = settings.coord_3d[9][0]
-        msg_3d.P9 = settings.coord_3d[10][0]
-        msg_3d.P10 = settings.coord_3d[11][0]
-        msg_3d.P11 = settings.coord_3d[12][0]
-        msg_3d.P12 = settings.coord_3d[13][0]
-        msg_3d.P13 = settings.coord_3d[14][0]
-        msg_3d.P14 = settings.coord_3d[15][0]
-    elif(len(settings.coord_3d)>=15):
-            msg_3d.P0 = settings.coord_3d[1][0]
-            msg_3d.P1 = settings.coord_3d[2][0]
-            msg_3d.P2 = settings.coord_3d[3][0]
-            msg_3d.P3 = settings.coord_3d[4][0]
-            msg_3d.P4 = settings.coord_3d[5][0]
-            msg_3d.P5 = settings.coord_3d[6][0]
-            msg_3d.P6 = settings.coord_3d[7][0]
-            msg_3d.P7 = settings.coord_3d[8][0]
-            msg_3d.P8 = settings.coord_3d[9][0]
-            msg_3d.P9 = settings.coord_3d[10][0]
-            msg_3d.P10 = settings.coord_3d[11][0]
-            msg_3d.P11 = settings.coord_3d[12][0]
-            msg_3d.P12 = settings.coord_3d[13][0]
-            msg_3d.P13 = settings.coord_3d[14][0]
-    elif(len(settings.coord_3d)>=14):
-            msg_3d.P0 = settings.coord_3d[1][0]
-            msg_3d.P1 = settings.coord_3d[2][0]
-            msg_3d.P2 = settings.coord_3d[3][0]
-            msg_3d.P3 = settings.coord_3d[4][0]
-            msg_3d.P4 = settings.coord_3d[5][0]
-            msg_3d.P5 = settings.coord_3d[6][0]
-            msg_3d.P6 = settings.coord_3d[7][0]
-            msg_3d.P7 = settings.coord_3d[8][0]
-            msg_3d.P8 = settings.coord_3d[9][0]
-            msg_3d.P9 = settings.coord_3d[10][0]
-            msg_3d.P10 = settings.coord_3d[11][0]
-            msg_3d.P11 = settings.coord_3d[12][0]
-            msg_3d.P12 = settings.coord_3d[13][0]
-    elif(len(settings.coord_3d)>=13):
-            msg_3d.P0 = settings.coord_3d[1][0]
-            msg_3d.P1 = settings.coord_3d[2][0]
-            msg_3d.P2 = settings.coord_3d[3][0]
-            msg_3d.P3 = settings.coord_3d[4][0]
-            msg_3d.P4 = settings.coord_3d[5][0]
-            msg_3d.P5 = settings.coord_3d[6][0]
-            msg_3d.P6 = settings.coord_3d[7][0]
-            msg_3d.P7 = settings.coord_3d[8][0]
-            msg_3d.P8 = settings.coord_3d[9][0]
-            msg_3d.P9 = settings.coord_3d[10][0]
-            msg_3d.P10 = settings.coord_3d[11][0]
-            msg_3d.P11 = settings.coord_3d[12][0]
-    elif(len(settings.coord_3d)>=12):
-            msg_3d.P0 = settings.coord_3d[1][0]
-            msg_3d.P1 = settings.coord_3d[2][0]
-            msg_3d.P2 = settings.coord_3d[3][0]
-            msg_3d.P3 = settings.coord_3d[4][0]
-            msg_3d.P4 = settings.coord_3d[5][0]
-            msg_3d.P5 = settings.coord_3d[6][0]
-            msg_3d.P6 = settings.coord_3d[7][0]
-            msg_3d.P7 = settings.coord_3d[8][0]
-            msg_3d.P8 = settings.coord_3d[9][0]
-            msg_3d.P9 = settings.coord_3d[10][0]
-            msg_3d.P10 = settings.coord_3d[11][0]
+#     # rospy.loginfo(len(settings.coord_3d))
+#     if(len(settings.coord_3d)>=19):
+#         # rospy.loginfo(len(settings.coord_3d))
+#         rospy.loginfo(settings.coord_3d)
+#         msg_3d.P0 = settings.coord_3d[1][0]
+#         msg_3d.P1 = settings.coord_3d[2][0]
+#         msg_3d.P2 = settings.coord_3d[3][0]
+#         msg_3d.P3 = settings.coord_3d[4][0]
+#         msg_3d.P4 = settings.coord_3d[5][0]
+#         msg_3d.P5 = settings.coord_3d[6][0]
+#         msg_3d.P6 = settings.coord_3d[7][0]
+#         msg_3d.P7 = settings.coord_3d[8][0]
+#         msg_3d.P8 = settings.coord_3d[9][0]
+#         msg_3d.P9 = settings.coord_3d[10][0]
+#         msg_3d.P10 = settings.coord_3d[11][0]
+#         msg_3d.P11 = settings.coord_3d[12][0]
+#         msg_3d.P12 = settings.coord_3d[13][0]
+#         msg_3d.P13 = settings.coord_3d[14][0]
+#         msg_3d.P14 = settings.coord_3d[15][0]
+#         msg_3d.P15 = settings.coord_3d[16][0]
+#         msg_3d.P16 = settings.coord_3d[17][0]
+#     elif(len(settings.coord_3d)>=16):
+#         msg_3d.P0 = settings.coord_3d[1][0]
+#         msg_3d.P1 = settings.coord_3d[2][0]
+#         msg_3d.P2 = settings.coord_3d[3][0]
+#         msg_3d.P3 = settings.coord_3d[4][0]
+#         msg_3d.P4 = settings.coord_3d[5][0]
+#         msg_3d.P5 = settings.coord_3d[6][0]
+#         msg_3d.P6 = settings.coord_3d[7][0]
+#         msg_3d.P7 = settings.coord_3d[8][0]
+#         msg_3d.P8 = settings.coord_3d[9][0]
+#         msg_3d.P9 = settings.coord_3d[10][0]
+#         msg_3d.P10 = settings.coord_3d[11][0]
+#         msg_3d.P11 = settings.coord_3d[12][0]
+#         msg_3d.P12 = settings.coord_3d[13][0]
+#         msg_3d.P13 = settings.coord_3d[14][0]
+#         msg_3d.P14 = settings.coord_3d[15][0]
+#     elif(len(settings.coord_3d)>=15):
+#             msg_3d.P0 = settings.coord_3d[1][0]
+#             msg_3d.P1 = settings.coord_3d[2][0]
+#             msg_3d.P2 = settings.coord_3d[3][0]
+#             msg_3d.P3 = settings.coord_3d[4][0]
+#             msg_3d.P4 = settings.coord_3d[5][0]
+#             msg_3d.P5 = settings.coord_3d[6][0]
+#             msg_3d.P6 = settings.coord_3d[7][0]
+#             msg_3d.P7 = settings.coord_3d[8][0]
+#             msg_3d.P8 = settings.coord_3d[9][0]
+#             msg_3d.P9 = settings.coord_3d[10][0]
+#             msg_3d.P10 = settings.coord_3d[11][0]
+#             msg_3d.P11 = settings.coord_3d[12][0]
+#             msg_3d.P12 = settings.coord_3d[13][0]
+#             msg_3d.P13 = settings.coord_3d[14][0]
+#     elif(len(settings.coord_3d)>=14):
+#             msg_3d.P0 = settings.coord_3d[1][0]
+#             msg_3d.P1 = settings.coord_3d[2][0]
+#             msg_3d.P2 = settings.coord_3d[3][0]
+#             msg_3d.P3 = settings.coord_3d[4][0]
+#             msg_3d.P4 = settings.coord_3d[5][0]
+#             msg_3d.P5 = settings.coord_3d[6][0]
+#             msg_3d.P6 = settings.coord_3d[7][0]
+#             msg_3d.P7 = settings.coord_3d[8][0]
+#             msg_3d.P8 = settings.coord_3d[9][0]
+#             msg_3d.P9 = settings.coord_3d[10][0]
+#             msg_3d.P10 = settings.coord_3d[11][0]
+#             msg_3d.P11 = settings.coord_3d[12][0]
+#             msg_3d.P12 = settings.coord_3d[13][0]
+#     elif(len(settings.coord_3d)>=13):
+#             msg_3d.P0 = settings.coord_3d[1][0]
+#             msg_3d.P1 = settings.coord_3d[2][0]
+#             msg_3d.P2 = settings.coord_3d[3][0]
+#             msg_3d.P3 = settings.coord_3d[4][0]
+#             msg_3d.P4 = settings.coord_3d[5][0]
+#             msg_3d.P5 = settings.coord_3d[6][0]
+#             msg_3d.P6 = settings.coord_3d[7][0]
+#             msg_3d.P7 = settings.coord_3d[8][0]
+#             msg_3d.P8 = settings.coord_3d[9][0]
+#             msg_3d.P9 = settings.coord_3d[10][0]
+#             msg_3d.P10 = settings.coord_3d[11][0]
+#             msg_3d.P11 = settings.coord_3d[12][0]
+#     elif(len(settings.coord_3d)>=12):
+#             msg_3d.P0 = settings.coord_3d[1][0]
+#             msg_3d.P1 = settings.coord_3d[2][0]
+#             msg_3d.P2 = settings.coord_3d[3][0]
+#             msg_3d.P3 = settings.coord_3d[4][0]
+#             msg_3d.P4 = settings.coord_3d[5][0]
+#             msg_3d.P5 = settings.coord_3d[6][0]
+#             msg_3d.P6 = settings.coord_3d[7][0]
+#             msg_3d.P7 = settings.coord_3d[8][0]
+#             msg_3d.P8 = settings.coord_3d[9][0]
+#             msg_3d.P9 = settings.coord_3d[10][0]
+#             msg_3d.P10 = settings.coord_3d[11][0]
 
-    pub_coord_3D.publish(msg_3d)
+#     pub_coord_3D.publish(msg_3d)
