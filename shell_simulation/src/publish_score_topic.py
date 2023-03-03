@@ -15,7 +15,7 @@ from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 
 class PublisherPyNode:
 	def __init__(self):
-		self.m_publisher = rospy.Publisher("/score", Score, queue_size=10, latch=False)
+		self.m_publisher = rospy.Publisher("/Score", Score, queue_size=10, latch=False)
 		self.sum_speed = 0
 
 		# sample for normal use with coordinates directly
@@ -98,21 +98,21 @@ class PublisherPyNode:
         #                         possible_goals[13],
         #                         possible_goals[14]
 		# ]
-		self.sample15goals = [  possible_goals[10],
+		self.sample15goals = [  possible_goals[0],
+                                possible_goals[1],
+                                possible_goals[2],
+                                possible_goals[3],
+                                possible_goals[4],
+                                possible_goals[5],
+                                possible_goals[6],
+                                possible_goals[7],
+                                possible_goals[8],
+                                possible_goals[9],
+                                possible_goals[10],
                                 possible_goals[11],
                                 possible_goals[12],
                                 possible_goals[13],
-                                possible_goals[14],
-                                possible_goals[15],
-                                possible_goals[16],
-                                possible_goals[17],
-                                possible_goals[18],
-                                possible_goals[19],
-                                possible_goals[20],
-                                possible_goals[21],
-                                possible_goals[22],
-                                possible_goals[23],
-                                possible_goals[24]
+                                possible_goals[14]
 		]
 		self.frame_count = 0
       # Initialise a publisher

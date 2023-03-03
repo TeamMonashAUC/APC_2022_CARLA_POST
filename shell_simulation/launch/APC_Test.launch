@@ -3,7 +3,7 @@
   <include file="$(find carla_ros_bridge)/launch/carla_ros_bridge_with_example_ego_vehicle.launch" />
   <node name="APC_Monash" pkg="shell_simulation" type="APC_Monash.py" output="screen"/>
   <node name="efficiency" pkg="shell_simulation" type="efficiency.py" output="screen"/>
-  <node name="score_test" pkg="shell_simulation" type="score_test.py" output="screen"/>
+  <node name="score" pkg="shell_simulation" type="score.py" output="screen"/>
   <node name="publish_score_topic" pkg="shell_simulation" type="publish_score_topic.py" output="screen"/>
   <node name="APC_Test_Car_Control" pkg="shell_simulation" type="APC_Test_Car_Control.py" output="screen"/>
   

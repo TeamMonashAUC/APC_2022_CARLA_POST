@@ -9,10 +9,8 @@
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  
   <build_depend>message_generation</build_depend>
   <depend>message_runtime</depend>
-
   <depend>python3-rosdep</depend>
   <depend>python3-rospkg</depend>
   <depend>nav_msgs</depend>

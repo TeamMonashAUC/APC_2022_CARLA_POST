@@ -19,7 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Score.msg
-  ActualCoord.msg
 )
 catkin_python_setup()
 generate_messages(
@@ -76,7 +75,7 @@ catkin_install_python(
     scripts/shell_simulation_2/settings.py
     src/publish_score_topic.py
     src/efficiency.py
-    src/score_test.py
+    src/score.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
