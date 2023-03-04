@@ -32,7 +32,7 @@ def getThrottle(throttle_data):
 
 def getSteering(steering_data):
     global steering
-    steering = steering_data.data
+    steering = -steering_data.data
 
     '''
     Method Name: 

@@ -188,7 +188,7 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
     
     
     pub_throttle.publish(throttle_data)
-    pub_steering.publish(steering_data)
+    pub_steering.publish(-steering_data)
     pub_brake.publish(brake_data)
     pub_handbrake.publish(handbrake_data)
 
