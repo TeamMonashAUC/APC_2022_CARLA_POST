@@ -26,10 +26,23 @@
   <depend>python3-simple-pid-pip</depend>
   <depend>python3-matplotlib</depend>
   <depend>python3-pygame</depend>
-<!-- https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
+  <depend>gitpython</depend>
+  <depend>python3-ipython</depend>
+  <depend>matplotlib</depend>
+  <depend>numpy</depend>
+  <depend>opencv-python</depend>
+  <depend>Pillow</depend>
+  <depend>psutil</depend>
+  <depend>PyYAML</depend>
+  <depend>requests</depend>
+  <depend>scipy</depend>
+  <depend>thop</depend>
+  <depend>torch</depend>
+  <depend>torchvision</depend>
+  <depend>tqdm</depend>
+  <depend>tensorboard</depend>
+  <depend>pandas</depend>
+  <depend>seaborn</depend>
+  <depend>setuptools</depend>
+  <depend>python3-wheel</depend>
 </package>

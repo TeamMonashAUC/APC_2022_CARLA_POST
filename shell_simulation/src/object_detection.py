@@ -1,4 +1,5 @@
-# Install YoloV5 before running: https://github.com/ultralytics/yolov5
+#!/usr/bin/env python
+import sys 
 import rospy
 from sensor_msgs.msg import Image
 
@@ -6,6 +7,9 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 import torch
+sys.path.append('./scripts/shell_simulation_2')
+
+import Movement_Control
 
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 #model.cuda() # use GPU
@@ -18,9 +22,6 @@ def calculate_boxArea(x1,y1,x2,y2):
     height = y2 - y1
     area = width * height
     return area
-
-def send_warning(state):
-    return state
 
 # test
 def show_image(img,output):
@@ -47,7 +48,8 @@ def show_image(img,output):
                     cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
                     # Draw the bounding box on the image                 
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
-                    send_warning(True)
+                    Movement_Control.carControl(0,0)
+                    print("stop tha car")
 
                 elif probability > 50:
                     # Display the object label and probability
@@ -55,7 +57,6 @@ def show_image(img,output):
                     cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
                     # Draw the bounding box on the image                 
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
-                    send_warning(True)
 
     except:
         pass
