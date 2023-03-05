@@ -77,6 +77,7 @@ catkin_install_python(
     src/publish_score_topic.py
     src/efficiency.py
     src/score_test.py
+    src/object_detection.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

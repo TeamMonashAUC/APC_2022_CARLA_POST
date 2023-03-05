@@ -9,7 +9,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import torch
 sys.path.append('./scripts/shell_simulation_2')
 
-import Movement_Control
+import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
 
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 #model.cuda() # use GPU
