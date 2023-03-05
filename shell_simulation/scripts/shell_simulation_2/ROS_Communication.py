@@ -80,7 +80,7 @@ def ROS_Start():
     # rospy.Subscriber('/carla/ego_vehicle/gnss',NavSatFix,receive_Gnss)   
     # rospy.Subscriber('/carla/ego_vehicle/imu',Imu,receive_IMU)   
     rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)   
-    rospy.Subscriber("/Score", Score,receive_Score)   
+    rospy.Subscriber("/score", Score,receive_Score)   
     
 
     ####################################################
