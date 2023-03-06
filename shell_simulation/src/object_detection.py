@@ -1,20 +1,16 @@
 #!/usr/bin/env python
-import sys 
 import rospy
 from sensor_msgs.msg import Image
-
+import yolov5
+import time
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
-import torch
-sys.path.append('./scripts/shell_simulation_2')
+# import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
+# import shell_simulation_2.ROS_Communication as ROS_Communication 
 
-import shell_simulation_2.Movement_Control as Movement_Control   	 # utilise PID for throttle & linear steering using maximum turning angle by the car (Level 2 code)
-
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
-#model.cuda() # use GPU
 bridge = CvBridge()
-
+model = yolov5.load('yolov5s.pt')
 
 
 def calculate_boxArea(x1,y1,x2,y2):
@@ -40,7 +36,7 @@ def show_image(img,output):
                 label = model.names[int(index)]
                 probability = probability * 100
                 colour = (255,0,0) # (B,G,R)
-
+                
                 # if the area or person crosses threshold then warn user
                 if area > 50000 and probability > 50 or (int(index) == 0 and area > 10000):
                     colour = (0,0,255)
@@ -48,8 +44,15 @@ def show_image(img,output):
                     cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
                     # Draw the bounding box on the image                 
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
-                    Movement_Control.carControl(0,0)
-                    print("stop tha car")
+                    too_close = True
+                    #Movement_Control.carControl(0,0)
+                    while too_close:
+                        #ROS_Communication.transmit_to_carla(0, 0, True, False, True)
+                        print("stop tha car")
+                        rospy.loginfo("stop")
+                        time.sleep(5)
+                        too_close = False
+
 
                 elif probability > 50:
                     # Display the object label and probability
@@ -57,11 +60,11 @@ def show_image(img,output):
                     cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, colour, 2)
                     # Draw the bounding box on the image                 
                     cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
-
+                    rospy.loginfo("all good")
     except:
         pass
 
-    cv2.imshow("Object Detection", img)
+    cv2.imshow("Object Detection New", img)
     cv2.waitKey(3)
 
 
