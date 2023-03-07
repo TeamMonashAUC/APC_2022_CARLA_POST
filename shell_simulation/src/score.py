@@ -12,6 +12,7 @@ from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 # School: Monash University Malaysia
 # Description: - Python script that keeps track of goals and penalties while running
 
+secondsPassed=0
 goalPassed =0
 class Score:
     def __init__(self): # constuctor
@@ -65,10 +66,13 @@ class Score:
 
     def odom(self,msg):
         global goalPassed
+        global secondsPassed
+        
         # Get car position, velocity and orientation
         car_x = msg.pose.pose.position.x
         car_y = msg.pose.pose.position.y
         car_z = msg.pose.pose.position.z
+        secondsPassed = msg.header.stamp.secs
         sizePose = len(self.goals)
 
         if sizePose > 0: # run only if number of goals is more than 0
@@ -129,6 +133,8 @@ def showStats():
     
     # lane crossed
     rospy.loginfo("/////////////////////////////")
+    rospy.loginfo("time:" + str(secondsPassed))
+    rospy.loginfo("")
     rospy.loginfo("dotted line crossed:" + str(laneCrossed.count(1)))
     rospy.loginfo("solid line crossed:" + str(laneCrossed.count(2)))
     rospy.loginfo("double line crossed:" + str(laneCrossed.count(3)))
