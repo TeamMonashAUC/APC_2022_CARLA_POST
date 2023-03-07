@@ -46,9 +46,9 @@ import numpy as np
 
 
 def R1():
-    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(40, [-245.5,0.8]) 
-    Coordinate_System.travel_to(30, [-255.9,0.2]) # P2   #stop
+    Coordinate_System.travel_to(10, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(15, [-245.5,0.8]) 
+    Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(20,7,180,[-272.5,-18.7],-90) #turn left
     Coordinate_System.travel_to(20, [-272.1,-43.9]) # P3
@@ -288,7 +288,14 @@ def R14():#Final ring
 
 
 def main():
-    Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
+    rospy.loginfo(settings.car_coordinate_from_world)
+    while settings.car_coordinate_from_world[0] ==0:
+        rospy.loginfo(settings.car_coordinate_from_world)
+        pass
+
+    rospy.loginfo("start coord:")
+    rospy.loginfo(settings.car_coordinate_from_world)
+    # Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
     R1()
     R2()
 
