@@ -289,7 +289,8 @@ def R14():#Final ring
 
 def main():
     rospy.loginfo(settings.car_coordinate_from_world)
-    while settings.car_coordinate_from_world[0] ==0:
+    while settings.car_coordinate_from_world[0] ==0:      
+        Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
         rospy.loginfo(settings.car_coordinate_from_world)
         pass
 
