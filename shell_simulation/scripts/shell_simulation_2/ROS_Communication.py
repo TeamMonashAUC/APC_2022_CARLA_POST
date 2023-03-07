@@ -151,8 +151,8 @@ Function Explanation :
 def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_reverse = False, car_handBrake = False):
  
     # set limits for carla
-    if car_throttle > 1:
-        car_throttle = 1
+    if car_throttle > 0.7:
+        car_throttle = 0.7
     elif car_throttle < 0:
         car_throttle = 0    
 
