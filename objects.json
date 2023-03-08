@@ -24,7 +24,7 @@
       {
           "type": "vehicle.tesla.model3",
           "id": "ego_vehicle",
-	  "spawn_point": {"x": -176.6, "y": 4.0, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 180.0},
+	  "spawn_point": {"x": -171.60, "y": 4.0, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 180.0},
           "sensors": 
           [
                  
