@@ -288,6 +288,8 @@ def R14():#Final ring
 
 
 def main():
+    # Coordinate_System.update_Coord()
+    # '''
     rospy.loginfo(settings.car_coordinate_from_world)
     while settings.car_coordinate_from_world[0] ==0:      
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
@@ -345,7 +347,7 @@ def main():
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
         rate.sleep()
         # rospy.spin()
-
+    # '''
 
 
     
@@ -364,7 +366,7 @@ if __name__ == '__main__':
     # single time setup
     # test()
     # start rosnode
-    rospy.init_node('APC_Monash')
+    rospy.init_node('APC_Monash2')
     rate = rospy.Rate(100) # publish data at 100Hz
     rospy.loginfo("APC_Monash started")
 
