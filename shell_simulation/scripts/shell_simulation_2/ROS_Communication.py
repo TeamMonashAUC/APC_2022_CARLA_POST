@@ -80,7 +80,7 @@ def ROS_Start():
     # rospy.Subscriber('/carla/ego_vehicle/gnss',NavSatFix,receive_Gnss)   
     # rospy.Subscriber('/carla/ego_vehicle/imu',Imu,receive_IMU)   
     rospy.Subscriber('/carla/ego_vehicle/odometry',Odometry,receive_Odometry)   
-    rospy.Subscriber("/score", Score,receive_Score)   
+    # rospy.Subscriber("/score", Score,receive_Score)   
     
 
     ####################################################
@@ -135,11 +135,11 @@ def ROS_Start():
     ####################################################
 
     # publish coordinate data
-    global pub_coord_2D
-    pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size =10000, latch=False)
+    # global pub_coord_2D
+    # pub_coord_2D = rospy.Publisher("/actual_coord_2D", ActualCoord, queue_size =10000, latch=False)
 
-    global pub_coord_3D
-    pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size =10000, latch=False)
+    # global pub_coord_3D
+    # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size =10000, latch=False)
 
 
 
@@ -212,7 +212,7 @@ def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_revers
         pub_gear.publish("forward")
 
     # publish current car coordinate after sending driving info
-    coord_publish()
+    # coord_publish()
   
 
 
@@ -374,7 +374,7 @@ def receive_Score(data):
     settings.coord_distance = data.closest_approach
     # rospy.loginfo(settings.coord_distance)
 
-
+'''
 def coord_publish():
     global pub_coord_2D 
     
@@ -583,3 +583,4 @@ def coord_publish():
             msg_3d.P10 = settings.coord_3d[11][0]
 
     pub_coord_3D.publish(msg_3d)
+    '''
