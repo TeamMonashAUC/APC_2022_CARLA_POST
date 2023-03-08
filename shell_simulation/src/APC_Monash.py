@@ -46,9 +46,9 @@ import numpy as np
 
 
 def R1():
-    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(40, [-245.5,0.8]) 
-    Coordinate_System.travel_to(30, [-255.9,0.2]) # P2   #stop
+    Coordinate_System.travel_to(10, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(15, [-245.5,0.8]) 
+    Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(20,7,180,[-272.5,-18.7],-90) #turn left
     Coordinate_System.travel_to(20, [-272.1,-43.9]) # P3
@@ -288,7 +288,17 @@ def R14():#Final ring
 
 
 def main():
-    Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
+    # Coordinate_System.update_Coord()
+    # '''
+    rospy.loginfo(settings.car_coordinate_from_world)
+    while settings.car_coordinate_from_world[0] ==0:      
+        Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
+        rospy.loginfo(settings.car_coordinate_from_world)
+        pass
+
+    rospy.loginfo("start coord:")
+    rospy.loginfo(settings.car_coordinate_from_world)
+    # Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
     R1()
     R2()
 
@@ -337,7 +347,7 @@ def main():
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
         rate.sleep()
         # rospy.spin()
-
+    # '''
 
 
     
@@ -350,28 +360,34 @@ def main():
 
 #################################################################################################################################################
 if __name__ == '__main__':
-    try:
-        # single time setup
-        # test()
-        # start rosnode
-        rospy.init_node('APC_Monash')
-        rate = rospy.Rate(100) # publish data at 100Hz
-        rospy.loginfo("APC_Monash started")
-
-        # start ros communications with rostopics
-        ROS_Communication.ROS_Start()
+    # try:
 
 
-        # global pub_coord_2D
-        # global pub_coord_3D 
-        # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size = 10)
+    # single time setup
+    # test()
+    # start rosnode
+    rospy.init_node('APC_Monash2')
+    rate = rospy.Rate(100) # publish data at 100Hz
+    rospy.loginfo("APC_Monash started")
 
-        while not rospy.is_shutdown():
-            # infinite loop
-            main()
-            rate.sleep()
+    # start ros communications with rostopics
+    ROS_Communication.ROS_Start()
 
-    except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
+
+    # global pub_coord_2D
+    # global pub_coord_3D 
+    # pub_coord_3D = rospy.Publisher("/actual_coord_3D", ActualCoord, queue_size = 10)
+
+    while not rospy.is_shutdown():
+    #try: 
+        # infinite loop
+        main()
+        rate.sleep()
+ 
+    # except ValueError:
+    #     print("Oops!  That was no valid number.  Try again...")
+
+    # except rospy.ROSInterruptException: # if we stop the script (using CTRL+C), it will run rospy.ROSInterruptException
         
-        rospy.loginfo("Exit program successful") # Exit message
-        pass
+    #     rospy.loginfo("Exit program successful") # Exit message
+    #     pass

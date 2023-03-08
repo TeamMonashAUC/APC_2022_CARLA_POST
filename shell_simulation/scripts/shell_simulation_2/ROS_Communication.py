@@ -118,6 +118,20 @@ def ROS_Start():
     throttle_data = steering_data = brake_data =  Float64()
     gear_data = String()
     handbrake_data = Bool()
+
+    # while not rospy.is_shutdown():
+    #     try:
+    #         break
+		
+    #     except(tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+    #         rospy.sleep(0.001)
+    #         continue
+    # data = rospy.wait_for_message("/carla/ego_vehicle/odometry", Odometry, 20) # Blocks until message is received, 20s timeout
+    # if data != None:
+    #     rospy.loginfo("Starting control!")
+    #     rospy.spin() # Block the node from exiting
+    # else:
+    #     rospy.loginfo("No odom data!")
     ####################################################
 
     # publish coordinate data
@@ -137,8 +151,8 @@ Function Explanation :
 def transmit_to_carla(car_throttle = 0, car_steer = 0, car_brake = 0, car_reverse = False, car_handBrake = False):
  
     # set limits for carla
-    if car_throttle > 1:
-        car_throttle = 1
+    if car_throttle > 0.7:
+        car_throttle = 0.7
     elif car_throttle < 0:
         car_throttle = 0    
 

@@ -12,39 +12,41 @@ from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 # School: Monash University Malaysia
 # Description: - Python script that keeps track of goals and penalties while running
 
+secondsPassed=0
 goalPassed =0
 class Score:
     def __init__(self): # constuctor
         self.cur = Int8() # class variable for passed goals counter
         self.passed = 0 # class variable for current time
         # List of goals
-        self.goals = [  [-171.60,4.00,0.00],   #P0
-                        [-206.40,4.20,0.00],   #P1
+        '''
+        self.goals = [  [-171.60,4.00,0.00],   #P0 x
+                        [-206.40,4.20,0.00],   #P1  x
                         [-255.90,0.20,0.00],   #P2
-                        [-272.10,-43.90,0.00], #P3
+                        [-272.10,-43.90,0.00], #P3 x
                         [-205.50,-95.00,0.00], #P4
-                        [-185.50,-142.40,0.00], #P5 #changed
+                        [-185.50,-142.40,0.00], #P5 #changed  x
                         [-151.10,-151.00,0.00],#P6
                         [-101.40,-154.70,0.00],#P7
                         [-47.80,-117.20,0.00], #P8
                         [-43.80,-56.80,0.00],  #P9
-                        [-43.90,-17.10,0.00],  #P10
-                        [3.00,-2.70,0.00],     #P11
-                        [47.80,-1.80,0.00],    #P12
+                        [-43.90,-17.10,0.00],  #P10  x
+                        [3.00,-2.70,0.00],     #P11  x
+                        [47.80,-1.80,0.00],    #P12  x
                         [89.00,-5.50,0.00],    #P13
-                        [45.90,-84.90,0.00],   #P14
-                        [31.30,19.30,0.00],    #P15
+                        [45.90,-84.90,0.00],   #P14  x
+                        [31.30,19.30,0.00],    #P15  x
                         [36.30,67.20,0.00],    #P16
-                        [38.60,155.10,0.00],   #P17
-                        [74.00,190.20,0.00],   #P18 # changed
-                        [154.10,177.30,0.00],  #P19
+                        [38.60,155.10,0.00],   #P17  x
+                        [74.00,190.20,0.00],   #P18 # changed  x
+                        [154.10,177.30,0.00],  #P19  x
                         [189.20,52.80,0.00],   #P20
                         [174.40,-148.00,0.00], #P21
-                        [10.20,-187.90,0.00],  #P22
+                        [10.20,-187.90,0.00],  #P22  x
                         [-145.80,-190.90,8.60],#P23
                         [-232.60,28.10,10.00], #P24
                         [-119.40,186.60,10.00],#P25
-                        [84.70,144.10,0.00],   #P26
+                        [84.70,144.10,0.00],   #P26  x
                         [148.10,112.20,0.00],  #P27
                         [151.40,15.20,0.00],   #P28
                         [124.70,1.90,0.00],    #P29
@@ -53,11 +55,27 @@ class Score:
                         [-83.20,-87.70,0.00],  #P32
                         [-124.30,-42.40,0.00], #P33
                         [-121.80,28.10,0.00],  #P34
-                        [-124.40,106.30,0.00], #P35
+                        [-124.40,106.30,0.00], #P35  x
                         [-80.20,133.30,0.00],  #P36
                         [-20.70,87.90,0.00],   #P37
                         [25.70,65.40,0.00],    #P38
                         [24.60,-30.70,0.00]    #P39
+        '''
+        self.goals = [  [-171.60,4.00,0.00],   #P0 x
+                        [-206.40,4.20,0.00],   #P1  x
+                        [-272.10,-43.90,0.00], #P3 x
+                        [-185.50,-142.40,0.00], #P5 #changed  x
+                        [-43.90,-17.10,0.00],  #P10  x
+                        [3.00,-2.70,0.00],     #P11  x
+                        [47.80,-1.80,0.00],    #P12  x
+                        [45.90,-84.90,0.00],   #P14  x
+                        [31.30,19.30,0.00],    #P15  x
+                        [38.60,155.10,0.00],   #P17  x
+                        [74.00,190.20,0.00],   #P18 # changed  x
+                        [154.10,177.30,0.00],  #P19  x
+                        [10.20,-187.90,0.00],  #P22  x
+                        [84.70,144.10,0.00],   #P26  x
+                        [-124.40,106.30,0.00], #P35  x
 
 ]
         self.num_goals = len(self.goals)
@@ -65,10 +83,13 @@ class Score:
 
     def odom(self,msg):
         global goalPassed
+        global secondsPassed
+        
         # Get car position, velocity and orientation
         car_x = msg.pose.pose.position.x
         car_y = msg.pose.pose.position.y
         car_z = msg.pose.pose.position.z
+        secondsPassed = msg.header.stamp.secs
         sizePose = len(self.goals)
 
         if sizePose > 0: # run only if number of goals is more than 0
@@ -129,6 +150,8 @@ def showStats():
     
     # lane crossed
     rospy.loginfo("/////////////////////////////")
+    rospy.loginfo("time:" + str(secondsPassed))
+    rospy.loginfo("")
     rospy.loginfo("dotted line crossed:" + str(laneCrossed.count(1)))
     rospy.loginfo("solid line crossed:" + str(laneCrossed.count(2)))
     rospy.loginfo("double line crossed:" + str(laneCrossed.count(3)))
