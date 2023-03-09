@@ -46,8 +46,8 @@ import numpy as np
 
 
 def R1():
-    Coordinate_System.travel_to(10, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(15, [-245.5,0.8]) 
+    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(40, [-245.5,0.8]) 
     Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(20,7,180,[-272.5,-18.7],-90) #turn left
@@ -316,7 +316,7 @@ if __name__ == '__main__':
     # test()
     # start rosnode
     rospy.init_node('APC_Monash')
-    rate = rospy.Rate(100) # publish data at 100Hz
+    rate = rospy.Rate(2) # publish data at 100Hz
     rospy.loginfo("APC_Monash started")
 
     # start ros communications with rostopics
