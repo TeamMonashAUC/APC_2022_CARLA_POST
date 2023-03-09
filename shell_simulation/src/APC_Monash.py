@@ -44,10 +44,9 @@ import numpy as np
 
 #################################################################################################################################################
 
-
 def R1():
-    Coordinate_System.travel_to(40, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(40, [-245.5,0.8]) 
+    Coordinate_System.travel_to(20, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(20, [-245.5,0.8]) 
     Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(20,7,180,[-272.5,-18.7],-90) #turn left
@@ -291,7 +290,44 @@ def main():
     R1()
     R2()
 
+    Coordinate_System.corner(20,6,90,[-65.8,-87.9],0) #turn left
+    R3()
+    R4()
+    R5()
+    Coordinate_System.corner(20,5,0,[29.4,75.5],-90) #turn right
+    R12()
 
+    R10()
+    Coordinate_System.corner(15,5,-90,[14.7,-88],-180) #turn right
+    R8()
+    Coordinate_System.corner(15,5,-180,[-43.7,-73.9],90) #turn right
+    R9()
+    R11()
+    Coordinate_System.corner(15,5,0,[96.2,-14.9],-90) #turn right
+    R7()
+    Coordinate_System.corner(15,5,-180,[31.7,-68.7],90) #turn right
+    Coordinate_System.travel_to(15, [31.7,-16.2]) 
+    R13()
+
+    Coordinate_System.travel_to(25, [37.2,105.6]) 
+    Coordinate_System.travel_to(20, [38,132.2]) 
+    Coordinate_System.corner(15,5,90,[47.9,146.0],0) #turn right
+                                                                                                                                                                                                                                                                      
+    R6()
+
+    Coordinate_System.travel_to(25, [87.6,5.1]) 
+    Coordinate_System.travel_to(20, [44.7,5.2]) 
+    Coordinate_System.corner(15,5,180,[31.6,15.4],90) #turn right
+
+    R13()
+    Coordinate_System.travel_to(25, [37.2,105.6]) 
+    Coordinate_System.travel_to(25, [38,132.2]) 
+    Coordinate_System.travel_to(25, [39.1,172.8]) 
+
+    Coordinate_System.travel_to(15, [39.1,180.2])
+    Coordinate_System.corner(15,6,90,[48.3,190.2],0)
+    R14()
+    
 
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
