@@ -489,7 +489,11 @@ def distances3D(coordinates):
      may it be the distances to all the coordinates or the distance to the valid coordinates
      Expect a ndarry for the coordinates"""
 
-    current_pos = np.array([settings.car_coordinate_from_world])
+    current_pos = np.array([-171.60,4.00,0.00])
+#     current_pos = np.array([-247.12860107421875
+# ,2.610320568084717,0.0019512939034029841])
+#     current_pos = np.array([-180.5712890625
+# ,-34.12797164916992,0.16353358328342438])
     distances = np.sqrt(np.sum(np.square(coordinates - current_pos), axis=1))
     return distances
 
@@ -542,12 +546,15 @@ def findGoalPointRobust2D(distancesToValidCoordinates):
     
     distance_to_possible_points = distances2D(possible_coords) # find the distances to the possible coordinates from the current position
     
+    # rospy.loginfo(distance_to_possible_points)
     # Assuming that the distance supplied is a normal python list
     for distance in distancesToValidCoordinates:
         possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
         if possible_distance.shape[0] != 0:
             goal_predict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
     return goal_predict
+
+
     #print(distance_to_possible_points)
     # find where the distance to the goal is less than or equal to 3m, that will be a confirmed goal point
     #possible_distances = distancesToValidCoordinates[distancesToValidCoordinates <= 3]
@@ -609,9 +616,11 @@ def findGoalPointRobust3D(distancesToValidCoordinates):
     
     distance_to_possible_points = distances3D(possible_coords) # find the distances to the possible coordinates from the current position
     
+    rospy.loginfo(distance_to_possible_points)
     # Assuming that the distance supplied is a normal python list
     for distance in distancesToValidCoordinates:
         possible_distance = distance_to_possible_points[abs(distance_to_possible_points - distance) <= 1]
+        # rospy.loginfo(possible_distance)
         if possible_distance.shape[0] != 0:
             goal_predict.append(possible_coords[np.where(distance_to_possible_points == possible_distance)[0], :].tolist())
     return goal_predict
