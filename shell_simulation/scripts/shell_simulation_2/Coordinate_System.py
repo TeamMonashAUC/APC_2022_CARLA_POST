@@ -142,9 +142,9 @@ def travel_to(setSpeed,goal_coord):
                 break
 
         # obtain coordinates of goal points every 3 seconds
-        # if((settings.curr_time - prev_time_coord) > 3):
-        #     prev_time_coord = settings.curr_time
-        #     update_Coord()
+        if((settings.curr_time - prev_time_coord) > 3):
+            prev_time_coord = settings.curr_time
+            update_Coord()
 
     
    
@@ -617,19 +617,19 @@ def findGoalPointRobust3D(distancesToValidCoordinates):
     return goal_predict
 
 
-# coord_2d = [[]]
-# coord_3d = [[]]
-# def update_Coord():
-#     for value in findGoalPointRobust2D(settings.coord_distance):
-#         if value not in coord_2d:
-#             coord_2d.append(value)
-#     for value in findGoalPointRobust3D(settings.coord_distance):
-#         if value not in coord_3d:
-#             coord_3d.append(value)
+coord_2d = [[]]
+coord_3d = [[]]
+def update_Coord():
+    for value in findGoalPointRobust2D(settings.coord_distance):
+        if value not in coord_2d:
+            coord_2d.append(value)
+    for value in findGoalPointRobust3D(settings.coord_distance):
+        if value not in coord_3d:
+            coord_3d.append(value)
     
-#     # print(f"The goal 2Dcoordinates {coord_2d}")
-#     # print(f"The goal 3Dcoordinates {coord_3d}")
+    # print(f"The goal 2Dcoordinates {coord_2d}")
+    # print(f"The goal 3Dcoordinates {coord_3d}")
 
-#     settings.coord_2d = coord_2d
-#     settings.coord_3d = coord_3d
+    settings.coord_2d = coord_2d
+    settings.coord_3d = coord_3d
    
