@@ -61,21 +61,22 @@ class Score:
                         [25.70,65.40,0.00],    #P38
                         [24.60,-30.70,0.00]    #P39
         '''
-        self.goals = [  [-171.60,4.00,0.00],   #P0 x
-                        [-206.40,4.20,0.00],   #P1  x
-                        [-272.10,-43.90,0.00], #P3 x
-                        [-185.50,-142.40,0.00], #P5 #changed  x
-                        [-43.90,-17.10,0.00],  #P10  x
-                        [3.00,-2.70,0.00],     #P11  x
-                        [47.80,-1.80,0.00],    #P12  x
-                        [45.90,-84.90,0.00],   #P14  x
-                        [31.30,19.30,0.00],    #P15  x
-                        [38.60,155.10,0.00],   #P17  x
-                        [74.00,190.20,0.00],   #P18 # changed  x
-                        [154.10,177.30,0.00],  #P19  x
-                        [10.20,-187.90,0.00],  #P22  x
-                        [84.70,144.10,0.00],   #P26  x
-                        [-124.40,106.30,0.00], #P35  x
+        self.goals = [  
+                        [-206.40,4.20,0.00],   #P1  x 8sec
+                        [-272.10,-43.90,0.00], #P3 x  30sec
+                        [-185.50,-142.40,0.00], #P5 #changed  x  57sec
+                        [-43.90,-17.10,0.00],  #P10  x  209sec
+                        [3.00,-2.70,0.00],     #P11  x 220sec
+                        [47.80,-1.80,0.00],    #P12  x 230.9sec
+                        [45.90,-84.90,0.00],   #P14  x 262sec
+                        [31.30,19.30,0.00],    #P15  x 287.8sec
+                        [38.60,155.10,0.00],   #P17  x 416.85
+                        [74.00,190.20,0.00],   #P18 # changed  x 430sec
+                        [154.10,177.30,0.00],  #P19  x  446sec
+                        [10.20,-187.90,0.00],  #P22  x 517.85sec
+                        [-232.60,28.10,10.00], #P24  x 562.8sec
+                        [84.70,144.10,0.00],   #P26  x 321sec
+                        [-124.40,106.30,0.00], #P35  x 123sec
 
 ]
         self.num_goals = len(self.goals)
@@ -99,6 +100,7 @@ class Score:
                 if diff_radius < 3: # goal is reached if the distance is less than 3 unit
                     self.passed += 1 # incrementing number of goals passed
                     goalPassed = self.passed
+                    showStats()
                     rospy.loginfo("Passed: [%.2f,%.2f]"%(self.goals[i][0],self.goals[i][1])) # logging goals passed message
                     self.goals.pop(i) # remove reached goal from the list array
                     if self.passed == self.num_goals: # if all 12 goals are passed
@@ -164,7 +166,7 @@ def showStats():
 
     rospy.loginfo("")
     rospy.loginfo("goal_Passed:" + str(goalPassed))
-    rospy.loginfo("/////////////////////////////")
+    # rospy.loginfo("/////////////////////////////")
 
     penaltyCount = laneCrossed.count(2)+laneCrossed.count(3)+laneCrossed.count(0)
     if(speedLimitCount>=1):
