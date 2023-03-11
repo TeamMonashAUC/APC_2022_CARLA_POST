@@ -34,16 +34,17 @@ def odom(msg):
 	v_y = msg.twist.twist.linear.y
 	v_z = msg.twist.twist.linear.z
 	(roll, pitch, yaw) = euler_from_quaternion([msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w])
-
-	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2) + car_z*car_z) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
+	rospy.loginfo("Calculating distance......")
+	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2)) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
 	velocity = math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
-
-
-
+	print("diff_radius: ", diff_radius)
+	print("velocity: ", velocity)
+	print("start: ", start)
+	print("distance travelled: ", distance)
 	
-	if diff_radius < 3 and not end: # reached the end goal
+	if diff_radius < 3 and end: # reached the end goal
 		rospy.sleep(1)
-		# rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+		rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		distance_km = distance/1000
 		energy_kWh = energy/3.6e6
 
@@ -71,7 +72,7 @@ def odom(msg):
 		# rospy.loginfo("Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		# rospy.loginfo("Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		# rospy.loginfo("cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-		end = 1
+		end = False
 
 		if showgraph: # plot a graph if enabled
 			#plt.figure(figsize=(8, 10))
@@ -110,7 +111,7 @@ def odom(msg):
 			plt.show()
 		return
 
-	elif end:
+	elif not end:
 		return
 
 	elif start:
@@ -161,6 +162,7 @@ def odom(msg):
 			e_array.append(e)
 	else:
 		t0 = rospy.get_time()
+		print("Velocity change to True")
 		if velocity > 0.01:
 			start = True
 score=0
@@ -198,7 +200,7 @@ def listener():
 if __name__ == '__main__':
 	# Initialize variables
 
-	goals = [[-119.40,186.60]] # Our common final goals
+	goals = [[-116.7,186.7]] # Our common final goals
 	# goals = [[-232.60,28.10]] # Our common final goals
 	# goals = [[-47.4,-105.9]] # Our common final goals
 	last_goal = goals[0] # If using a different final goal, change here
@@ -213,7 +215,7 @@ if __name__ == '__main__':
 	distance = 0
 	duration = 0
 	energy = 0
-	end = False
+	end = True
 	start = False
 
 	# CPU
