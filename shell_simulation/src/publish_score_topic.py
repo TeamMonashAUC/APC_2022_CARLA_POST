@@ -17,7 +17,22 @@ class PublisherPyNode:
 	def __init__(self):
 		self.m_publisher = rospy.Publisher("/score", Score, queue_size=10, latch=False)
 		self.sum_speed = 0
+		self.x0 = -171.60
+		self.y0 = 4.0
+		self.z0 = 0.2
+		# self.msg = Score()
+		self.distance_traveled = 0		# distance
+		self.energy_spent  = 0			# energy
+		self.mean_speed = 0			# average speed    self.sum_speed / count
+		self.goal_reached = []			# goals
+		self.closest_approach = []		# goal distance
+		
+		self.time_to_goal = []			# time taken to reach each goal
+		self.score = 0					# points passed
+		self.mean_cpu_usage = 0			# average cpu usage
+		self.penalties = 0				# penalty score
 
+		
 		# sample for normal use with coordinates directly
 		'''
 		# self.sample15goals = [  [-171.60,4.00,0.00],
@@ -119,28 +134,47 @@ class PublisherPyNode:
 
         
 	# def timerCallback(self, distance, energy, speed, goals, x, y, penalty, count):
-	def timerCallback(self, x, y,z):
+	def timerCallback(self, x, y,z, v_x, v_y, v_z):
 		msg = Score()
+		dd = math.sqrt(math.pow(x - self.x0, 2) + math.pow(y - self.y0, 2) + math.pow(z - self.z0, 2))
+		self.x0 = x
+		self.y0 = y
+		self.z0 = z
     # Initialise an empty message of the custom type
 
 		# Fill in the fields of the message
-		msg.distance_traveled = 0		# distance
-		msg.energy_spent = 0			# energy
-		msg.mean_speed = 0				# average speed    self.sum_speed / count
-		msg.goal_reached = []			# goals
-		msg.closest_approach = []		# goal distance
+    
+		self.distance_traveled += dd 		# distance
+		self.energy_spent = 0			# energy
+		self.mean_speed = 0				# average speed    self.sum_speed / count
+		self.goal_reached = []			# goals
+		self.closest_approach = []		# goal distance
 		
-		msg.time_to_goal = []			# time taken to reach each goal
-		msg.score = 0					# points passed
-		msg.mean_cpu_usage = 0			# average cpu usage
-		msg.penalties = 0				# penalty score
+		self.time_to_goal = []			# time taken to reach each goal
+		self.score = 0					# points passed
+		self.mean_cpu_usage = 0			# average cpu usage
+		self.penalties = 0				# penalty score
+		
 
+
+
+
+		msg.distance_traveled = self.distance_traveled
+		msg.energy_spent = self.energy_spent
+		msg.mean_speed = self.mean_speed
+		msg.goal_reached = self.goal_reached
+		msg.closest_approach = self.closest_approach
+		msg.time_to_goal = self.time_to_goal 
+		msg.score = self.score
+		msg.mean_cpu_usage = self.mean_cpu_usage
+		msg.penalties = self.penalties
 
 		# variables for closest distance
 		for coor in self.sample15goals:
 			# dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2))
 			dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2)+ math.pow(coor[2] - z,2))
-			msg.closest_approach.append(dist_diff)
+			self.closest_approach.append(dist_diff)
+			msg.closest_approach = self.closest_approach
 
 
 
@@ -158,7 +192,10 @@ class PublisherPyNode:
 		car_x = msg.pose.pose.position.x
 		car_y = msg.pose.pose.position.y
 		car_z = msg.pose.pose.position.z
-		self.timerCallback(car_x, car_y,car_z)
+		v_x = msg.twist.twist.linear.x
+		v_y = msg.twist.twist.linear.y
+		v_z = msg.twist.twist.linear.z
+		self.timerCallback(car_x, car_y,car_z, v_x, v_y, v_z)
 
 def listener():	
 	node = PublisherPyNode()
@@ -177,6 +214,8 @@ def listener():
 
 if __name__ == '__main__':
 	try:
+		
+
 		rospy.init_node('score_node')
 		# print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 		# rospy.loginfo("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")

@@ -34,12 +34,12 @@ def odom(msg):
 	v_y = msg.twist.twist.linear.y
 	v_z = msg.twist.twist.linear.z
 	(roll, pitch, yaw) = euler_from_quaternion([msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w])
-	rospy.loginfo("Calculating distance......")
+	# rospy.loginfo("Calculating distance......")
 	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2)) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
 	velocity = math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
-	print("diff_radius: ", diff_radius)
-	print("velocity: ", velocity)
-	print("start: ", start)
+	# print("diff_radius: ", diff_radius)
+	# print("velocity: ", velocity)
+	# print("start: ", start)
 	print("distance travelled: ", distance)
 	
 	if diff_radius < 3 and end: # reached the end goal
@@ -208,9 +208,9 @@ if __name__ == '__main__':
 	v_x0 = 0
 	v_y0 = 0
 	v_z0 = 0
-	x0 = -77.9
-	y0 = -17.59
-	z0 = 0.03
+	x0 = -171.60
+	y0 = 4.0
+	z0 = 0.2
 	t0 = 0
 	distance = 0
 	duration = 0
