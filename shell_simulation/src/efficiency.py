@@ -42,7 +42,7 @@ def odom(msg):
 	# print("velocity: ", velocity)
 	# print("start: ", start)
 	global prev_distance
-	if((distance-prev_distance)>50):
+	if((distance-prev_distance)>10):
 		print("distance travelled: ", distance)
 		prev_distance = distance
 	
