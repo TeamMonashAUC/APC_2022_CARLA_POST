@@ -20,6 +20,7 @@ class PublisherPyNode:
 		self.x0 = -171.60
 		self.y0 = 4.0
 		self.z0 = 0.2
+		self.final_goal = []
 		# self.msg = Score()
 		self.distance_traveled = 0		# distance
 		self.energy_spent  = 0			# energy
