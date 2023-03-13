@@ -113,7 +113,7 @@ class PublisherPyNode:
         #                         possible_goals[13],
         #                         possible_goals[14]
 		# ]
-		self.sample15goals = [  possible_goals[0],
+		self.sample15goals = [  
                                 possible_goals[1],
                                 possible_goals[3],
                                 possible_goals[5],
@@ -126,6 +126,7 @@ class PublisherPyNode:
                                 possible_goals[18],
                                 possible_goals[19],
                                 possible_goals[22],
+                                possible_goals[24],
                                 possible_goals[26],
                                 possible_goals[35]
 		]
