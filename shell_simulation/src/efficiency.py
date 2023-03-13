@@ -20,6 +20,7 @@ from std_srvs.srv import Empty
 #                and plot several subgraphs consist of these data against time at the end
 passed =0
 
+prev_distance=0
 
 def odom(msg):
 	global distance, energy, duration, start
@@ -40,7 +41,10 @@ def odom(msg):
 	# print("diff_radius: ", diff_radius)
 	# print("velocity: ", velocity)
 	# print("start: ", start)
-	print("distance travelled: ", distance)
+	global prev_distance
+	if((distance-prev_distance)>50):
+		print("distance travelled: ", distance)
+		prev_distance = distance
 	
 	if diff_radius < 3 and end: # reached the end goal
 		rospy.sleep(1)
