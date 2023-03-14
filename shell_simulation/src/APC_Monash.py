@@ -320,9 +320,9 @@ def main():
     #Coordinate_System.corner(15,5,180,[31.6,15.4],90) #turn right
 
     #R13()
-    #Coordinate_System.travel_to(25, [37.2,105.6]) 
-    #Coordinate_System.travel_to(25, [38,132.2]) 
-    #Coordinate_System.travel_to(25, [39.1,172.8]) 
+    Coordinate_System.travel_to(25, [37.2,105.6]) 
+    Coordinate_System.travel_to(25, [38,132.2]) 
+    Coordinate_System.travel_to(25, [39.1,172.8]) 
 
     Coordinate_System.travel_to(15, [39.1,180.2])
     
