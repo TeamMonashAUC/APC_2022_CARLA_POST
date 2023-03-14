@@ -46,7 +46,7 @@
               {
                 "type": "sensor.lidar.ray_cast",
                 "id": "vlp16_1",
-                "spawn_point": {"x": 39.1, "y": 180.2, "z": 1.7, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                "spawn_point": {"x": 39.1, "y": 180.2, "z": 1.7, "roll": 90.0, "pitch": 0.0, "yaw": 0.0},
                 "range": 100,
                 "channels": 16,
                 "points_per_second": 300000,
