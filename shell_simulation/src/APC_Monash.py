@@ -433,7 +433,7 @@ def R14():#Final ring
     '''
 
 def R15():
-    Coordinate_System.corner(15,3.5,-180,[-184.6,14.7],90) #turn right
+    Coordinate_System.corner(20,5,-180,[-184.6,14.7],90) #turn right
     Coordinate_System.travel_to(20, [-184.6,70])  
     Coordinate_System.corner(20,6,90,[-172.3,88.1],0) #turn right
     Coordinate_System.travel_to(20, [-145.4,88.1])  
