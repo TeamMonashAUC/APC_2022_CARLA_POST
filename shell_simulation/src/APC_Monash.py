@@ -256,7 +256,9 @@ def R14():#Final ring
     Coordinate_System.travel_to(30, [104.2,-187.8])
     Coordinate_System.travel_to(40, [100.0,-187.9])
     Coordinate_System.travel_to(40, [95.6,-187.8])
+    Coordinate_System.travel_to(40, [60,-187.8])
     Coordinate_System.travel_to(40, [10.2,-187.9]) #P22
+    Coordinate_System.travel_to(40, [-60,-188.9]) 
     Coordinate_System.travel_to(40, [-145.8,-190.9]) #P23 
     Coordinate_System.travel_to(40, [-152.0,-190.7])
     Coordinate_System.travel_to(30, [-158.5,-189.7])
