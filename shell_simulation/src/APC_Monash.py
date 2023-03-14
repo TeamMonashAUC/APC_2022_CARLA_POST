@@ -326,7 +326,7 @@ def main():
 
     Coordinate_System.travel_to(15, [39.1,180.2])
     
-    #Coordinate_System.corner(15,6,90,[48.3,190.2],0)
+    Coordinate_System.corner(15,6,90,[48.3,190.2],0)
     R14()
     
 
