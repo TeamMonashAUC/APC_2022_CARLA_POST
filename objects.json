@@ -24,7 +24,7 @@
       {
           "type": "vehicle.tesla.model3",
           "id": "ego_vehicle",
-	  "spawn_point": {"x": -171.60, "y": 4.0, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 180.0},
+	  "spawn_point": {"x": 36.5, "y": 74.5, "z": 0.2, "roll": 0.0, "pitch": 0.0, "yaw": 180.0},
           "sensors": 
           [
                  
@@ -46,7 +46,7 @@
               {
                 "type": "sensor.lidar.ray_cast",
                 "id": "vlp16_1",
-                "spawn_point": {"x": 39.1, "y": 180.2, "z": 1.7, "roll": 90.0, "pitch": 0.0, "yaw": 0.0},
+                "spawn_point": {"x": -0.5, "y": 0.0, "z": 1.7, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
                 "range": 100,
                 "channels": 16,
                 "points_per_second": 300000,
