@@ -74,43 +74,6 @@ def odom(msg):
 		# rospy.loginfo("cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		end = False
 
-		if showgraph: # plot a graph if enabled
-			#plt.figure(figsize=(8, 10))
-			fig, ax = plt.subplots(figsize=(8,10))
-
-			plt.subplot(5,1,1)
-			plt.plot(t_array,v_array,'-r')
-			plt.title("Velocity vs Time")
-
-			plt.subplot(5,1,2)
-			plt.plot(t_array,a_array,'-r')
-			plt.title("Acceleration vs Time")
-
-			plt.subplot(5,1,3)
-			plt.plot(t_array,e_array,'-r')
-			plt.title("Energy vs Time")
-
-			plt.subplot(5,1,4)
-			plt.plot(t_array,d_array,'-r')
-			plt.title("Drag Force vs Time")
-
-			plt.subplot(5,1,5)
-			plt.plot(t_array,ma_array,'-r')
-			plt.title("Inertial Force vs Time")
-
-			plt.tight_layout()
-
-			for p in fig.axes:
-				pos = p.get_position()
-				i = 0
-
-				for t in goaltime:
-					p.axvline(t,ls ='--',color = 'g') # set line style and color
-					p.text(t,pos.x1,i) # add text to the axes
-					i += 1
-			plt.show()
-		return
-
 	elif not end:
 		return
 
