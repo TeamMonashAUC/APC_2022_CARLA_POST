@@ -95,7 +95,8 @@ def carControl(targetSpeed = 0, steerAngle = 0):
         if calc >= 0:     
             car_throttle = abs(calc)
         else:   		 
-            car_brake = abs(calc)/10  # 0.2 is to reduce the braking effect on the car
+            # car_brake = abs(calc)/10  # 0.2 is to reduce the braking effect on the car
+            car_brake = 0  # 0.2 is to reduce the braking effect on the car
 
 
     elif targetSpeed < 0: # car is moving in reverse
