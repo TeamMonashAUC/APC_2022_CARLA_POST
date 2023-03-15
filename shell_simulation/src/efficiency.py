@@ -92,7 +92,7 @@ def odom(msg):
 		x0 = car_x
 		y0 = car_y
 		z0 = car_z
-
+		print("distance: ",dd)
 		# Calculate dt and save
 		t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
 		dt = t - t0
@@ -115,6 +115,7 @@ def odom(msg):
 		f_tot = f_r_x + f_r_y + f_d + f_i # Total force
 		e = f_tot*dd
 		energy += e
+		print("energy:	",energy)
 
 		if showgraph: # update arrays
 			v_array.append(velocity)
