@@ -44,10 +44,9 @@ import numpy as np
 
 #################################################################################################################################################
 
-
 def R1():
-    Coordinate_System.travel_to(10, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to(15, [-245.5,0.8]) 
+    Coordinate_System.travel_to(20, [-206.4, 4.2]) # P1
+    Coordinate_System.travel_to(20, [-245.5,0.8]) 
     Coordinate_System.travel_to(20, [-255.9,0.2]) # P2   #stop
 
     Coordinate_System.corner(20,7,180,[-272.5,-18.7],-90) #turn left
@@ -288,17 +287,6 @@ def R14():#Final ring
 
 
 def main():
-    # Coordinate_System.update_Coord()
-    # '''
-    rospy.loginfo(settings.car_coordinate_from_world)
-    while settings.car_coordinate_from_world[0] ==0:      
-        Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
-        rospy.loginfo(settings.car_coordinate_from_world)
-        pass
-
-    rospy.loginfo("start coord:")
-    rospy.loginfo(settings.car_coordinate_from_world)
-    # Coordinate_System.travel_to(20, [-171.60,4.00,0.00]) #P0
     R1()
     R2()
 
@@ -341,13 +329,10 @@ def main():
     R14()
     
 
-
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
         rate.sleep()
-        # rospy.spin()
-    # '''
 
 
     
@@ -366,8 +351,8 @@ if __name__ == '__main__':
     # single time setup
     # test()
     # start rosnode
-    rospy.init_node('APC_Monash2')
-    rate = rospy.Rate(100) # publish data at 100Hz
+    rospy.init_node('APC_Monash')
+    rate = rospy.Rate(2) # publish data at 100Hz
     rospy.loginfo("APC_Monash started")
 
     # start ros communications with rostopics
@@ -380,6 +365,15 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
     #try: 
+        ## Start procedure
+        rospy.loginfo(settings.car_coordinate_from_world)
+        while settings.car_coordinate_from_world[0] ==0:      
+            Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
+            # rospy.loginfo(settings.car_coordinate_from_world)
+            pass
+        rospy.loginfo("start coord:")
+        rospy.loginfo(settings.car_coordinate_from_world)
+
         # infinite loop
         main()
         rate.sleep()

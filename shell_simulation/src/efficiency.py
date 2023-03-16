@@ -40,20 +40,21 @@ def odom(msg):
 	# print("diff_radius: ", diff_radius)
 	# print("velocity: ", velocity)
 	# print("start: ", start)
-	print("distance travelled: ", distance)
-	
+	#print("distance travelled: ", distance)
+	#print(diff_radius)
 	if diff_radius < 3 and end: # reached the end goal
 		rospy.sleep(1)
+		#print('Diff_radius<3')
 		rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		distance_km = distance/1000
 		energy_kWh = energy/3.6e6
 
 
-		rospy.loginfo("Results:")
-		rospy.loginfo("Time(s): %.1f" %( duration))
-		rospy.loginfo("Distance(km): %.3f" %(distance_km))
-		rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
-		rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
+		# rospy.loginfo("Results:")
+		# rospy.loginfo("Time(s): %.1f" %( duration))
+		# rospy.loginfo("Distance(km): %.3f" %(distance_km))
+		# rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
+		# rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
 
 		rospy.loginfo("")
 		rospy.loginfo("Penalties Count: %d" %(penaltyCount))
@@ -92,7 +93,7 @@ def odom(msg):
 		x0 = car_x
 		y0 = car_y
 		z0 = car_z
-		print("distance: ",dd)
+		#print("distance: ",dd)
 		# Calculate dt and save
 		t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
 		dt = t - t0
@@ -115,7 +116,7 @@ def odom(msg):
 		f_tot = f_r_x + f_r_y + f_d + f_i # Total force
 		e = f_tot*dd
 		energy += e
-		print("energy:	",energy)
+		# print("energy:	",energy)
 
 		if showgraph: # update arrays
 			v_array.append(velocity)
@@ -165,6 +166,7 @@ if __name__ == '__main__':
 	# Initialize variables
 
 	goals = [[-116.7,186.7]] # Our common final goals
+	#goals=[[-124.4,106.3]]
 	# goals = [[-232.60,28.10]] # Our common final goals
 	# goals = [[-47.4,-105.9]] # Our common final goals
 	last_goal = goals[0] # If using a different final goal, change here

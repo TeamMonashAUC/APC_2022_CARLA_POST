@@ -152,11 +152,13 @@ class PublisherPyNode:
                                 possible_goals[18],
                                 possible_goals[19],
                                 possible_goals[22],
+                                possible_goals[24],
                                 possible_goals[26],
                                 possible_goals[35]
         ]
         self.frame_count = 0
-        self.last_goal=self.sample15goals[-1][0:2]
+        #self.last_goal=self.sample15goals[-1][0:2]
+        self.last_goal=[-116.7,186.7]
       # Initialise a publisher
 
     penaltyCount =0
@@ -164,42 +166,42 @@ class PublisherPyNode:
         global penaltyCount
         penaltyCount = data.data
     # def timerCallback(self, distance, energy, speed, goals, x, y, penalty, count):
-    def timerCallback(self, x, y,z, v_x, v_y, v_z,roll,pitch,yaw,angle):
-        global v0,t0,start,end,velocity
+    def timerCallback(self, x, y,z, v_x, v_y, v_z,posex,posey,posez,angori):
+        global v0,t0,start,end,velocity,penaltyCount
         msg = Score()
         diff_radius = math.sqrt(math.pow(self.last_goal[0] - x,2) + math.pow(self.last_goal[1] - y,2)) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
         velocity=math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
+        (roll, pitch, yaw) =euler_from_quaternion([posex,posey,posez,angori])
         #dd = math.sqrt(math.pow(x - self.x0, 2) + math.pow(y - self.y0, 2) + math.pow(z - self.z0, 2))
         # self.x0 = x
         # self.y0 = y
         # self.z0 = z
-        #print(self.x0)
-        #print(self.y0)  
-        print(start)
+        #print(diff_radius)
         if diff_radius < 3 and end: # reached the end goal
-            print('HI')
             rospy.sleep(1)
-            rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
+            rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(self.distance_traveled, self.duration, math.ceil(self.energy_spent), self.cpu_avg, self.cpu_max, self.cc_avg, self.cc_max))
             distance_km = self.distance_traveled/1000
-            energy_kWh = energy/3.6e6
-
+            energy_kWh = self.energy_spent/3.6e6
+            print('Final (kWh): ',energy_kWh)
 
             rospy.loginfo("Results:")
             rospy.loginfo("Time(s): %.1f" %(self.duration))
             rospy.loginfo("Distance(km): %.3f" %(distance_km))
             rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
-            rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
+            rospy.loginfo("Efficiency(km/kWh): %.3f" %(distance_km/ energy_kWh ))
 
-            rospy.loginfo("")
-            rospy.loginfo("Penalties Count: %d" %(penaltyCount))
-            energy_with_penalty = energy_kWh +  ((energy_kWh *0.02) * penaltyCount) #calculate penalty energy of 2% for every additional rule broken
-            rospy.loginfo("Energy with penalties: %.3f" %(energy_with_penalty))
+            # rospy.loginfo("")
+            # rospy.loginfo("Penalties Count: %d" %(penaltyCount))
+            # energy_with_penalty = energy_kWh +  ((energy_kWh *0.02) * penaltyCount) #calculate penalty energy of 2% for every additional rule broken
+            # rospy.loginfo("Energy with penalties: %.3f" %(energy_with_penalty))
             
-            global score
-            rospy.loginfo("")
-            rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
-            rospy.loginfo("Goals Passed: %d" %(score))
-
+            #global score
+            # rospy.loginfo("")
+            # rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
+            #rospy.loginfo("Goals Passed: %d" %(score))
+            # file = open('out.txt', 'w')
+            # file.write('Energy: ', energy_kWh)
+            # file.close()
 
 
 
@@ -215,12 +217,9 @@ class PublisherPyNode:
             
             # Calculate velocity and save
             
-            dv = velocity - v0
-            v0 = velocity
-            # dv = math.sqrt(math.pow(v_x - v_x0, 2) + math.pow(v_y - v_y0, 2) + math.pow(v_z - v_z0, 2))
-            v_x0 = v_x
-            v_y0 = v_y
-            v_z0 = v_z
+            dv = abs(velocity) - abs(v0)
+            v0 = abs(velocity)
+            
 
             # Calculate distance travelled and save
             dd = math.sqrt(math.pow(x - self.x0, 2) + math.pow(y - self.y0, 2) + math.pow(z - self.z0, 2))
@@ -233,6 +232,7 @@ class PublisherPyNode:
 
             # Calculate dt and save
             t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
+            # print("time: ", t)
             dt = t - t0
             # dt = 0.05
             t0 = t
@@ -244,11 +244,21 @@ class PublisherPyNode:
             acceleration = dv/dt
             #print(acceleration)
             # Force Calculation
-            (roll, pitch, yaw) = euler_from_quaternion([roll,pitch,yaw,angle])
-            f_r_x = self.mass*self.g*self.friction*math.cos(pitch) # Road force
-            f_r_y = self.mass*self.g*math.sin(pitch)
-            f_d = 0.5*self.rho*self.drag_coef*self.area*math.pow(velocity,2) # Drag force
-            f_i = self.mass*acceleration # Inertial force
+            # print("mass of the vehicle: ", self.mass)
+            # print("Rolling resistance: ", self.friction)
+            # print("Pitch angle of the vehicle: ", math.degrees(pitch))
+            # print("mass density of air: ", self.rho )
+            # print("drag coefficient: ", self.drag_coef)
+            # print("surface area: ", self.area)
+            # print("velocity: ", velocity)
+            # print("acceleration of the vehicle: ", acceleration)
+            f_r_x = abs(self.mass*self.g*self.friction*math.cos(pitch)) # Road force
+            f_r_y = abs(self.mass*self.g*math.sin(pitch))
+            f_d = abs(0.5*self.rho*self.drag_coef*self.area*math.pow(velocity,2)) # Drag force
+            if acceleration > 0:
+                f_i = abs(self.mass*acceleration) # Inertial force
+            else:
+                f_i = 0
             # Calculate Energy usage
             f_tot = f_r_x + f_r_y + f_d + f_i # Total force
             #print(f_tot)
@@ -256,15 +266,17 @@ class PublisherPyNode:
             e = f_tot*dd
             self.energy_spent += e
             energy=self.energy_spent
-            #print(energy)
+            energy_kWh = energy/3.6e8
+            print("energy_kWh: ", energy_kWh)
             # Initialise an empty message of the custom type
 
             # Fill in the fields of the message
-        
+            # print("Energy (kWh):    ",energy_kWh)
             msg.distance_traveled = self.distance_traveled
             msg.energy_spent = self.energy_spent
             msg.mean_speed = self.mean_speed
             msg.goal_reached = self.goal_reached
+            #msg.energykwh=energy_kWh
             msg.closest_approach = self.closest_approach
             msg.time_to_goal = self.time_to_goal 
             msg.score = self.score
@@ -272,11 +284,11 @@ class PublisherPyNode:
             msg.penalties = self.penalties
            # print(self.energy_spent)
             # variables for closest distance
-            for coor in self.sample15goals:
+            #for coor in self.sample15goals:
                 # dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2))
-                dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2)+ math.pow(coor[2] - z,2))
-                self.closest_approach.append(dist_diff)
-                msg.closest_approach = self.closest_approach
+                #dist_diff = math.sqrt(math.pow(coor[0] - x,2) + math.pow(coor[1] - y,2)+ math.pow(coor[2] - z,2))
+                #self.closest_approach.append(dist_diff)
+                #msg.closest_approach = self.closest_approach
 
 
 
@@ -309,96 +321,17 @@ class PublisherPyNode:
         y=msg.pose.pose.orientation.z
         ang=msg.pose.pose.orientation.w
         self.timerCallback(car_x, car_y,car_z, v_x, v_y, v_z,r,p,y,ang)
-        # (roll, pitch, yaw) = euler_from_quaternion([msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w])
-        # diff_radius=math.sqrt(math.pow(self.last_goal[0] - car_x,2) + math.pow(self.last_goal[1] - car_y,2)) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
-        # velocity=math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
-        # # rospy.loginfo("Calculating distance......")
-        # print("distance travelled: ", self.distance_travelled)
-    
-        # if diff_radius < 3 and end: # reached the end goal
-        #     rospy.sleep(1)
-        #     rospy.loginfo("Results: [Distance(m): %f, Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(self.distance_traveled, self.duration, math.ceil(self.energy), cpu_avg, cpu_max, cc_avg, cc_max))
-        #     distance_km = self.distance_travelled/1000
-        #     energy_kWh = self.energy/3.6e6
         
-
-
-        #     rospy.loginfo("Results:")
-        #     rospy.loginfo("Time(s): %.1f" %(self.duration))
-        #     rospy.loginfo("Distance(km): %.3f" %(distance_km))
-        #     rospy.loginfo("Energy(kWh): %.3f" %(energy_kWh))
-        #     rospy.loginfo("Efficiency(kWh/km): %.3f" %(energy_kWh / distance_km))
-
-        #     rospy.loginfo("")
-        #     rospy.loginfo("Penalties Count: %d" %(penaltyCount))
-        #     energy_with_penalty = energy_kWh +  ((energy_kWh *0.02) * penaltyCount) #calculate penalty energy of 2% for every additional rule broken
-        #     rospy.loginfo("Energy with penalties: %.3f" %(energy_with_penalty))
-            
-        #     global score
-        #     rospy.loginfo("")
-        #     rospy.loginfo("Efficiency with penalties(kWh/km): %.3f" %(energy_with_penalty/distance_km))
-        #     rospy.loginfo("Goals Passed: %d" %(score))
-
-
-
-
-
-        #     # rospy.loginfo("Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-        #     # rospy.loginfo("Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-        #     # rospy.loginfo("cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-        #     end = False
-
-        # elif not end:
-        #     return
-
-        # elif start:
-        #     # Calculate velocity and save
-        #     dv = velocity - v0
-        #     v0 = velocity
-        #     # dv = math.sqrt(math.pow(v_x - v_x0, 2) + math.pow(v_y - v_y0, 2) + math.pow(v_z - v_z0, 2))
-        #     v_x0 = v_x
-        #     v_y0 = v_y
-        #     v_z0 = v_z
-
-        #     # Calculate distance travelled and save
-        #     dd = math.sqrt(math.pow(car_x - x0, 2) + math.pow(car_y - y0, 2) + math.pow(car_z - z0, 2))
-        #     self.distance_travelled += dd
-        #     x0 = car_x
-        #     y0 = car_y
-        #     z0 = car_z
-
-        #     # Calculate dt and save
-        #     t = rospy.get_time() ## NOTe THAT CARLA is running simulation time and not real time
-        #     dt = t - t0
-        #     # dt = 0.05
-        #     t0 = t
-        #     if dt == 0:
-        #         dt = 0.001
-        #     self.duration += dt
-
-        #     # Calculate acceleration
-        #     acceleration = dv/dt
-
-        #     # Force Calculation
-        #     f_r_x = self.mass*self.g*self.friction*math.cos(pitch) # Road force
-        #     f_r_y = self.mass*self.g*math.sin(pitch)
-        #     f_d = 0.5*self.rho*self.drag_coeff*self.area*math.pow(velocity,2) # Drag force
-        #     f_i = self.mass*acceleration # Inertial force
-
-        #     # Calculate Energy usage
-        #     f_tot = f_r_x + f_r_y + f_d + f_i # Total force
-        #     e = f_tot*dd
-        #     self.energy_spent += e
-        # else:
-        #     t0 = rospy.get_time()
-        #     print("Velocity change to True")
-        #     if velocity > 0.01:
-        #         start = True
 
 
 def listener():	
     node = PublisherPyNode()
+    ros_topics = {"/carla/ego_vehicle/odometry": {"data": None,
+                            "type": Odometry},
+              "rosTopic2": {"data": None,
+                            "type": "msg_type2"}}
     rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, node.odom)
+    rospy.Subscriber("/Monash/penalty_score", Int8,node.penalty_calc)  
         # rate = rospy.Rate(100) # publish data at 100Hz
         # while not rospy.is_shutdown():
         # rospy.Subscriber("/carla/ego_vehicle/lane_invasion",  CarlaLaneInvasionEvent, LanePenaltyCounter) 
@@ -417,12 +350,12 @@ if __name__ == '__main__':
         t0=0
         start=False
         end=True
-        velocity=0
+        #velocity=0
         #energy=0
         rospy.init_node('score_node')
-        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        # print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         #rospy.loginfo(energy)
-        rospy.loginfo("xxxxxusxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")	
+        # rospy.loginfo("xxxxxusxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")	
         listener() # executing main function
     except rospy.ROSInterruptException:
         pass
