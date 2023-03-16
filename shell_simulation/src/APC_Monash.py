@@ -275,14 +275,14 @@ def R14():#Final ring
     Coordinate_System.travel_to(30, [-233.8,-103.8])
     Coordinate_System.travel_to(30, [-233.6,-84.3])
     Coordinate_System.travel_to(40, [-232.6,28.1]) #P24 
-    Coordinate_System.travel_to(35, [-233.9,98.7])
-    Coordinate_System.travel_to(30, [-224.3,132.8])
-    Coordinate_System.travel_to(30, [-210.5,151.2])
-    Coordinate_System.travel_to(30, [-187.9,176.2])
-    Coordinate_System.travel_to(30, [-176.2,182.5])
-    Coordinate_System.travel_to(30, [-163.7,186.8])
-    Coordinate_System.travel_to(30, [-125.8,186.5])
-    Coordinate_System.travel_to(30, [-119.4,186.6]) #P25 
+    # Coordinate_System.travel_to(35, [-233.9,98.7])
+    # Coordinate_System.travel_to(30, [-224.3,132.8])
+    # Coordinate_System.travel_to(30, [-210.5,151.2])
+    # Coordinate_System.travel_to(30, [-187.9,176.2])
+    # Coordinate_System.travel_to(30, [-176.2,182.5])
+    # Coordinate_System.travel_to(30, [-163.7,186.8])
+    # Coordinate_System.travel_to(30, [-125.8,186.5])
+    # Coordinate_System.travel_to(30, [-119.4,186.6]) #P25 
 
 
 
