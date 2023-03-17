@@ -255,6 +255,7 @@ class PublisherPyNode:
             f_r_x = abs(self.mass*self.g*self.friction*math.cos(pitch)) # Road force
             f_r_y = abs(self.mass*self.g*math.sin(pitch))
             f_d = abs(0.5*self.rho*self.drag_coef*self.area*math.pow(velocity,2)) # Drag force
+            # f_i = abs(self.mass*acceleration) 
             if acceleration > 0:
                 f_i = abs(self.mass*acceleration) # Inertial force
             else:
