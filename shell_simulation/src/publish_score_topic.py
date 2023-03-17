@@ -264,20 +264,24 @@ class PublisherPyNode:
             f_tot = f_r_x + f_r_y + f_d + f_i # Total force
             #print(f_tot)
 
+            
             e = f_tot*dd
             self.energy_spent += e
             energy=self.energy_spent
-            energy_kWh = energy/3.6e8
-            print("energy_kWh: ", energy_kWh)
+            energy_kWh = energy/3.6e6
+            print("energy_kWh: ", energy_kWh/20)
             # Initialise an empty message of the custom type
 
             # Fill in the fields of the message
             # print("Energy (kWh):    ",energy_kWh)
             msg.distance_traveled = self.distance_traveled
-            msg.energy_spent = self.energy_spent
+            
+            # msg.energy_spent = self.energy_spent
+            #msg.energykwh=energy_kWh
+            msg.energy_spent=energy_kWh/20
+
             msg.mean_speed = self.mean_speed
             msg.goal_reached = self.goal_reached
-            #msg.energykwh=energy_kWh
             msg.closest_approach = self.closest_approach
             msg.time_to_goal = self.time_to_goal 
             msg.score = self.score
