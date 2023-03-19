@@ -255,14 +255,14 @@ def R14():#Final ring
     Coordinate_System.travel_to(30, [111.1,-187.4])
     Coordinate_System.travel_to(30, [104.2,-187.8])
     Coordinate_System.travel_to(40, [100.0,-187.9])
-    Coordinate_System.travel_to(40, [95.6,-187.8])
-    Coordinate_System.travel_to(40, [60,-187.8])
-    Coordinate_System.travel_to(40, [10.2,-187.9]) #P22
+    Coordinate_System.decel(40, [95.6,-187.8])
+    Coordinate_System.decel(40, [60,-187.8])
+    Coordinate_System.decel(40, [10.2,-187.9]) #P22
     Coordinate_System.travel_to(40, [-60,-188.9]) 
     Coordinate_System.travel_to(40, [-145.8,-190.9]) #P23 
     Coordinate_System.travel_to(40, [-152.0,-190.7])
-    Coordinate_System.travel_to(30, [-158.5,-189.7])
-    Coordinate_System.travel_to(30, [-166.2,-187.9])
+    Coordinate_System.decel(40, [-158.5,-189.7])
+    Coordinate_System.decel(40, [-166.2,-187.9])
     Coordinate_System.travel_to(30, [-193.3,-177.6])
     Coordinate_System.travel_to(30, [-196.6,-175.9])
     Coordinate_System.travel_to(30, [-201.3,-172.6])
@@ -272,19 +272,19 @@ def R14():#Final ring
     Coordinate_System.travel_to(30, [-225.2,-141.4])
     Coordinate_System.travel_to(30, [-229.0,-132.3])
     Coordinate_System.travel_to(30, [-230.7,-125.9])
-    Coordinate_System.travel_to(30, [-232.4,-118.1])
-    Coordinate_System.travel_to(30, [-233.5,-111.5])
-    Coordinate_System.travel_to(30, [-233.8,-103.8])
-    Coordinate_System.travel_to(30, [-233.6,-84.3])
-    Coordinate_System.travel_to(40, [-232.6,28.1]) #P24 
+    Coordinate_System.decel(40, [-232.4,-118.1])
+    Coordinate_System.decel(40, [-233.5,-111.5])
+    Coordinate_System.decel(40, [-233.8,-103.8])
+    Coordinate_System.decel(40, [-233.6,-84.3])
+    Coordinate_System.decel(40, [-232.6,28.1]) #P24 
     Coordinate_System.travel_to(35, [-233.9,98.7])
     Coordinate_System.travel_to(30, [-224.3,132.8])
     Coordinate_System.travel_to(30, [-210.5,151.2])
     Coordinate_System.travel_to(30, [-187.9,176.2])
     Coordinate_System.travel_to(30, [-176.2,182.5])
-    Coordinate_System.travel_to(30, [-163.7,186.8])
-    Coordinate_System.travel_to(30, [-125.8,186.5])
-    Coordinate_System.travel_to(30, [-119.4,186.6]) #P25 
+    Coordinate_System.decel(40, [-163.7,186.8])
+    Coordinate_System.decel(40, [-125.8,186.5])
+    Coordinate_System.decel(40, [-119.4,186.6]) #P25 
 
 
 

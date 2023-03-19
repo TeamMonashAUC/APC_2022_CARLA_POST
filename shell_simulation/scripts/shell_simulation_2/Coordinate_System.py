@@ -632,4 +632,49 @@ def update_Coord():
 
     settings.coord_2d = coord_2d
     settings.coord_3d = coord_3d
+
+#cruise control
+def decel(setSpeed, goal_coord):
+    prev_time = settings.curr_time
+    prev_time_coord = settings.curr_time
+    flag =0
+    while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
+        rospy.ROSInterruptException  # allow ctrl+C to exit the program    
+        prev_time = settings.curr_time
+
+        # 1) run function to obtain goal coordinates & angle from current car position
+        goal_coord_from_car = goal_position_from_car(goal_coord)
+        
+
+        # 2) obtain goal distance from car (using pythagoras theorem)
+        diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
+        # run at 20Hz to reduce computational power 
+        # using non (search for arduino debounce if you're intrested in this method)
+        if((settings.curr_time - prev_time) > 0.05):
+            current_speed = settings.currentCarSpeed
+            if(flag ==0):
+                ROS_Communication.transmit_to_carla(0, 0, 0, 0,  0) #set everything to 0
+            else:
+                Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
+
+            if(setSpeed - current_speed < 5):
+                flag =0
+
+            elif(setSpeed - current_speed > 35):
+                flag =1
+
+
+
+            # 3) send commands to carla to control the car
+            
+
+            # stop the loop when the goal is within 0.6m of the car
+            if diff_goal<=1:
+                break
+
+        # obtain coordinates of goal points every 3 seconds
+        # if((settings.curr_time - prev_time_coord) > 3):
+        #     prev_time_coord = settings.curr_time
+        #     update_Coord()
    
+        
