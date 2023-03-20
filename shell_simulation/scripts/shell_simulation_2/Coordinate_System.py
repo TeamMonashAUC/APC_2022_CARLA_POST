@@ -686,4 +686,49 @@ def decel(setSpeed, goal_coord):
         #     prev_time_coord = settings.curr_time
         #     update_Coord()
    
-        
+    def travel_to2(setSpeed,goal_coord):
+    
+        # set up local variable to ensure output signal updates at 50Hz
+        prev_time = settings.curr_time
+        prev_time_coord = settings.curr_time
+        gradual_increase = 0.2 #change this to affect acceleration
+        while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
+            rospy.ROSInterruptException  # allow ctrl+C to exit the program    
+            starting_speed = settings.currentCarSpeed
+            # run at 20Hz to reduce computational power 
+            # using non (search for arduino debounce if you're intrested in this method)
+            if((settings.curr_time - prev_time) > 0.05):  
+                prev_time = settings.curr_time
+
+                # 1) run function to obtain goal coordinates & angle from current car position
+                goal_coord_from_car = goal_position_from_car(goal_coord)
+                
+
+                # 2) obtain goal distance from car (using pythagoras theorem)
+                diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
+
+
+                # 3) send commands to carla to control the car
+                #attempting to increase speed gradually
+                if(starting_speed < setSpeed- gradual_increase):
+                    starting_speed +=gradual_increase
+                    Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2]) 
+
+                elif(starting_speed > setSpeed+gradual_increase):
+                    starting_speed -=gradual_increase
+                    Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2])
+                
+                else:
+                    Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
+    
+                
+                
+
+                # stop the loop when the goal is within 0.6m of the car
+                if diff_goal<=1:
+                    break
+
+        # obtain coordinates of goal points every 3 seconds
+        # if((settings.curr_time - prev_time_coord) > 3):
+        #     prev_time_coord = settings.curr_time
+        #     update_Coord()
