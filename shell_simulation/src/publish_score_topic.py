@@ -11,8 +11,28 @@ from cmath import cos
 from shell_simulation.msg import Score
 from std_msgs.msg import Int8, Float64,Int8MultiArray,Float32
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Imu
+import carla_msgs
 from carla_msgs.msg import CarlaLaneInvasionEvent, CarlaCollisionEvent
 from tf.transformations import euler_from_quaternion
+v0=0
+t0=0
+dd = 0
+x = 0
+y = 0
+z = 0
+dd = 0.01
+distance_traveled = 0
+acceleration = 0
+velocity = 0
+pitch = 0
+x0 = -171.60
+y0 = 4.0
+z0 = 0.2
+energy_spent = 0
+dv = 0
+energy_kWh = 0
+e = 0
 
 class PublisherPyNode:
     def __init__(self):
@@ -240,7 +260,7 @@ class PublisherPyNode:
             #print(self.distance_traveled)
             self.distance_traveled += dd
             self.x0 = x
-            self.y0 = y
+            self.y0 = y 
             self.z0 = z
 
             # Calculate dt and save
@@ -287,25 +307,23 @@ class PublisherPyNode:
             # Force Calculation
             # print("mass of the vehicle: ", self.mass)
             # print("Rolling resistance: ", self.friction)
-            print("Pitch angle of the vehicle: ",math.degrees(pitch))
+            # print("Pitch angle of the vehicle: ",math.degrees(pitch))
             # print("mass density of air: ", self.rho )
             # print("drag coefficient: ", self.drag_coef)
             # print("surface area: ", self.area)
-            #print("velocity: ", velocity)
+            print("velocity: ", velocity)
             #print("acceleration of the vehicle: ", self.acceleration)
             # Wd total
             # F total
             # Ftot - frx - fry - fd = fi
+            # measurements, sensor_data = carla_client.read_data()
             f_r_x = self.mass*self.g*self.friction*math.cos(pitch) # Road force
             f_r_y = self.mass*self.g*math.sin(pitch)
 
             #o
             f_d = 0.5*self.rho*self.drag_coef*self.area*math.pow(velocity,2)# Drag force
             f_i = self.mass*acceleration 
-            #o
-
-            # #n
-            # f_d = 0.5 * self.rho * self.drag_coef * self.area * (v_x**2 + v_y**2 + v_z**2) # Drag force
+            #o msg.linear_acceleration.x _z**2) # Drag force
             # f_i_x = self.mass * acceleration_x
             # f_i_y = self.mass * acceleration_y
             # f_i_z = self.mass * acceleration_z
@@ -388,19 +406,81 @@ class PublisherPyNode:
         p=msg.pose.pose.orientation.y
         y=msg.pose.pose.orientation.z
         ang=msg.pose.pose.orientation.w
-        
+        print("orientation: ") 
+        print("x: ", r)
+        print("y: ", p)
+        print("z: ", y)
+        print("w: ", ang)
+                
         self.timerCallback(car_x, car_y,car_z, v_x, v_y, v_z,r,p,y,ang)
         
+def common_callback(msg, args):
+    global acceleration, pitch, velocity, x, y, z,dd, distance_traveled, x0, y0, z0, energy_spent, dv, v0, e, energy_kWh
+    key = args
 
+    if key == "/carla/ego_vehicle/imu":
+
+        acceleration = math.sqrt(math.pow(msg.linear_acceleration.x, 2) + math.pow(msg.linear_acceleration.y, 2)) 
+        # print("key: ", key)
+        # print("msg: ", msg)
+        if dv < 0:
+            acceleration = -acceleration
+        _, pitch, _ =euler_from_quaternion([msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w])
+    
+    elif key == "/carla/ego_vehicle/speedometer":
+        velocity = msg.data
+        dv = velocity - v0
+    elif key == "/carla/ego_vehicle/odometry":
+        x = msg.pose.pose.position.x
+        y = msg.pose.pose.position.y
+        z = msg.pose.pose.position.z          # Calculate distance travelled and save
+        dd = math.sqrt(math.pow(x - x0, 2) + math.pow(y - y0, 2) + math.pow(z - z0, 2))
+            #print(dd)
+            #print(self.distance_traveled)
+        distance_traveled += dd
+        x0 = x
+        y0 = y
+        z0 = z
+    drag_coef=0.15000000596    # Drag coefficient
+    mass=1845.0                # Car mass [kg]
+    g=9.81                     # Gravitational constant [m/s^2]
+    rho=1.2                    # Air density at NTP [kg/m^3]
+    area=2.22                  # Car front chassis area [m^2]
+    friction=0.01              # Rolling friction coefficient
+
+    f_r_x = mass*g*friction*math.cos(pitch) # Road force
+    f_r_y = mass*g*math.sin(pitch)
+
+
+            #o
+    f_d = 0.5*rho*drag_coef*area*math.pow(velocity,2)# Drag force
+    f_i = mass*acceleration 
+    # print("velocity in km/h: ", velocity*3.6)
+    # print("acceleration in m/s: ", acceleration)
+    # print("pitch: ", pitch)
+
+    f_tot = f_r_x + f_r_y + f_d + f_i
+    v0 = velocity
+    # print("key: ", key)
+    # print("msg: ", msg)
+    e = f_tot*dd
+    energy_spent += e
+    energy_kWh = energy_spent/3.6e6
+    print("energy_kWh: ", energy_kWh)
 
 def listener():	
     node = PublisherPyNode()
-    ros_topics = {"/carla/ego_vehicle/odometry": {"data": None,
-                            "type": Odometry},
-              "rosTopic2": {"data": None,
-                            "type": "msg_type2"}}
-    rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, node.odom)
-    rospy.Subscriber("/Monash/penalty_score", Int8,node.penalty_calc)  
+    ros_topics = {"/carla/ego_vehicle/imu": {"data": None,"type": Imu},
+              "/carla/ego_vehicle/speedometer": {"data": None,"type": Float32},
+              "/carla/ego_vehicle/odometry": {"data": None,"type": Odometry}}
+    # rostuple = (ros_topics["/carla/ego_vehicle/odometry"], ros_topics["/carla/ego_vehicle/speedometer"])
+    for key in ros_topics.keys():
+        rospy.Subscriber(name=key,
+                         data_class=ros_topics[key]["type"],
+                         callback=common_callback,
+                        callback_args=key)
+    # rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, node.odom)
+    # rospy.Subscriber("/Monash/penalty_score", Int8,node.penalty_calc)  
         # rate = rospy.Rate(100) # publish data at 100Hz
         # while not rospy.is_shutdown():
         # rospy.Subscriber("/carla/ego_vehicle/lane_invasion",  CarlaLaneInvasionEvent, LanePenaltyCounter) 
@@ -417,15 +497,28 @@ if __name__ == '__main__':
     try:
         v0=0
         t0=0
+        dd = 0
+        x = 0
+        y = 0
+        z = 0
+        dd = 0.01
+        distance_traveled = 0
+        acceleration = 0
+        velocity = 0
+        pitch = 0
         start=False
         end=True
         # rate = rospy.Rate(10)
         #velocity=0
         #energy=0
         rospy.init_node('score_node')
+        x0 = -171.60
+        y0 = 4.0
+        z0 = 0.2
         # print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         #rospy.loginfo(energy)
         # rospy.loginfo("xxxxxusxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtestxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")	
+        rospy.sleep(3)
         listener() # executing main function
         # rate.sleep()
     except rospy.ROSInterruptException:
