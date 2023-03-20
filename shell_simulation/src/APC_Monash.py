@@ -327,8 +327,12 @@ def main():
     Coordinate_System.travel_to(15, [39.1,180.2])
     Coordinate_System.corner(15,6,90,[48.3,190.2],0)
     R14()
-    
-
+    # energy_kWh:  0.3408846924737369
+    # energy_kWh:  0.28177312097715723
+    # energy_kWh:  0.13046111149851083
+    # energy_kWh:  0.35088701011854456
+    # 0.276
+    # ze xin branch: 0.255
     while not rospy.is_shutdown():
         rospy.ROSInterruptException  # allow control+C to exit the program        
         Movement_Control.carControl(targetSpeed = 0,steerAngle = 0)
