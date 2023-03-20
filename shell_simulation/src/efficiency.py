@@ -19,7 +19,7 @@ from std_srvs.srv import Empty
 #              - Record the Velocity, Acceleration, Energy, Drag Force and Inertial Force of the car at a defined period
 #                and plot several subgraphs consist of these data against time at the end
 passed =0
-
+end = False
 
 def odom(msg):
 	global distance, energy, duration, start
@@ -35,7 +35,7 @@ def odom(msg):
 	v_z = msg.twist.twist.linear.z
 	(roll, pitch, yaw) = euler_from_quaternion([msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w])
 
-	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2) + car_z*car_z) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
+	diff_radius = math.sqrt(math.pow(last_goal[0] - car_x,2) + math.pow(last_goal[1] - car_y,2)) # calculates the distance between the car and the final goal position using Pythagoras' Theorem
 	velocity = math.sqrt(math.pow(v_x, 2) + math.pow(v_y, 2) + math.pow(v_z, 2)) # calculates the resultant velocity of the car
 
 
@@ -71,7 +71,7 @@ def odom(msg):
 		# rospy.loginfo("Duration(s): %f, Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		# rospy.loginfo("Energy(J): %d, cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
 		# rospy.loginfo("cpu_tot(avg): %f, cpu_tot(max): %f, cpu_cc(avg): %f,  cpu_cc(max): %f]" %(distance, duration, math.ceil(energy), cpu_avg, cpu_max, cc_avg, cc_max))
-		end = 1
+		end = True
 
 		if showgraph: # plot a graph if enabled
 			#plt.figure(figsize=(8, 10))
