@@ -123,6 +123,7 @@ def R4():
     
 
 
+
 def R5():
     Coordinate_System.travel_to(20, [-20.70,87.90]) # P37
     Coordinate_System.travel_to(15, [16,87.8]) 
@@ -208,7 +209,7 @@ def R13():
 
 def R14():#Final ring
 
-    Coordinate_System.travel_to(25, [50.0,190.2])
+    Coordinate_System.travel_to(20, [50.0,190.2])
     Coordinate_System.travel_to(20, [52.0,190.5])
     Coordinate_System.travel_to(20, [54.0,190.5]) 
     Coordinate_System.travel_to(20, [74.0,190.5])   #P18 (74.0, 190.0)
@@ -236,9 +237,9 @@ def R14():#Final ring
     Coordinate_System.travel_to(20, [193.7,117.3])
     Coordinate_System.travel_to(20, [195.6,101.3])
     Coordinate_System.travel_to(20, [189.1,72.0])   #189.3?
-    Coordinate_System.travel_to(20, [189.2,52.8])   #P20
-    Coordinate_System.travel_to(30, [189.2,50.0])
-    Coordinate_System.travel_to(30, [190.0,-4.0])
+    Coordinate_System.travel_to(23, [189.2,52.8])   #P20
+    Coordinate_System.travel_to(25, [189.2,50.0])
+    Coordinate_System.travel_to(28, [190.0,-4.0])
     Coordinate_System.travel_to(30, [189.5,-80.0])
     Coordinate_System.travel_to(30, [188.9,-104.7])
     Coordinate_System.travel_to(30, [187.4,-116.4])
@@ -254,40 +255,54 @@ def R14():#Final ring
     Coordinate_System.travel_to(30, [123.1,-185.0])
     Coordinate_System.travel_to(30, [111.1,-187.4])
     Coordinate_System.travel_to(30, [104.2,-187.8])
-    Coordinate_System.travel_to(40, [100.0,-187.9])
-    Coordinate_System.travel_to(40, [95.6,-187.8])
-    Coordinate_System.travel_to(40, [60,-187.8])
-    Coordinate_System.travel_to(40, [10.2,-187.9]) #P22
-    Coordinate_System.travel_to(40, [-60,-188.9]) 
-    Coordinate_System.travel_to(40, [-145.8,-190.9]) #P23 
-    Coordinate_System.travel_to(40, [-152.0,-190.7])
-    Coordinate_System.travel_to(40, [-158.5,-189.7])
-    Coordinate_System.travel_to(40, [-166.2,-187.9])
-    Coordinate_System.travel_to(30, [-193.3,-177.6])
-    Coordinate_System.travel_to(30, [-196.6,-175.9])
-    Coordinate_System.travel_to(30, [-201.3,-172.6])
-    Coordinate_System.travel_to(30, [-205.4,-169.2])
-    Coordinate_System.travel_to(30, [-212.5,-161.2])
-    Coordinate_System.travel_to(30, [-219.7,-150.9])
-    Coordinate_System.travel_to(30, [-225.2,-141.4])
-    Coordinate_System.travel_to(30, [-229.0,-132.3])
-    Coordinate_System.travel_to(30, [-230.7,-125.9])
-    Coordinate_System.travel_to(40, [-232.4,-118.1])
-    Coordinate_System.travel_to(40, [-233.5,-111.5])
-    Coordinate_System.travel_to(40, [-233.8,-103.8])
-    Coordinate_System.travel_to(40, [-233.6,-84.3])
-    Coordinate_System.travel_to(40, [-232.6,28.1]) #P24 
-    Coordinate_System.travel_to(35, [-233.9,98.7])
-    Coordinate_System.travel_to(30, [-224.3,132.8])
-    Coordinate_System.travel_to(30, [-210.5,151.2])
-    Coordinate_System.travel_to(30, [-187.9,176.2])
-    Coordinate_System.travel_to(30, [-176.2,182.5])
-    Coordinate_System.travel_to(40, [-163.7,186.8])
-    Coordinate_System.travel_to(40, [-125.8,186.5])
-    Coordinate_System.travel_to(40, [-119.4,186.6]) #P25 
+    Coordinate_System.travel_to(30, [100.0,-187.9])
+    Coordinate_System.travel_to(30, [95.6,-187.8])
+    Coordinate_System.travel_to(30, [60,-187.8])
+    Coordinate_System.travel_to(30, [10.2,-187.9]) #P22
+    Coordinate_System.travel_to(30, [-60,-188.9]) 
+    Coordinate_System.travel_to(28, [-145.8,-190.9]) #P23 
+    Coordinate_System.travel_to(28, [-152.0,-190.7])
+    Coordinate_System.travel_to(26, [-158.5,-189.7])
+    Coordinate_System.travel_to(26, [-166.2,-187.9])
+    Coordinate_System.travel_to(24, [-193.3,-177.6])
+    Coordinate_System.travel_to(24, [-196.6,-175.9])
+    Coordinate_System.travel_to(22, [-201.3,-172.6])
+    Coordinate_System.travel_to(22, [-205.4,-169.2])
+    Coordinate_System.travel_to(20, [-212.5,-161.2])
+    Coordinate_System.travel_to(20, [-219.7,-150.9])
+    Coordinate_System.travel_to(18, [-225.2,-141.4])
+    Coordinate_System.travel_to(18, [-229.0,-132.3])
+    Coordinate_System.travel_to(16, [-230.7,-125.9])
+    Coordinate_System.travel_to(16, [-232.4,-118.1])
+    Coordinate_System.travel_to(15, [-233.5,-111.5])
+    Coordinate_System.travel_to(15, [-233.8,-103.8])
+    Coordinate_System.travel_to(15, [-233.6,-84.3])
+    Coordinate_System.travel_to(15, [-232.6,28.1]) #P24 
+    Coordinate_System.travel_to(15, [-233.9,98.7])
+    Coordinate_System.travel_to(15, [-224.3,132.8])
+    Coordinate_System.travel_to(13, [-210.5,151.2])
+    Coordinate_System.travel_to(13, [-187.9,176.2])
+    Coordinate_System.travel_to(10, [-176.2,182.5])
+    Coordinate_System.travel_to(10, [-163.7,186.8])
+    Coordinate_System.travel_to(10, [-125.8,186.5])
+    Coordinate_System.travel_to(10, [-119.4,186.6]) #P25 
 
 
+# Omar set test (gradually increase acceleration)
+# test 1: energy_kWh:  0.4633077713919691
+# test 2: energy_kWh:  0.39980203666751424
+# test 3: energy_kWh:  0.30029766099112754
+# test 4: energy_kWh:  0.36765042255716934
+# test 5: energy_kWh:  0.40242175560518834
+# average = 0.3864 kWh
 
+# Ze Xin set test (gradually increase then decrease to zero)
+# test 1: energy_kWh:  0.31671157840988806
+# test 2: energy_kWh:  0.16442033859631258
+# test 3: energy_kWh:  0.22855886600072606
+# test 4: energy_kWh:  0.18579423941564457
+# test 5: energy_kWh:  0.24787018887331325
+# average = 0.2287 kWh
 def main():
     #R1()
     #R2()
