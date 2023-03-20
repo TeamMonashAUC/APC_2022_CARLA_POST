@@ -158,8 +158,8 @@ def showStats():
     rospy.loginfo("solid line crossed:" + str(laneCrossed.count(2)))
     rospy.loginfo("double line crossed:" + str(laneCrossed.count(3)))
     rospy.loginfo("Other crossed lines:" + str(laneCrossed.count(0)))
-
-    rospy.loginfo("")
+    # rospy.loginfo("Position data:" + str)
+    # rospy.loginfo("")
     # collision
     rospy.loginfo("Collision:" + str(collisionCounter))
     rospy.loginfo("OverSpeed Count:" + str(speedLimitCount))
