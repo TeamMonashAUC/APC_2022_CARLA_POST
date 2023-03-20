@@ -120,7 +120,7 @@ def travel_to(setSpeed,goal_coord):
 
     while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
         rospy.ROSInterruptException  # allow ctrl+C to exit the program    
-
+        starting_speed = settings.currentCarSpeed
         # run at 20Hz to reduce computational power 
         # using non (search for arduino debounce if you're intrested in this method)
         if((settings.curr_time - prev_time) > 0.05):  
@@ -135,7 +135,16 @@ def travel_to(setSpeed,goal_coord):
 
 
             # 3) send commands to carla to control the car
-            Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
+            #attempting to increase speed gradually
+            if(starting_speed < setSpeed- 0.2):
+                starting_speed +=2
+                Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2]) 
+            
+            else:
+                Movement_Control.carControl(targetSpeed = setSpeed,steerAngle= goal_coord_from_car[2])
+   
+            
+            
 
             # stop the loop when the goal is within 0.6m of the car
             if diff_goal<=1:
