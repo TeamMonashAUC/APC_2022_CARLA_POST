@@ -499,7 +499,7 @@ def travel_to2(setSpeed,goal_coord):
     # set up local variable to ensure output signal updates at 50Hz
     prev_time = settings.curr_time
     prev_time_coord = settings.curr_time
-    gradual_increase = 0.15 #change this to affect acceleration
+    gradual_increase = 0.5 #change this to affect acceleration
     while not rospy.is_shutdown(): # ignore this loop when ctrl+c is already activated (to exit the program)
         rospy.ROSInterruptException  # allow ctrl+C to exit the program    
         starting_speed = settings.currentCarSpeed
@@ -511,22 +511,22 @@ def travel_to2(setSpeed,goal_coord):
             # 1) run function to obtain goal coordinates & angle from current car position
             goal_coord_from_car = goal_position_from_car(goal_coord)
 
-
+            starting_speed = settings.currentCarSpeed
             # 2) obtain goal distance from car (using pythagoras theorem)
             diff_goal = math.sqrt(math.pow(goal_coord_from_car[0], 2) + math.pow(goal_coord_from_car[1], 2))
-
+            
 
             # 3) send commands to carla to control the car
             #attempting to increase speed gradually
             print("Set speed: ", setSpeed)
             print("Starting speed: ", starting_speed)
             # print("")
-            if(starting_speed < (setSpeed)):
+            if(starting_speed < (setSpeed) -gradual_increase):
                 starting_speed +=gradual_increase
                 print("increasing speed")
                 Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2]) 
 
-            elif(starting_speed >= (setSpeed)):
+            elif(starting_speed > (setSpeed)+gradual_increase):
                 starting_speed -=gradual_increase
                 print("decreasing speed")
                 Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2])
