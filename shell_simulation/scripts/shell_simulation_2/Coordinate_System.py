@@ -580,17 +580,17 @@ def travel_to2(setSpeed,goal_coord):
 
             # 3) send commands to carla to control the car
             #attempting to increase speed gradually
-            print("Set speed: ", setSpeed)
-            print("Starting speed: ", starting_speed)
+            # print("Set speed: ", setSpeed)
+            # print("Starting speed: ", starting_speed)
             # print("")
             if(starting_speed < (setSpeed) -gradual_increase):
                 starting_speed +=gradual_increase
-                print("increasing speed")
+                # print("increasing speed")
                 Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2]) 
 
             elif(starting_speed > (setSpeed)+gradual_increase):
                 starting_speed -=gradual_increase
-                print("decreasing speed")
+                # print("decreasing speed")
                 Movement_Control.carControl(targetSpeed = starting_speed,steerAngle= goal_coord_from_car[2])
 
             else:

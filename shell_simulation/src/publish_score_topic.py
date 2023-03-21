@@ -467,7 +467,7 @@ def common_callback(msg, args):
     e = f_tot*dd
     energy_spent += e
     energy_kWh = energy_spent/3.6e6
-    print("energy_kWh: ", energy_kWh)
+    # print("energy_kWh: ", energy_kWh)
 
 def listener():	
     node = PublisherPyNode()
