@@ -206,7 +206,7 @@ def R6():
     Coordinate_System.travel_to2(20, [151.4,87.1]) 
 
     Coordinate_System.travel_to2(20, [151.4,13.2]) 
-    Coordinate_System.corner2(20,8,-90,[141.4,2.2],-180) #turn right
+    Coordinate_System.corner2(20,6,-90,[141.4,2.2],-180) #turn right
     Coordinate_System.travel_to2(20, [124.70,1.9]) #P29
     # Coordinate_System.travel_to2(20, [116.5,2.2]) 
 
@@ -289,9 +289,9 @@ def R14():#Final ring
 
     # straight
     Coordinate_System.travel_to2(18, [-232.5,-75.6]) 
-    Coordinate_System.travel_to2(13, [-232.6,-29.3]) 
+    Coordinate_System.travel_to2(18, [-232.6,-29.3]) 
 
-    Coordinate_System.travel_to2(13, [-232.6,28.1]) #P24 
+    Coordinate_System.travel_to2(15, [-232.6,28.1]) #P24 
     '''
     Coordinate_System.travel_to2(25, [50.0,190.2])
     Coordinate_System.travel_to2(20, [52.0,190.5])
