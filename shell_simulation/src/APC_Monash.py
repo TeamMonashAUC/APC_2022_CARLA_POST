@@ -46,10 +46,10 @@ import numpy as np
 
 def R1():
     Coordinate_System.travel_to2(20, [-206.4, 4.2]) # P1
-    Coordinate_System.travel_to2(20, [-245.5,0.8]) 
-    Coordinate_System.travel_to2(20, [-255.9,0.2]) # P2   #stop
+    # Coordinate_System.travel_to2(20, [-245.5,0.8]) 
+    # Coordinate_System.travel_to2(20, [-255.9,0.2]) # P2   #stop
 
-    Coordinate_System.corner2(20,9,180,[-272.5,-18.7],-90) #turn left
+    Coordinate_System.corner2(20,15,180,[-272.5,-43.9],-90) #turn left
     Coordinate_System.travel_to2(20, [-272.1,-43.9]) # P3
     Coordinate_System.travel_to2(20, [-272.0,-68.2]) 
 
@@ -65,9 +65,9 @@ def R1():
     Coordinate_System.travel_to2(20, [-239.0,-91.3])  
 
 
-    Coordinate_System.travel_to2(20, [-219.0,-94.6]) 
-    Coordinate_System.travel_to2(20, [-205.5,-95.0]) # P4
-    Coordinate_System.travel_to2(20, [-205.3,-94.7]) # traffic light 
+    # Coordinate_System.travel_to2(20, [-219.0,-94.6]) 
+    # Coordinate_System.travel_to2(20, [-205.5,-95.0]) # P4
+    # Coordinate_System.travel_to2(20, [-205.3,-94.7]) # traffic light 
     # Coordinate_System.travel_to2(25, [-205.3,-91.4]) # traffic light 
 
 def R2():
@@ -75,17 +75,17 @@ def R2():
     # Coordinate_System.travel_to2(20, [-199.1,-95.0])
     # Coordinate_System.travel_to2(25, [-195.0,-104.6]) 
     Coordinate_System.travel_to2(20, [-195.0,-118.3]) 
-    Coordinate_System.travel_to2(20, [-194.4,-123.9]) 
-    Coordinate_System.travel_to2(20, [-193.7,-127.4]) 
-    Coordinate_System.travel_to2(20, [-193.0,-129.6]) 
-    Coordinate_System.travel_to2(20, [-191.7,-132.8]) 
-    Coordinate_System.travel_to2(20, [-190.0,-136.1]) 
-    Coordinate_System.travel_to2(20, [-187.1,-140.4]) 
-    Coordinate_System.travel_to2(20, [-183.1,-144.5]) 
-    Coordinate_System.travel_to2(20, [-179.0,-146.9]) 
-    Coordinate_System.travel_to2(20, [-171.6,-149.4]) 
-    Coordinate_System.travel_to2(20, [-166.8,-150.3]) 
-    Coordinate_System.travel_to2(20, [-162.9,-150.7]) 
+    Coordinate_System.travel_to2(20, [-193.9,-124.9]) 
+    Coordinate_System.travel_to2(20, [-188.8,-134.2]) 
+    Coordinate_System.travel_to2(20, [-183.6,-140.5]) 
+    Coordinate_System.travel_to2(20, [-176.2,-146.1]) 
+    Coordinate_System.travel_to2(20, [-167.5,-149.7]) 
+    Coordinate_System.travel_to2(20, [-162.6,-150.6]) 
+    # Coordinate_System.travel_to2(20, [-183.1,-144.5]) 
+    # Coordinate_System.travel_to2(20, [-179.0,-146.9]) 
+    # Coordinate_System.travel_to2(20, [-171.6,-149.4]) 
+    # Coordinate_System.travel_to2(20, [-166.8,-150.3]) 
+    # Coordinate_System.travel_to2(20, [-162.9,-150.7]) 
     # Coordinate_System.travel_to2(15, [-165.0,-153.9]) 
 
     Coordinate_System.travel_to2(20, [-158.0,-151.1]) 
@@ -160,20 +160,21 @@ def R3():
     Coordinate_System.travel_to2(20, [-43.9,-25.0])
     Coordinate_System.travel_to2(20, [-43.90,-17.10,0.00]) #P10
 
-    Coordinate_System.corner2(20,6,90,[-34.9,-2.6],0) #turn right
-    Coordinate_System.travel_to2(20, [-18.6,-2.70])
+    Coordinate_System.corner2(20,10,90,[-24.2,-3.1],0) #turn right
+    # Coordinate_System.travel_to2(20, [-18.6,-2.70])
     Coordinate_System.travel_to2(20, [3.00,-2.70]) #P11
-    Coordinate_System.travel_to2(20, [13.7,-2.60])
+    # Coordinate_System.travel_to2(20, [13.7,-2.60])
 
-    Coordinate_System.corner2(20,7,0,[31.6,15],90) #turn left
+    Coordinate_System.corner2(20,10,0,[32.0,19.3],90) #turn left
     Coordinate_System.travel_to2(20, [31.30,19.30]) # P15 
 
-    Coordinate_System.travel_to2(20, [34.6,51.60]) 
-    Coordinate_System.travel_to2(20, [36.4,72.20])
+    # Coordinate_System.travel_to2(20, [34.6,51.60]) 
+    # Coordinate_System.travel_to2(20, [36.4,72.20])
 
-    # cross x junction
-    Coordinate_System.travel_to2(20, [37.2,105.0])
-    Coordinate_System.travel_to2(20, [38.1,133.2])
+    # # cross x junction
+    # Coordinate_System.travel_to2(20, [37.2,105.0])
+    # Coordinate_System.travel_to2(20, [38.1,133.2])
+    Coordinate_System.travel_to2(20, [34.3,122.9])
      
 
     # Coordinate_System.travel_to2(25, [-83.20,-87.70]) #P32
@@ -369,13 +370,15 @@ def R14():#Final ring
     '''
 
 def R15():
-    Coordinate_System.corner2(15,7,-180,[-184.6,14.7],90) #turn right
-    Coordinate_System.travel_to2(20, [-184.6,70])  
-    Coordinate_System.corner2(20,7,90,[-172.3,88.1],0) #turn right
-    Coordinate_System.travel_to2(20, [-145.4,88.1])  
-    Coordinate_System.corner2(20,10,0,[-124.40,123.80],90) #turn left
-    Coordinate_System.travel_to2(20, [-124.4,123.8])  
-    Coordinate_System.corner2(20,10,90,[-144.80,142.60],180) #turn left
+    
+    Coordinate_System.corner2(13,12,-180,[-187.9,31.1],90) #turn right
+    Coordinate_System.travel_to2(20, [-187.9,65.8])  
+    Coordinate_System.corner2(20,12,90,[-168.1,84.7],0) #turn right
+    Coordinate_System.travel_to2(20, [-156.4,84.7])  
+    Coordinate_System.corner2(20,15,0,[-124.40,123.80],90) #turn left
+    # Coordinate_System.travel_to2(20, [-124.4,123.8])  
+    # Coordinate_System.travel_to2(20, [-124.40,106.30])  #P35
+    Coordinate_System.corner2(20,15,90,[-154.80,142.60],180) #turn left
     Coordinate_System.travel_to2(20, [-161.1,142.6])  
     Coordinate_System.travel_to2(20, [-168.5,141.5])  
     Coordinate_System.travel_to2(20, [-175.5,138.6])  
@@ -388,8 +391,8 @@ def R15():
 
     # cross x junction
     Coordinate_System.travel_to2(20, [-191.6,74.1])  
-    Coordinate_System.travel_to2(20, [-191.5,15.2])  
-    Coordinate_System.corner2(20,6,-90,[-204.5,3.9],180) #turn right
+    # Coordinate_System.travel_to2(20, [-191.5,15.2])  
+    Coordinate_System.corner2(20,10,-90,[-206.4, 4.2],180) #turn right
 
 
 def main():
@@ -397,7 +400,7 @@ def main():
     # '''
     R15()
     R1()
-    Coordinate_System.corner2(20,6,0,[-195.1,-105.1],-90) #turn right
+    Coordinate_System.corner2(20,12,0,[-195.0,-118.3],-90) #turn right
     R2()
 
     # Coordinate_System.corner2(20,6,90,[-65.8,-87.9],0) #turn left
@@ -405,7 +408,7 @@ def main():
     # '''
 
     # '''
-    Coordinate_System.corner2(20,5,90,[49.6,146.1],0) #turn right
+    Coordinate_System.corner2(20,10,90,[49.6,146.1],0) #turn right
     R6()
     Coordinate_System.corner2(20,8,-180,[96.2,-14.9],-90) #turn left
     R7()
