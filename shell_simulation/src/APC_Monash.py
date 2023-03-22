@@ -372,7 +372,7 @@ def R14():#Final ring
 
 def R15():
     
-    Coordinate_System.corner2(13,12,-180,[-187.9,31.1],90) #turn right
+    Coordinate_System.corner2(16,12,-180,[-187.9,31.1],90) #turn right
     Coordinate_System.travel_to2(20, [-187.9,65.8])  
     Coordinate_System.corner2(20,12,90,[-168.1,84.7],0) #turn right
     Coordinate_System.travel_to2(20, [-156.4,84.7])  
@@ -413,7 +413,7 @@ def main():
     # '''
     Coordinate_System.corner2(20,12,-180,[96.20,-28.60],-90) #turn left
     R7()
-    Coordinate_System.corner2(20,8,180,[32.3,-60.7],90) #turn right
+    Coordinate_System.corner2(20,6,180,[32.3,-60.7],90) #turn right
     Coordinate_System.travel_to2(20, [31.8,-47.4])  
     # Coordinate_System.travel_to2(20, [31.8,-16.1])  
 

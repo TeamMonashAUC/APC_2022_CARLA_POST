@@ -39,7 +39,7 @@ def PID_SetSpeed(targetSpeed):
 
     if targetSpeed>15:
         # pid = PID(Kp = 0.4, Ki = 0.3, Kd = 0.5, setpoint= targetSpeed)
-        pid = PID(Kp = 0.3, Ki = 10000, Kd = 3, setpoint= targetSpeed)
+        pid = PID(Kp = 0.4, Ki = 10000, Kd = 3, setpoint= targetSpeed)
 
     else: # speed below 15
         pid = PID(Kp = 0.2, Ki = 0.0, Kd = 0.0, setpoint= targetSpeed)
