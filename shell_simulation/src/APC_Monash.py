@@ -206,12 +206,12 @@ def R6():
     Coordinate_System.travel_to2(20, [151.4,87.1]) 
 
     Coordinate_System.travel_to2(20, [151.4,13.2]) 
-    Coordinate_System.corner2(20,6,-90,[141.4,2.2],-180) #turn right
+    Coordinate_System.corner2(20,8,-90,[141.4,2.2],-180) #turn right
     Coordinate_System.travel_to2(20, [124.70,1.9]) #P29
     # Coordinate_System.travel_to2(20, [116.5,2.2]) 
 
 def R7():
-    Coordinate_System.travel_to2(20, [96.2,-14.9])
+    # Coordinate_System.travel_to2(20, [96.2,-14.9])
     Coordinate_System.travel_to2(20, [96.20,-28.60]) #P30
 
     #curve
@@ -397,35 +397,35 @@ def R15():
 
 
 def main():
-    # section 1
+    # section 1 (yellow then green path)
     # '''
     R15()
     R1()
     Coordinate_System.corner2(20,12,0,[-195.0,-118.3],-90) #turn right
     R2()
 
-    # # Coordinate_System.corner2(20,6,90,[-65.8,-87.9],0) #turn left
-    # R3()
-    # # '''
+    # Coordinate_System.corner2(20,6,90,[-65.8,-87.9],0) #turn left
+    R3()
 
-    # '''
-    Coordinate_System.corner2(20,10,90,[49.6,146.1],0) #turn right
+    # section 2 (blue path)
+    Coordinate_System.corner2(20,8,90,[49.6,146.1],0) #turn right
     R6()
-    Coordinate_System.corner2(20,8,-180,[96.2,-14.9],-90) #turn left
+    # '''
+    Coordinate_System.corner2(20,12,-180,[96.20,-28.60],-90) #turn left
     R7()
-    Coordinate_System.corner2(20,6,180,[31.8,-73.7],90) #turn right
+    Coordinate_System.corner2(20,8,180,[32.3,-60.7],90) #turn right
     Coordinate_System.travel_to2(20, [31.8,-47.4])  
-    Coordinate_System.travel_to2(20, [31.8,-16.1])  
+    # Coordinate_System.travel_to2(20, [31.8,-16.1])  
 
 
-    Coordinate_System.corner2(20,6,90,[43.6,-1.8],0) #turn right
+    Coordinate_System.corner2(20,8,90,[43.6,-2.8],0) #turn right
     Coordinate_System.travel_to2(20, [60.3,-3.1]) 
     Coordinate_System.travel_to2(20, [68.6,-4.3]) 
-    Coordinate_System.travel_to2(20, [77.4,-5.4]) 
-    Coordinate_System.travel_to2(20, [88.0,-5.6])  
+    # Coordinate_System.travel_to2(20, [77.4,-5.4]) 
+    # Coordinate_System.travel_to2(20, [88.0,-5.6])  
 
-    Coordinate_System.corner2(20,10,0,[106.9,14.8],90) #turn left
-    Coordinate_System.travel_to2(20, [103.5,34.0])  
+    Coordinate_System.corner2(20,15,0,[106.9,17.6],90) #turn left
+    # Coordinate_System.travel_to2(20, [103.5,34.0])  
     Coordinate_System.travel_to2(20, [103.4,49.0])
 
     ## here  
@@ -436,16 +436,16 @@ def main():
     Coordinate_System.travel_to2(20, [86.3,81.2])   
     Coordinate_System.travel_to2(20, [79.4,85.8])  
     Coordinate_System.travel_to2(20, [72.1,89.0]) 
-    Coordinate_System.travel_to2(20, [60.8,92.5]) 
-    Coordinate_System.travel_to2(20, [52.3,94.5]) 
-    Coordinate_System.travel_to2(20, [47.2,94.6]) 
+    Coordinate_System.travel_to2(20, [64.0,90.9]) 
+    Coordinate_System.travel_to2(20, [54.2,91.5]) 
+    # Coordinate_System.travel_to2(20, [47.2,94.6]) 
 
-    Coordinate_System.corner2(20,7,180,[37.3,104.4],90) #turn right
-    Coordinate_System.travel_to2(20, [38.8,161.2]) 
+    Coordinate_System.corner2(20,12,180,[37.0,119.7],90) #turn right
+    Coordinate_System.travel_to2(20, [38.8,155.1]) 
     
     # '''
     # Coordinate_System.travel_to2(20, [39.1,180.2])
-    Coordinate_System.corner2(20,10,90,[57.6,190.3],0)
+    Coordinate_System.corner2(20,12,90,[57.6,190.3],0)
     R14()
 
     # [-232.6,28.1]
@@ -529,7 +529,7 @@ if __name__ == '__main__':
     # test()
     # start rosnode
     rospy.init_node('APC_Monash')
-    rate = rospy.Rate(5) # publish data at 100Hz
+    rate = rospy.Rate(10) # publish data at 100Hz
     rospy.loginfo("APC_Monash started")
 
     # start ros communications with rostopics

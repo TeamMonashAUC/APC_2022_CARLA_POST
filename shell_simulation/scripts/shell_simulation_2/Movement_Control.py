@@ -35,7 +35,7 @@ Function Explanation :
 def PID_SetSpeed(targetSpeed):
 
     # PID parameters setting
-    PID.sample_time = 0.2
+    PID.sample_time = 0.1
 
     if targetSpeed>15:
         # pid = PID(Kp = 0.4, Ki = 0.3, Kd = 0.5, setpoint= targetSpeed)
