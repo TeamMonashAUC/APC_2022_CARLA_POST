@@ -529,19 +529,19 @@ def main():
     # R15()
 
 
-    # R1()
-    # Coordinate_System.corner2(20,6,0,[-195.1,-105.1],-90) #turn right
-    # R2()
-    # Coordinate_System.corner2(20,7,0,[-123.4,-124.1],90) #turn left
-    # R3()
-    # R4()
-    # Coordinate_System.corner2(20,5,0,[96.2,-14.9],-90) #turn right
-    # R7()
-    # Coordinate_System.corner2(20,7,180,[27.9,-110.1],-90) #turn left
-    # Coordinate_System.travel_to2(20, [28.0,-169.6])  
-    # Coordinate_System.corner2(20,6,-90,[10.2,-187.9],180) #turn right
+    R1()
+    Coordinate_System.corner2(20,6,0,[-195.1,-105.1],-90) #turn right
+    R2()
+    Coordinate_System.corner2(20,7,0,[-123.4,-124.1],90) #turn left
+    R3()
+    R4()
+    Coordinate_System.corner2(20,5,0,[96.2,-14.9],-90) #turn right
+    R7()
+    Coordinate_System.corner2(20,7,180,[27.9,-110.1],-90) #turn left
+    Coordinate_System.travel_to2(20, [28.0,-169.6])  
+    Coordinate_System.corner2(20,6,-90,[10.2,-187.9],180) #turn right
 
-    # R14()
+    R14()
 
     R17()
     Coordinate_System.corner2(20,12,90,[57.6,190.3],0)
