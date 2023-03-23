@@ -188,7 +188,8 @@ class PublisherPyNode:
         ]
         self.frame_count = 0
         #self.last_goal=self.sample15goals[-1][0:2]
-        self.last_goal=[-232.6,28.1]
+        # self.last_goal=[-232.6,28.1]
+        self.last_goal=[0, 0]
       # Initialise a publisher
 
     penaltyCount =0
@@ -259,7 +260,8 @@ class PublisherPyNode:
             dd = math.sqrt(math.pow(x - self.x0, 2) + math.pow(y - self.y0, 2) + math.pow(z - self.z0, 2))
             #print(dd)
             #print(self.distance_traveled)
-            self.distance_traveled += dd
+            self.distance_traveled += dd    # curve [From P4 to P6 ish]
+
             self.x0 = x
             self.y0 = y 
             self.z0 = z

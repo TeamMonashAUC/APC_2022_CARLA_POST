@@ -204,7 +204,7 @@ def listener():
 if __name__ == '__main__':
 	# Initialize variables
 
-	goals = [[-116.7,186.7]] # Our common final goals
+	goals = [[0, 0]] # Our common final goals
 	# goals = [[-232.60,28.10]] # Our common final goals
 	# goals = [[-47.4,-105.9]] # Our common final goals
 	last_goal = goals[0] # If using a different final goal, change here
