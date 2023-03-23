@@ -493,10 +493,10 @@ def R17():
     '''
     
     # U turn
-    Coordinate_System.travel_to(20, [24.3, -63.1])
-    Coordinate_System.travel_to(15, [24.3, -84.8])
-    Coordinate_System.travel_to(15, [31.7, -83.2])
-    Coordinate_System.travel_to(15, [32.8, -75.2])
+    Coordinate_System.travel_to(20, [24.3, 35.1])
+    Coordinate_System.travel_to(15, [24.3, 10.8])
+    Coordinate_System.travel_to(15, [31.7, 10.2])
+    Coordinate_System.travel_to(15, [32.8, 19.3])
 
     Coordinate_System.travel_to2(20, [32.80,19.30]) #p15
     Coordinate_System.travel_to2(20, [34.40,40.9])
@@ -512,7 +512,7 @@ def R17():
 
     Coordinate_System.travel_to2(15, [54.8,149.6])
 
-    Coordinate_System.corner2(15,6,180,[35.7,170.4],90) # turn right
+    Coordinate_System.corner2(15,5,180,[35.7,170.4],90) # turn right
     # Coordinate_System.corner2(8,0.5,90,[78.2,150.5],0)
     # Coordinate_System.travel_to2(20, [61.3,149.3])
     # Coordinate_System.travel_to2(20, [47.6,149.5])
@@ -529,19 +529,19 @@ def main():
     # R15()
 
 
-    R1()
-    Coordinate_System.corner2(20,6,0,[-195.1,-105.1],-90) #turn right
-    R2()
-    Coordinate_System.corner2(20,7,0,[-123.4,-124.1],90) #turn left
-    R3()
-    R4()
-    Coordinate_System.corner2(20,5,0,[96.2,-14.9],-90) #turn right
-    R7()
-    Coordinate_System.corner2(20,7,180,[27.9,-110.1],-90) #turn left
-    Coordinate_System.travel_to2(20, [28.0,-169.6])  
-    Coordinate_System.corner2(20,6,-90,[10.2,-187.9],180) #turn right
+    # R1()
+    # Coordinate_System.corner2(20,6,0,[-195.1,-105.1],-90) #turn right
+    # R2()
+    # Coordinate_System.corner2(20,7,0,[-123.4,-124.1],90) #turn left
+    # R3()
+    # R4()
+    # Coordinate_System.corner2(20,5,0,[96.2,-14.9],-90) #turn right
+    # R7()
+    # Coordinate_System.corner2(20,7,180,[27.9,-110.1],-90) #turn left
+    # Coordinate_System.travel_to2(20, [28.0,-169.6])  
+    # Coordinate_System.corner2(20,6,-90,[10.2,-187.9],180) #turn right
 
-    R14()
+    # R14()
 
     R17()
     Coordinate_System.corner2(20,12,90,[57.6,190.3],0)
