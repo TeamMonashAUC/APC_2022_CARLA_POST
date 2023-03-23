@@ -231,44 +231,44 @@ def R7():
 
 def R14():#Final ring
 
-    # curve
-    Coordinate_System.travel_to2(20, [57.6,190.3])
-    Coordinate_System.travel_to2(20, [74.0,190.5])   #P18 (74.0, 190.0)
+    # # curve
+    # Coordinate_System.travel_to2(20, [57.6,190.3])
+    # Coordinate_System.travel_to2(20, [74.0,190.5])   #P18 (74.0, 190.0)
 
-    Coordinate_System.travel_to2(20, [100.9,190.4])
-    Coordinate_System.travel_to2(20, [112.6,189.6])
-    Coordinate_System.travel_to2(20, [124.9,187.0])
-    Coordinate_System.travel_to2(20, [137.6,182.7])
-    Coordinate_System.travel_to2(20, [146.1,180.2])
-    Coordinate_System.travel_to2(20, [151.8,178.3])
-    # Coordinate_System.travel_to2(0, [153.0,178.4])
-    # Coordinate_System.travel_to2(20, [154.10,177.30])  #P19
+    # Coordinate_System.travel_to2(20, [100.9,190.4])
+    # Coordinate_System.travel_to2(20, [112.6,189.6])
+    # Coordinate_System.travel_to2(20, [124.9,187.0])
+    # Coordinate_System.travel_to2(20, [137.6,182.7])
+    # Coordinate_System.travel_to2(20, [146.1,180.2])
+    # Coordinate_System.travel_to2(20, [151.8,178.3])
+    # # Coordinate_System.travel_to2(0, [153.0,178.4])
+    # # Coordinate_System.travel_to2(20, [154.10,177.30])  #P19
 
-    Coordinate_System.travel_to2(20, [154.10,176.30])  #P19
+    # Coordinate_System.travel_to2(20, [154.10,176.30])  #P19
 
-    # Coordinate_System.travel_to2(20, [161.3,171.6]) 
-    Coordinate_System.travel_to2(20, [171.8,157.2])  
-    Coordinate_System.travel_to2(20, [182.8,132.3])  
-    Coordinate_System.travel_to2(20, [187.3,113.9])   
+    # # Coordinate_System.travel_to2(20, [161.3,171.6]) 
+    # Coordinate_System.travel_to2(20, [171.8,157.2])  
+    # Coordinate_System.travel_to2(20, [182.8,132.3])  
+    # Coordinate_System.travel_to2(20, [187.3,113.9])   
 
-    # straight
-    Coordinate_System.travel_to2(20, [188.6,97.4])    
-    Coordinate_System.travel_to2(20, [189.2,51.9])     
-    Coordinate_System.travel_to2(20, [189.8,-31.6])   
+    # # straight
+    # Coordinate_System.travel_to2(20, [188.6,97.4])    
+    # Coordinate_System.travel_to2(20, [189.2,51.9])     
+    # Coordinate_System.travel_to2(20, [189.8,-31.6])   
 
-    # curve
-    Coordinate_System.travel_to2(20, [188.9,-98.8]) 
-    Coordinate_System.travel_to2(20, [186.6,-119.9]) 
-    Coordinate_System.travel_to2(20, [180.6,-137.3]) 
-    Coordinate_System.travel_to2(20, [168.7,-155.7]) 
-    Coordinate_System.travel_to2(20, [153.8,-170.1]) 
-    Coordinate_System.travel_to2(20, [137.1,-180.0]) 
-    Coordinate_System.travel_to2(20, [118.5,-186.1]) 
-    Coordinate_System.travel_to2(20, [118.5,-186.1])     
+    # # curve
+    # Coordinate_System.travel_to2(20, [188.9,-98.8]) 
+    # Coordinate_System.travel_to2(20, [186.6,-119.9]) 
+    # Coordinate_System.travel_to2(20, [180.6,-137.3]) 
+    # Coordinate_System.travel_to2(20, [168.7,-155.7]) 
+    # Coordinate_System.travel_to2(20, [153.8,-170.1]) 
+    # Coordinate_System.travel_to2(20, [137.1,-180.0]) 
+    # Coordinate_System.travel_to2(20, [118.5,-186.1]) 
+    # Coordinate_System.travel_to2(20, [118.5,-186.1])     
 
-    # straight
-    Coordinate_System.travel_to2(20, [98.8,-188.0])    
-    Coordinate_System.travel_to2(20, [46.6,-187.8])     
+    # # straight
+    # Coordinate_System.travel_to2(20, [98.8,-188.0])    
+    # Coordinate_System.travel_to2(20, [46.6,-187.8])     
     Coordinate_System.travel_to2(20, [10.2,-187.9]) #P22
 
     Coordinate_System.travel_to2(20, [-76.7,-187.5])    
@@ -422,14 +422,31 @@ def R16():
     # CORNERING
     Coordinate_System.travel_to2(20, [37.1, 104.3])
 
+def R17():
+    ## for testing only ####
+    Coordinate_System.travel_to(15, [17.7, 189.4])
+    ###########
+    Coordinate_System.corner2(15,9,0,[32.1, 172.8],-90)
+    Coordinate_System.travel_to2(15, [29.8, 147.8])
+    Coordinate_System.travel_to(15, [27.2, 126.2])
+    Coordinate_System.travel_to(15, [26.6, 107.5])
+    Coordinate_System.travel_to(15, [24.3, 18.3])
+    Coordinate_System.corner2(10,4,-90,[29.1, 7.2],0)
+    Coordinate_System.corner2(10,4,0,[34.5, 13.9],93)
+    Coordinate_System.travel_to2(15, [32.80,19.30]) #p15
+    Coordinate_System.travel_to2(15, [34.40,40.9])
+    Coordinate_System.travel_to2(15, [34.40,79.2])
+    Coordinate_System.travel_to2(15, [34.40,133.3])
+    Coordinate_System.corner2(15,9,90,[48.4, 146.6],0)
+    Coordinate_System.travel_to2(10, [78.2,142.3])
+    Coordinate_System.corner2(8,0.5,0,[84.70,146.0],90)
+    Coordinate_System.corner2(8,0.5,90,[78.2,150.5],0)
+    Coordinate_System.travel_to2(15, [61.3,149.3])
+    Coordinate_System.travel_to2(15, [47.6,149.5])
+    Coordinate_System.travel_to2(15, [48.4, 146.6])
+    Coordinate_System.corner2(15,9,90,[34.7, 157.8],0)
 
-
-
-
-
-
-
-
+    
 
 
 
@@ -451,48 +468,49 @@ def main():
     R3()
     '''
     # Steve adds
-    R16()
+    # R16()
 
-    # section 2 (blue path)
-    Coordinate_System.corner2(20,8,90,[49.6,146.1],0) #turn right
-    R6()
-    # '''
-    Coordinate_System.corner2(20,12,-180,[96.20,-28.60],-90) #turn left
-    R7()
-    Coordinate_System.corner2(20,6,180,[32.3,-60.7],90) #turn right
-    Coordinate_System.travel_to2(20, [31.8,-47.4])  
-    # Coordinate_System.travel_to2(20, [31.8,-16.1])  
+    # # section 2 (blue path)
+    # Coordinate_System.corner2(20,8,90,[49.6,146.1],0) #turn right
+    # R6()
+    # # '''
+    # Coordinate_System.corner2(20,12,-180,[96.20,-28.60],-90) #turn left
+    # R7()
+    # Coordinate_System.corner2(20,6,180,[32.3,-60.7],90) #turn right
+    # Coordinate_System.travel_to2(20, [31.8,-47.4])  
+    # # Coordinate_System.travel_to2(20, [31.8,-16.1])  
 
 
-    Coordinate_System.corner2(20,8,90,[43.6,-2.8],0) #turn right
-    Coordinate_System.travel_to2(20, [60.3,-3.1]) 
-    Coordinate_System.travel_to2(20, [68.6,-4.3]) 
-    # Coordinate_System.travel_to2(20, [77.4,-5.4]) 
-    # Coordinate_System.travel_to2(20, [88.0,-5.6])  
+    # Coordinate_System.corner2(20,8,90,[43.6,-2.8],0) #turn right
+    # Coordinate_System.travel_to2(20, [60.3,-3.1]) 
+    # Coordinate_System.travel_to2(20, [68.6,-4.3]) 
+    # # Coordinate_System.travel_to2(20, [77.4,-5.4]) 
+    # # Coordinate_System.travel_to2(20, [88.0,-5.6])  
 
-    Coordinate_System.corner2(20,15,0,[106.9,17.6],90) #turn left
-    # Coordinate_System.travel_to2(20, [103.5,34.0])  
-    Coordinate_System.travel_to2(20, [103.4,49.0])
+    # Coordinate_System.corner2(20,15,0,[106.9,17.6],90) #turn left
+    # # Coordinate_System.travel_to2(20, [103.5,34.0])  
+    # Coordinate_System.travel_to2(20, [103.4,49.0])
 
-    ## here  
-    Coordinate_System.travel_to2(20, [102.3,55.7])  
-    Coordinate_System.travel_to2(20, [100.4,61.9])  
-    Coordinate_System.travel_to2(20, [97.5,68.1])  
-    Coordinate_System.travel_to2(20, [92.5,75.1])  
-    Coordinate_System.travel_to2(20, [86.3,81.2])   
-    Coordinate_System.travel_to2(20, [79.4,85.8])  
-    Coordinate_System.travel_to2(20, [72.1,89.0]) 
-    Coordinate_System.travel_to2(20, [64.0,90.9]) 
-    Coordinate_System.travel_to2(20, [54.2,91.5]) 
-    # Coordinate_System.travel_to2(20, [47.2,94.6]) 
+    # ## here  
+    # Coordinate_System.travel_to2(20, [102.3,55.7])  
+    # Coordinate_System.travel_to2(20, [100.4,61.9])  
+    # Coordinate_System.travel_to2(20, [97.5,68.1])  
+    # Coordinate_System.travel_to2(20, [92.5,75.1])  
+    # Coordinate_System.travel_to2(20, [86.3,81.2])   
+    # Coordinate_System.travel_to2(20, [79.4,85.8])  
+    # Coordinate_System.travel_to2(20, [72.1,89.0]) 
+    # Coordinate_System.travel_to2(20, [64.0,90.9]) 
+    # Coordinate_System.travel_to2(20, [54.2,91.5]) 
+    # # Coordinate_System.travel_to2(20, [47.2,94.6]) 
 
-    Coordinate_System.corner2(20,12,180,[37.0,119.7],90) #turn right
-    Coordinate_System.travel_to2(20, [38.8,155.1]) 
+    # Coordinate_System.corner2(20,12,180,[37.0,119.7],90) #turn right
+    # Coordinate_System.travel_to2(20, [38.8,155.1]) 
     
-    # '''
-    # Coordinate_System.travel_to2(20, [39.1,180.2])
-    Coordinate_System.corner2(20,12,90,[57.6,190.3],0)
-    R14()
+    # # '''
+    # # Coordinate_System.travel_to2(20, [39.1,180.2])
+    # Coordinate_System.corner2(20,12,90,[57.6,190.3],0)
+    # R14()
+    R17()
 
     # [-232.6,28.1]
 
