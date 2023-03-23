@@ -482,8 +482,8 @@ def R17():
     ## for testing only ####
     # Coordinate_System.travel_to(20, [17.7, 189.4])
     ###########
-    # Coordinate_System.corner2(20,9,0,[28.3, 172.8],-90)
-    # Coordinate_System.travel_to2(20, [28.3, 106.5])
+    Coordinate_System.corner2(20,9,0,[28.3, 172.8],-90)
+    Coordinate_System.travel_to2(20, [28.3, 106.5])
 
     '''
     # Coordinate_System.travel_to2(15, [29.8, 147.8])
@@ -493,16 +493,16 @@ def R17():
     '''
     
     # U turn
-    # Coordinate_System.travel_to(20, [24.3, -63.1])
-    # Coordinate_System.travel_to(15, [24.3, -84.8])
-    # Coordinate_System.travel_to(15, [31.7, -83.2])
-    # Coordinate_System.travel_to(15, [32.8, -75.2])
+    Coordinate_System.travel_to(20, [24.3, -63.1])
+    Coordinate_System.travel_to(15, [24.3, -84.8])
+    Coordinate_System.travel_to(15, [31.7, -83.2])
+    Coordinate_System.travel_to(15, [32.8, -75.2])
 
-    # Coordinate_System.travel_to2(20, [32.80,19.30]) #p15
-    # Coordinate_System.travel_to2(20, [34.40,40.9])
-    # Coordinate_System.travel_to2(20, [34.40,79.2])
-    # Coordinate_System.travel_to2(20, [34.40,133.3])
-    # Coordinate_System.corner2(20,9,90,[48.4, 146.6],0)a
+    Coordinate_System.travel_to2(20, [32.80,19.30]) #p15
+    Coordinate_System.travel_to2(20, [34.40,40.9])
+    Coordinate_System.travel_to2(20, [34.40,79.2])
+    Coordinate_System.travel_to2(20, [34.40,133.3])
+    Coordinate_System.corner2(20,9,90,[48.4, 146.6],0)
 
 
     Coordinate_System.travel_to2(15, [80.2,142.3])
